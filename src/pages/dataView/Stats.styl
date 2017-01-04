@@ -1,0 +1,32 @@
+makeGradient(topColor, bottomColor)
+  background -webkit-linear-gradient(top, topColor, bottomColor)
+  background -webkit-gradient(linear, top, topColor, bottomColor)
+  background linear-gradient(top, topColor, bottomColor)
+
+.stats-container
+  position relative
+  margin 10px 0
+  makeGradient(#7d8bfe, #3b57d4)
+  .stats-item
+    float left
+    width 50%
+    padding 30px 0
+    text-align center
+    color #f9f9f9
+    .stats-name
+      font-size 16px
+      margin-bottom 8px
+    .stats-value
+      font-size 24px
+      > em
+        font-style: normal
+        font-size: 14px
+        margin-left 3px
+  &:after
+    content ""
+    position absolute
+    left 50%
+    top 0
+    bottom 0
+    width 1px
+    makeGradient(rgba(255,255,255,.1), rgba(255,255,255,.4))
