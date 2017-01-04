@@ -59,7 +59,7 @@ function httpRequestSignIn(code, corp) {
             var json = JSON.parse(recv);
             if (json.session) {
                 sessionInfo = json.session;
-                sessionHeader = JSON.stringify({sessionId: sessionInfo.sessionId});
+                sessionHeader = {sessionId: sessionInfo.sessionId};
                 //alert('sign in ok: ' + JSON.stringify(sessionInfo));
                 resolve(sessionInfo);
                 isSigined = true;
