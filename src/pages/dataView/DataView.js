@@ -68,10 +68,10 @@ class Page extends React.Component {
           var data = res.data;
           var count = (data.axisY.count || []).reduce((prevValue, curValue) => {
             return prevValue + curValue;
-          });
+          }, 0);
           var amout = (data.axisY.rmb || []).reduce((prevValue, curValue) => {
             return prevValue + curValue;
-          });
+          }, 0);
 
           this.setState({
             isDataLoaded: true,
