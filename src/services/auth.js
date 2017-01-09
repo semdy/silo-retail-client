@@ -1,12 +1,43 @@
 
+
+const urlParams = fetchUrlParams()
+const envConfigs = {
+    release: {
+        urlDingTalk: 'http://it.zaofans.com/silo/app/retail',
+        urlAppRoot: 'http://it.zaofans.com/silo/app/retail',
+        keyApp: 1050,
+    },
+    test: {
+        urlDingTalk: 'http://it.zaofans.com/silo/app/retail',
+        urlAppRoot: 'http://it.zaofans.com/silo/app/retail',
+        keyApp: 1051,
+    },
+    debug: {
+        urlDingTalk: 'http://it.zaofans.com/silo/app/retail',
+        urlAppRoot: 'http://it.zaofans.com/hawk/app/retail',
+        keyApp: 1052,
+    },
+}
+var envKey = urlParams['env']
+if (!envKey) {
+    envKey = 'release'
+}
+const env = envConfigs[envKey]
+if (!env) {
+    alert('环境参数配置错误\n' + envKey)
+}
+
+const isDD = navigator.userAgent.indexOf("DingTalk") > -1
+
+
 /* 基础配置 */
-const urlAppRoot = 'http://it.zaofans.com/hawk/app/retail';
-const urlConfigGet = `${urlAppRoot}/7001.json`;
-const urlSignIn = `${urlAppRoot}/7003.json`;
-const urlReportPayment = `${urlAppRoot}/7101.json`;
+const urlAppRoot = env.urlAppRoot
+const urlDingTalk = env.urlDingTalk
+const urlConfigGet = `${urlDingTalk}/7001.json`
+const urlSignIn = `${urlAppRoot}/7003.json`
+const urlReportPayment = `${urlAppRoot}/7101.json`
 
-const ddConfigReq = JSON.stringify({keyCorp: 1000, keyApp: 1050});
-
+const ddConfigReq = JSON.stringify({ keyCorp: 1000, keyApp: env.keyApp })
 const jsApiList = ['runtime.info', 'biz.contact.choose',
     'device.notification.confirm', 'device.notification.alert',
     'device.notification.prompt', 'biz.ding.post',
@@ -16,8 +47,30 @@ var sessionInfo = null;
 var sessionHeader = '';
 var isSigined = false;
 
-var isDD = navigator.userAgent.indexOf("DingTalk") > -1;
-
+function fetchUrlParams() {
+    var params = {}
+    var querystr = window.location.search.substring(1)
+    if (!querystr || querystr.length == 0) {
+        return params
+    }
+    var pairs = querystr.split('&')
+    var len = pairs.length
+    if (len <= 0) {
+        return params
+    }
+    for (var i = 0; i < len; ++i) {
+        var pair = unescape(pairs[i])
+        var split = pair.indexOf('=')
+        if (split <= 0) {
+            params[pair] = ''
+            continue
+        }
+        var name = pair.substring(0, split)
+        var value = pair.substring(split + 1)
+        params[name] = value
+    }
+    return params
+}
 
 function onDingTalkYes(corp) {
     return new Promise(function (resolve, reject) {
@@ -49,7 +102,7 @@ function httpRequestConfig(yes) {
 
 function httpRequestSignIn(code, corp) {
     /* 请求使用钉钉返回的验证码登录 */
-    var json = JSON.stringify({corpId: corp, code: code});
+    var json = JSON.stringify({ corpId: corp, code: code });
 
     return new Promise(function (resolve, reject) {
         httpPostJson(urlSignIn, json, function (hint) {
@@ -59,7 +112,7 @@ function httpRequestSignIn(code, corp) {
             var json = JSON.parse(recv);
             if (json.session) {
                 sessionInfo = json.session;
-                sessionHeader = {sessionId: sessionInfo.sessionId};
+                sessionHeader = { sessionId: sessionInfo.sessionId };
                 //alert('sign in ok: ' + JSON.stringify(sessionInfo));
                 resolve(sessionInfo);
                 isSigined = true;
@@ -70,13 +123,13 @@ function httpRequestSignIn(code, corp) {
 
 function httpRequestReportPayment(query, storeId, offset) {
     var json = JSON.stringify({
-            protoc2S: sessionHeader,
-            query: query,
-            storeId: storeId,
-            offset: offset
-        });
+        protoc2S: sessionHeader,
+        query: query,
+        storeId: storeId,
+        offset: offset
+    });
 
-    return new Promise(function(resolve, reject){
+    return new Promise(function (resolve, reject) {
         httpPostJson(urlReportPayment, json, function (hint) {
             onHttpError(hint);
             reject(hint);
@@ -94,7 +147,7 @@ function httpRequestReportPayment(query, storeId, offset) {
 
 function signIn() {
     return new Promise(function (resolve, reject) {
-        if( isDD && !isSigined ) {
+        if (isDD && !isSigined) {
             httpRequestConfig(function (json) {
                 var config = json.config;
                 config.jsApiList = jsApiList;
@@ -118,7 +171,7 @@ function signIn() {
 }
 
 function signOut() {
-    
+
 }
 
 function httpPostJson(url, send, err, yes) {
