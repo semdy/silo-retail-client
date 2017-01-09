@@ -1,12 +1,24 @@
+gblue = #008cee;
+
 makeGradient(topColor, bottomColor)
   background -webkit-linear-gradient(top, topColor, bottomColor)
   background -webkit-gradient(linear, top, topColor, bottomColor)
   background linear-gradient(top, topColor, bottomColor)
 
+makeShadow(x, y, offset, color, isInset = false)
+  if isInset
+    -webkit-box-shadow x y offset color inset
+    box-shadow x y offset color inset
+  else
+    -webkit-box-shadow x y offset color
+    box-shadow x y offset color
+
 .stats-container
   position relative
-  margin 10px 0
-  makeGradient(#7d8bfe, #3b57d4)
+  margin 10px 5px
+  /*makeGradient(#7d8bfe, #3b57d4)*/
+  background-color gblue
+  makeShadow(0, 3px, 5px, rgba(0,0,0,.2))
   .stats-item
     float left
     width 50%
@@ -14,10 +26,9 @@ makeGradient(topColor, bottomColor)
     text-align center
     color #f9f9f9
     .stats-name
-      font-size 16px
       margin-bottom 8px
     .stats-value
-      font-size 24px
+      font-size 30px
       > em
         font-style: normal
         font-size: 14px
@@ -29,4 +40,5 @@ makeGradient(topColor, bottomColor)
     top 0
     bottom 0
     width 1px
-    makeGradient(rgba(255,255,255,.1), rgba(255,255,255,.4))
+    background-color rgba(255,255,255,.3)
+    /*makeGradient(rgba(255,255,255,.1), rgba(255,255,255,.4))*/

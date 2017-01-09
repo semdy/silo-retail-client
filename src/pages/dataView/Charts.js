@@ -1,5 +1,20 @@
 require('./Charts.styl');
 
+const getChartBackground = (topColor, bottomColor) => {
+  return {normal: {
+    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+      offset: 0, color: topColor
+    }, {
+      offset: 1, color: bottomColor
+    }], false)
+  }}
+};
+
+const getMax = (group) => {
+  if( !Array.isArray(group) ) return 0;
+  return Math.max.apply(Math, group);
+};
+
 class Charts extends React.Component {
 
     constructor(props) {
@@ -11,6 +26,9 @@ class Charts extends React.Component {
     }
 
     componentDidMount(){
+      const {statsData, chartData} = this.props;
+      //计算订单量Y轴的最大值并放大2倍，以防止柱状图过高
+      const yAxisMax = (getMax(chartData.yAxis.count[0]) + getMax(chartData.yAxis.count[1]))*2;
       this.chartInstance = echarts.init(this.refs.chart);
       this.chartInstance.setOption({
         title: {
@@ -20,11 +38,14 @@ class Charts extends React.Component {
           trigger: 'axis'
         },
         legend: {
-          data: this.props.statsData.map(function (prop) {
-            return prop.name;
+          width: 200,
+          left: "center",
+          data: statsData.concat(statsData).map(function (prop, i) {
+            return (i < 2 ? "今日" : "昨日") + prop.name;
           })
         },
         toolbox: {
+          show: false,
           feature: {
             saveAsImage: {}
           }
@@ -39,51 +60,59 @@ class Charts extends React.Component {
           {
             type : 'category',
             boundaryGap : false,
-            data : this.props.chartData.xAxisData
+            data : chartData.xAxisData
           }
         ],
         yAxis : [
           {
             type : 'value',
-            name: this.props.statsData[0].name
+            max: yAxisMax - yAxisMax%50, //将最大值设为50的整数倍
+            name: statsData[0].name
           },
           {
             type : 'value',
-            name: this.props.statsData[1].name
+            name: statsData[1].name
           }
         ],
         series : [
           {
-            name: this.props.statsData[0].name,
-            type:'line',
-            stack: '总量',
+            name: `今日${statsData[0].name}`,
+            type:'bar',
+            stack: 'one',
             smooth: true,
             yAxisIndex: 0,
-            color: ["#2c51ff"],
-            areaStyle: {normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0, color: 'rgba(44,81,255,0.6)'
-              }, {
-                offset: 1, color: 'rgba(44,81,255,0.4)'
-              }], false)
-            }},
-            data: this.props.chartData.yAxis.count
+            color: ["#4db7cd"],
+            barCategoryGap: '50%',
+            //areaStyle: getChartBackground('rgba(44,81,255,0.6)', 'rgba(44,81,255,0.4)'),
+            data: chartData.yAxis.count[0]
           },
           {
-            name: this.props.statsData[1].name,
+            name: `今日${statsData[1].name}`,
             type:'line',
-            stack: '总量',
+            stack: '',
             smooth: true,
             yAxisIndex: 1,
-            color: ["#7160f2"],
-            areaStyle: {normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0, color: 'rgba(113,96,242,0.9)'
-              }, {
-                offset: 1, color: 'rgba(113,96,242,0.4)'
-              }], false)
-            }},
-            data: this.props.chartData.yAxis.amount
+            color: ["#4db7cd"],
+            data: chartData.yAxis.amount[0]
+          },
+          {
+            name: `昨日${statsData[0].name}`,
+            type:'bar',
+            stack: 'one',
+            smooth: true,
+            yAxisIndex: 0,
+            color: ["#ffbe00"],
+            barCategoryGap: '50%',
+            data: chartData.yAxis.count[1]
+          },
+          {
+            name: `昨日${statsData[1].name}`,
+            type:'line',
+            stack: '',
+            smooth: true,
+            yAxisIndex: 1,
+            color: ["#ffbe00"],
+            data: chartData.yAxis.amount[1]
           }
         ]
       });
@@ -95,7 +124,7 @@ class Charts extends React.Component {
 
     render() {
         return (<div className="charts-container">
-                <div ref="chart" className="charts-main" style={{height: window.innerHeight - 188 + "px"}}></div>
+                <div ref="chart" className="charts-main" style={{height: window.innerHeight - 243 + "px"}}></div>
             </div>
         );
     }
