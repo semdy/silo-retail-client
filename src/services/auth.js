@@ -1,23 +1,20 @@
 
-
-const urlParams = fetchUrlParams()
+const urlParams = fetchUrlParams();
+const urlDingTalk = 'http://it.zaofans.com/silo/app/retail';
 const envConfigs = {
     release: {
-        urlDingTalk: 'http://it.zaofans.com/silo/app/retail',
         urlAppRoot: 'http://it.zaofans.com/silo/app/retail',
         keyApp: 1050,
     },
     test: {
-        urlDingTalk: 'http://it.zaofans.com/silo/app/retail',
         urlAppRoot: 'http://it.zaofans.com/silo/app/retail',
         keyApp: 1051,
     },
     debug: {
-        urlDingTalk: 'http://it.zaofans.com/silo/app/retail',
         urlAppRoot: 'http://it.zaofans.com/hawk/app/retail',
         keyApp: 1052,
     },
-}
+};
 var envKey = urlParams['env']
 if (!envKey) {
     envKey = 'release'
@@ -29,10 +26,8 @@ if (!env) {
 
 const isDD = navigator.userAgent.indexOf("DingTalk") > -1
 
-
 /* 基础配置 */
 const urlAppRoot = env.urlAppRoot
-const urlDingTalk = env.urlDingTalk
 const urlConfigGet = `${urlDingTalk}/7001.json`
 const urlSignIn = `${urlAppRoot}/7003.json`
 const urlReportPayment = `${urlAppRoot}/7101.json`
@@ -47,6 +42,9 @@ var sessionInfo = null;
 var sessionHeader = '';
 var isSigined = false;
 
+httpRequestStoreList();
+alert(isSigined);
+
 function fetchUrlParams() {
     var params = {}
     var querystr = window.location.search.substring(1)
@@ -59,7 +57,7 @@ function fetchUrlParams() {
         return params
     }
     for (var i = 0; i < len; ++i) {
-        var pair = unescape(pairs[i])
+        var pair = decodeURIComponent(pairs[i])
         var split = pair.indexOf('=')
         if (split <= 0) {
             params[pair] = ''
@@ -128,7 +126,6 @@ function httpRequestReportPayment(query, storeId, offset) {
         storeId: storeId,
         offset: offset
     });
-
     return new Promise(function (resolve, reject) {
         httpPostJson(urlReportPayment, json, function (hint) {
             onHttpError(hint);
@@ -136,6 +133,24 @@ function httpRequestReportPayment(query, storeId, offset) {
         }, function (recv) {
             //alert('retail.payment.report.hour: ' + recv);
             var res = JSON.parse(recv);
+            if (res.result == 0) {
+                resolve(res);
+            } else {
+                reject(res);
+            }
+        });
+    });
+}
+
+function httpRequestStoreList() {
+    return new Promise(function (resolve, reject) {
+        const url = `${urlAppRoot}/7103.json`;
+        httpPostJson(url, '{}', function (hint) {
+            onHttpError(hint);
+            reject(hint);
+        }, function (recv) {
+            var res = JSON.parse(recv);
+            alert(recv)
             if (res.result == 0) {
                 resolve(res);
             } else {
@@ -200,15 +215,5 @@ function onDingTalkApiFail(err, api) {
 
 exports.signIn = signIn;
 exports.signOut = signOut;
-exports.httpRequestReportPayment = function () {
-    var args = arguments;
-    return new Promise(function (resolve, reject) {
-        signIn().then(function () {
-            httpRequestReportPayment.apply(null, args).then(function (res) {
-                resolve(res);
-            }, function (err) {
-                reject(err);
-            });
-        });
-    });
-};
+exports.httpRequestReportPayment = httpRequestReportPayment;
+exports.httpRequestStoreList = httpRequestStoreList
