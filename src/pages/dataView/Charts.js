@@ -15,22 +15,42 @@ const getMax = (group) => {
   return Math.max.apply(Math, group);
 };
 
+//计算订单量Y轴的最大值并放大2倍，以防止柱状图过高
+const getSumMax = ( yAxisCounts ) => {
+  let yAxisMax = 0;
+  yAxisCounts.forEach((count) => {
+    if( !count.length ){
+      yAxisMax += 0;
+    } else {
+      yAxisMax += getMax(count);
+    }
+  });
+
+  return yAxisMax * 2;
+};
+
 class Charts extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-
+          isFullScreen: false
         };
         this.chartInstance = null;
     }
 
     componentDidMount(){
-      const {statsData, chartData} = this.props;
-      //计算订单量Y轴的最大值并放大2倍，以防止柱状图过高
-      const yAxisMax = (getMax(chartData.yAxis.count[0]) + getMax(chartData.yAxis.count[1]))*2;
       this.chartInstance = echarts.init(this.refs.chart);
-      this.chartInstance.setOption({
+      this.setOption();
+    }
+
+    setOption(){
+      const {statsData, chartData} = this.props;
+      const yAxisCount = chartData.yAxis.count;
+      const yAxisMax = getSumMax(yAxisCount);
+
+      this.chartInstance.clear();
+      let chartOptions = {
         title: {
           text: ''
         },
@@ -38,11 +58,9 @@ class Charts extends React.Component {
           trigger: 'axis'
         },
         legend: {
-          width: 200,
+          width: 250,
           left: "center",
-          data: statsData.concat(statsData).map(function (prop, i) {
-            return (i < 2 ? "今日" : "昨日") + prop.name;
-          })
+          data: []
         },
         toolbox: {
           show: false,
@@ -59,14 +77,13 @@ class Charts extends React.Component {
         xAxis : [
           {
             type : 'category',
-            boundaryGap : false,
             data : chartData.xAxisData
           }
         ],
         yAxis : [
           {
             type : 'value',
-            max: yAxisMax - yAxisMax%50, //将最大值设为50的整数倍
+            max: yAxisMax - (yAxisMax > 50 ? yAxisMax%50 : 0), //将最大值设为50的整数倍
             name: statsData[0].name
           },
           {
@@ -74,59 +91,59 @@ class Charts extends React.Component {
             name: statsData[1].name
           }
         ],
-        series : [
-          {
-            name: `今日${statsData[0].name}`,
+        series: []
+      };
+
+      let drawColors = ["#4db7cd", "#ffdb73", "#a191d8"];
+
+      if( yAxisCount.length > 2 ){
+        chartOptions.legend.itemHeight = 11;
+        chartOptions.legend.top = -5;
+      }
+
+      chartData.yAxis.count.forEach((itemData, index) => {
+        chartOptions.legend.data = chartData.legendNames;
+        chartOptions.series.push({
+            name: chartData.legendNames[index*2],
             type:'bar',
             stack: 'one',
             smooth: true,
             yAxisIndex: 0,
-            color: ["#4db7cd"],
+            color: [drawColors[index]],
             barCategoryGap: '50%',
-            //areaStyle: getChartBackground('rgba(44,81,255,0.6)', 'rgba(44,81,255,0.4)'),
-            data: chartData.yAxis.count[0]
+            data: itemData
           },
           {
-            name: `今日${statsData[1].name}`,
+            name: chartData.legendNames[index*2 + 1],
             type:'line',
             stack: '',
             smooth: true,
             yAxisIndex: 1,
-            color: ["#4db7cd"],
-            data: chartData.yAxis.amount[0]
-          },
-          {
-            name: `昨日${statsData[0].name}`,
-            type:'bar',
-            stack: 'one',
-            smooth: true,
-            yAxisIndex: 0,
-            color: ["#ffbe00"],
-            barCategoryGap: '50%',
-            data: chartData.yAxis.count[1]
-          },
-          {
-            name: `昨日${statsData[1].name}`,
-            type:'line',
-            stack: '',
-            smooth: true,
-            yAxisIndex: 1,
-            color: ["#ffbe00"],
-            data: chartData.yAxis.amount[1]
-          }
-        ]
+            color: [drawColors[index]],
+            data: chartData.yAxis.amount[index]
+          });
       });
+
+      this.chartInstance.setOption(chartOptions);
     }
 
     componentWillUnmount(){
         this.chartInstance.dispose();
     }
 
+    changeViewMode(){
+      this.setState({
+        isFullScreen: !this.state.isFullScreen
+      });
+    }
+
     render() {
-        return (<div className="charts-container">
-                <div ref="chart" className="charts-main" style={{height: window.innerHeight - 243 + "px"}}></div>
-            </div>
-        );
+      let { isFullScreen } = this.state;
+      return (<div className={"charts-container " + ( isFullScreen ? "charts-fullscreen" : "" )}>
+              {/*<span className={"tool-fullscreen " + (isFullScreen ? "open" : "")} onClick={this.changeViewMode.bind(this)}></span>*/}
+              <div ref="chart" className="charts-main" style={{width: isFullScreen ? window.innerHeight + "px" : "100%", height: isFullScreen ? window.innerWidth + "px" : window.innerHeight - 243 + "px"}}></div>
+          </div>
+      );
     }
 }
 

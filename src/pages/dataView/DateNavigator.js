@@ -8,7 +8,7 @@ const formatDate = (dateUTC) => {
 };
 
 const getDay = (dateUTC) => {
-  var n = ["日", "一", "二", "三",  "四",  "五", "六"];
+  var n = ["日", "一", "二", "三", "四", "五", "六"];
   return n[dateUTC.getDay()];
 };
 

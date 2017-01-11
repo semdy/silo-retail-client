@@ -49,7 +49,7 @@ ReactDOM.render(
         <Route path="icon" component={PageIcon}/>
         <Route path="dialog" component={PageDialog}/>
         <Route path="scene" component={PageScene}/>
-        <Route path="dataView" component={DataView}/>
+        <Route path="saleDataView" component={DataView}/>
       </Route>
     </Router>, document.getElementById('App')
 );

@@ -42,9 +42,6 @@ var sessionInfo = null;
 var sessionHeader = '';
 var isSigined = false;
 
-httpRequestStoreList();
-alert(isSigined);
-
 function fetchUrlParams() {
     var params = {}
     var querystr = window.location.search.substring(1)
@@ -130,11 +127,10 @@ function httpRequestReportPayment(query, storeId, offset) {
         httpPostJson(urlReportPayment, json, function (hint) {
             onHttpError(hint);
             reject(hint);
-        }, function (recv) {
+        }, function (res) {
             //alert('retail.payment.report.hour: ' + recv);
-            var res = JSON.parse(recv);
             if (res.result == 0) {
-                resolve(res);
+                resolve(res.data);
             } else {
                 reject(res);
             }
@@ -148,11 +144,9 @@ function httpRequestStoreList() {
         httpPostJson(url, '{}', function (hint) {
             onHttpError(hint);
             reject(hint);
-        }, function (recv) {
-            var res = JSON.parse(recv);
-            alert(recv)
+        }, function (res) {
             if (res.result == 0) {
-                resolve(res);
+                resolve(res.data);
             } else {
                 reject(res);
             }
@@ -194,12 +188,15 @@ function httpPostJson(url, send, err, yes) {
         url: url, type: 'POST',
         crossDomain: true,
         data: send,
+        dataType: 'json',
         success: yes,
         error: function (xhr, ajaxOptions, thrownError) {
             err && err(xhr.statusText)
         }
     })
 }
+
+
 
 function onHttpError(hint) {
     alert('网络不给力，请稍后刷新重试。\n' + hint)
@@ -216,4 +213,4 @@ function onDingTalkApiFail(err, api) {
 exports.signIn = signIn;
 exports.signOut = signOut;
 exports.httpRequestReportPayment = httpRequestReportPayment;
-exports.httpRequestStoreList = httpRequestStoreList
+exports.httpRequestStoreList = httpRequestStoreList;

@@ -1,0 +1,72 @@
+makeShadow(x, y, offset, color, isInset = false)
+  if isInset
+    -webkit-box-shadow x y offset color inset
+    box-shadow x y offset color inset
+  else
+    -webkit-box-shadow x y offset color
+    box-shadow x y offset color
+
+makeTransform(attrs){
+  -webkit-transform attrs
+  transform attrs
+}
+
+makeTransition(attrs){
+  -webkit-transition attrs
+  transition attrs
+}
+
+.store-selector
+  position fixed
+  left 0
+  right 0
+  bottom 0
+  z-index 100
+  border-top 1px solid #e0e0e0
+  background-color #f9f9f9
+  padding 10px 0
+  makeShadow(0, -5px, 12px, rgba(0,0,0,.12))
+  makeTransform(translate3d(0, 100%, 0))
+  makeTransition(transform .5s ease)
+
+  &.store-shown
+    makeTransform(translate3d(0, 0, 0))
+
+  .store-header{
+    font-size 14px
+    padding 0 0 10px
+    text-align center
+    color #888
+  }
+
+  .store-list
+    max-height 300px
+    overflow-x hidden
+    overflow-y auto
+    > li
+      padding 12px 8px
+      border-bottom 1px solid #f0f0f0
+      &:active
+        background-color rgba(0,0,0,.05)
+
+      > .t-icon
+        display inline-block
+        width 18px
+        height 18px
+        margin-right 12px
+        visibility hidden
+
+        svg
+          width 18px
+          height 18px
+          fill #38adff
+
+    > li:last-child
+      border-bottom-color transparent
+
+    > li.selected
+      > .t-icon
+        visibility visible
+
+  .store-actions
+    padding-top 10px
