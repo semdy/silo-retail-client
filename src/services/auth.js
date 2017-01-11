@@ -1,6 +1,6 @@
-
+'use strict';
+/* 基础配置 */
 const urlParams = fetchUrlParams();
-const urlDingTalk = 'http://it.zaofans.com/silo/app/retail';
 const envConfigs = {
     release: {
         urlAppRoot: 'http://it.zaofans.com/silo/app/retail',
@@ -15,24 +15,19 @@ const envConfigs = {
         keyApp: 1052,
     },
 };
-var envKey = urlParams['env']
+var envKey = urlParams['env'];
 if (!envKey) {
-    envKey = 'release'
+    envKey = 'release';
 }
 const env = envConfigs[envKey]
 if (!env) {
-    alert('环境参数配置错误\n' + envKey)
+    alert('环境参数配置错误\n' + envKey);
 }
+const urlDingTalk = 'http://it.zaofans.com/silo/app/retail';
+const urlAppRoot = env.urlAppRoot;
 
-const isDD = navigator.userAgent.indexOf("DingTalk") > -1
+const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
 
-/* 基础配置 */
-const urlAppRoot = env.urlAppRoot
-const urlConfigGet = `${urlDingTalk}/7001.json`
-const urlSignIn = `${urlAppRoot}/7003.json`
-const urlReportPayment = `${urlAppRoot}/7101.json`
-
-const ddConfigReq = JSON.stringify({ keyCorp: 1000, keyApp: env.keyApp })
 const jsApiList = ['runtime.info', 'biz.contact.choose',
     'device.notification.confirm', 'device.notification.alert',
     'device.notification.prompt', 'biz.ding.post',
@@ -40,7 +35,24 @@ const jsApiList = ['runtime.info', 'biz.contact.choose',
 
 var sessionInfo = null;
 var sessionHeader = '';
-var isSigined = false;
+var sessionOK = false;
+
+function sessionInit(info) {
+    if (info == null) {
+        return;
+    }
+    sessionInfo = info;
+    sessionHeader = { sessionId: info.sessionId };
+    window.localStorage['session'] = JSON.stringify(info);
+    sessionOK = true;
+}
+
+function sessionClear() {
+    sessionInfo = null;
+    sessionHeader = null;
+    window.localStorage['session'] = '';
+    sessionOK = false;
+}
 
 function fetchUrlParams() {
     var params = {}
@@ -87,53 +99,51 @@ function onDingTalkYes(corp) {
 }
 
 function httpRequestConfig(yes) {
+    let url = `${urlDingTalk}/7001.json`;
+    let req = { keyCorp: 1000, keyApp: env.keyApp };
     /* 请求钉钉的JS-API签名信息 */
-    httpPostJson(urlConfigGet, ddConfigReq, function (hint) {
+    httpPostJson(url, req).then(function (data) {
+        yes && yes(data)
+    }, function (hint) {
         onHttpError(hint)
-    }, function (recv) {
-        yes && yes(JSON.parse(recv))
     })
 }
 
 function httpRequestSignIn(code, corp) {
     /* 请求使用钉钉返回的验证码登录 */
-    var json = JSON.stringify({ corpId: corp, code: code });
-
     return new Promise(function (resolve, reject) {
-        httpPostJson(urlSignIn, json, function (hint) {
+        let url = `${urlAppRoot}/7003.json`;
+        httpPostJson(url, { corpId: corp, code: code }).then(function (json) {
+            if (json.session) {
+                sessionInit(sessionInfo);
+                resolve(sessionInfo);
+                //alert('sign in ok: ' + JSON.stringify(sessionInfo));
+            }
+        }, function (hint) {
             onHttpError(hint);
             reject(hint);
-        }, function (recv) {
-            var json = JSON.parse(recv);
-            if (json.session) {
-                sessionInfo = json.session;
-                sessionHeader = { sessionId: sessionInfo.sessionId };
-                //alert('sign in ok: ' + JSON.stringify(sessionInfo));
-                resolve(sessionInfo);
-                isSigined = true;
-            }
         });
     });
 }
 
 function httpRequestReportPayment(query, storeId, offset) {
-    var json = JSON.stringify({
-        protoc2S: sessionHeader,
-        query: query,
-        storeId: storeId,
-        offset: offset
-    });
     return new Promise(function (resolve, reject) {
-        httpPostJson(urlReportPayment, json, function (hint) {
+        let url = `${urlAppRoot}/7101.json`;
+        let req = {
+            protoc2S: sessionHeader,
+            query: query,
+            storeId: storeId,
+            offset: offset
+        };
+        httpPostJson(url, req).then(function (json) {
+            if (json.result == 0) {
+                resolve(json.data);
+            } else {
+                reject(json);
+            }
+        }, function (hint) {
             onHttpError(hint);
             reject(hint);
-        }, function (res) {
-            //alert('retail.payment.report.hour: ' + recv);
-            if (res.result == 0) {
-                resolve(res.data);
-            } else {
-                reject(res);
-            }
         });
     });
 }
@@ -141,49 +151,78 @@ function httpRequestReportPayment(query, storeId, offset) {
 function httpRequestStoreList() {
     return new Promise(function (resolve, reject) {
         const url = `${urlAppRoot}/7103.json`;
-        httpPostJson(url, '{}', function (hint) {
-            onHttpError(hint);
-            reject(hint);
-        }, function (res) {
+        httpPostJson(url, {}).then(function (res) {
             if (res.result == 0) {
                 resolve(res.data);
             } else {
                 reject(res);
             }
+        }, function (hint) {
+            onHttpError(hint);
+            reject(hint);
         });
     });
 }
 
 function signIn() {
     return new Promise(function (resolve, reject) {
-        if (isDD && !isSigined) {
-            httpRequestConfig(function (json) {
-                var config = json.config;
-                config.jsApiList = jsApiList;
-                dd.config(config);
-                dd.ready(function () {
-                    onDingTalkYes(json.config.corpId).then(function (sessionInfo) {
-                        resolve(sessionInfo);
-                    }, function (err) {
-                        reject(err);
-                    });
-                });
-                dd.error(function (err) {
-                    onDingTalkErr(err);
-                    reject(err);
-                });
-            });
-        } else {
+        if (sessionOK) {
             resolve(sessionInfo);
+        } else {
+            var jsonStr = window.localStorage['session'];
+            if (jsonStr) {
+                sessionInit(JSON.parse(jsonStr));
+                resolve(sessionInfo);
+            } else {
+                if (!isDD) {
+                    resolve(sessionInfo);
+                } else {
+                    httpRequestConfig(function (json) {
+                        var config = json.config;
+                        config.jsApiList = jsApiList;
+                        dd.config(config);
+                        dd.ready(function () {
+                            onDingTalkYes(json.config.corpId).then(function (sessionInfo) {
+                                resolve(sessionInfo);
+                            }, function (err) {
+                                reject(err);
+                            });
+                        });
+                        dd.error(function (err) {
+                            onDingTalkErr(err);
+                            reject(err);
+                        });
+                    });
+                }
+            }
         }
     });
 }
 
-function signOut() {
-
+function httpPostJson(url, obj) {
+    var promise = new Promise(function executor(resolve, reject) {
+        httpPostData(url, JSON.stringify(obj),
+            function (hint) {
+                reject(hint);
+            },
+            function (recv) {
+                let json = recv;
+                let code = json.protocError;
+                if (code === 0) {
+                    resolve(json);
+                } else if (code === 403) {
+                    sessionClear();
+                    reject(code);
+                } else {
+                    reject(code);
+                    onProtocError(code);
+                }
+            })
+    });
+    return promise;
 }
 
-function httpPostJson(url, send, err, yes) {
+function httpPostData(url, send, err, yes) {
     $.ajax({
         url: url, type: 'POST',
         crossDomain: true,
@@ -196,7 +235,9 @@ function httpPostJson(url, send, err, yes) {
     })
 }
 
-
+function onProtocError(code) {
+    alert('服务器响应出错了: ' + code)
+}
 
 function onHttpError(hint) {
     alert('网络不给力，请稍后刷新重试。\n' + hint)
@@ -211,6 +252,5 @@ function onDingTalkApiFail(err, api) {
 }
 
 exports.signIn = signIn;
-exports.signOut = signOut;
 exports.httpRequestReportPayment = httpRequestReportPayment;
 exports.httpRequestStoreList = httpRequestStoreList;
