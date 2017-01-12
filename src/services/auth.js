@@ -27,6 +27,7 @@ const urlDingTalk = 'http://it.zaofans.com/silo/app/retail';
 const urlAppRoot = env.urlAppRoot;
 
 const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
+const cheatCode = urlParams['cheat'];
 
 const jsApiList = ['runtime.info', 'biz.contact.choose',
     'device.notification.confirm', 'device.notification.alert',
@@ -117,7 +118,22 @@ function httpRequestSignIn(code, corp) {
             if (json.session) {
                 sessionInit(sessionInfo);
                 resolve(sessionInfo);
-                //alert('sign in ok: ' + JSON.stringify(sessionInfo));
+            }
+        }, function (hint) {
+            onHttpError(hint);
+            reject(hint);
+        });
+    });
+}
+
+function httpRequestSignInByUserPass(user, pass) {
+    /* 请求使用用户名密码登录 */
+    return new Promise(function (resolve, reject) {
+        let url = `${urlAppRoot}/1003.json`;
+        httpPostJson(url, { username: user, password: pass }).then(function (json) {
+            if (json.session) {
+                sessionInit(sessionInfo);
+                resolve(sessionInfo);
             }
         }, function (hint) {
             onHttpError(hint);
@@ -164,6 +180,9 @@ function httpRequestStoreList() {
     });
 }
 
+const username = urlParams['user'];
+const password = urlParams['pass'];
+
 function signIn() {
     return new Promise(function (resolve, reject) {
         if (sessionOK) {
@@ -174,15 +193,19 @@ function signIn() {
                 sessionInit(JSON.parse(jsonStr));
                 resolve(sessionInfo);
             } else {
-                if (!isDD) {
-                    resolve(sessionInfo);
+                if (username && password) {
+                    httpRequestSignInByUserPass(username, password).then(function (sessionInfo) {
+                        resolve(sessionInfo);
+                    }, function (err) {
+                        reject(err);
+                    });
                 } else {
                     httpRequestConfig(function (json) {
                         var config = json.config;
                         config.jsApiList = jsApiList;
                         dd.config(config);
                         dd.ready(function () {
-                            onDingTalkYes(json.config.corpId).then(function (sessionInfo) {
+                            onDingTalkYes(config.corpId).then(function (sessionInfo) {
                                 resolve(sessionInfo);
                             }, function (err) {
                                 reject(err);
@@ -191,8 +214,8 @@ function signIn() {
                         dd.error(function (err) {
                             onDingTalkErr(err);
                             reject(err);
-                        });
-                    });
+                        })
+                    })
                 }
             }
         }
@@ -251,6 +274,16 @@ function onDingTalkApiFail(err, api) {
     alert('钉钉接口调用出错了！\n' + api + '\n' + JSON.stringify(err))
 }
 
-exports.signIn = signIn;
 exports.httpRequestReportPayment = httpRequestReportPayment;
 exports.httpRequestStoreList = httpRequestStoreList;
+/*
+exports.httpRequestStoreList = function () {
+    return new Promise(function (resolve, reject) {
+    })
+}
+exports.httpRequestReportPayment = function () {
+    return new Promise(function (resolve, reject) {
+    });
+} //*/
+
+//signIn();
