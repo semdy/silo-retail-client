@@ -1,5 +1,8 @@
 require('./DateNavigator.styl');
 
+let { Icon } = SaltUI;
+import classnames from 'classnames';
+
 const formatDate = (dateUTC) => {
   var year = dateUTC.getFullYear();
   var month = dateUTC.getMonth() + 1;
@@ -22,10 +25,12 @@ class DateNavigator extends React.Component {
     }
 
     render() {
-        const {date} = this.props;
+        const {date, disabled, onPrev, onNext} = this.props;
         return (<div className="date-navigator">
+            <Icon name="angle-left" className="date-arrow left" onClick={onPrev} />
             <span className="date">{formatDate(date)}</span>
             <span className="day">{`星期${getDay(date)}`}</span>
+            <Icon name="angle-right" className={classnames("date-arrow right", {disabled: disabled})} onClick={onNext} />
         </div>);
     }
 }

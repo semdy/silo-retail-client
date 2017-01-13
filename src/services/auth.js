@@ -23,6 +23,9 @@ const env = envConfigs[envKey]
 if (!env) {
     alert('环境参数配置错误\n' + envKey);
 }
+
+let { Toast } = SaltUI;
+
 const urlDingTalk = 'http://it.zaofans.com/silo/app/retail';
 const urlAppRoot = env.urlAppRoot;
 
@@ -259,19 +262,35 @@ function httpPostData(url, send, err, yes) {
 }
 
 function onProtocError(code) {
-    alert('服务器响应出错了: ' + code)
+  //alert('服务器响应出错了: ' + code)
+  Toast.show({
+    type: 'error',
+    content: '服务器响应出错了: ' + code
+  });
 }
 
 function onHttpError(hint) {
-    alert('网络不给力，请稍后刷新重试。\n' + hint)
+  //alert('网络不给力，请稍后刷新重试。\n' + hint)
+  Toast.show({
+    type: 'error',
+    content: '网络不给力，请稍后刷新重试。\n' + hint
+  });
 }
 
 function onDingTalkErr(err) {
-    alert('钉钉客户端出错了！\n' + JSON.stringify(err))
+  //alert('钉钉客户端出错了！\n' + JSON.stringify(err))
+  Toast.show({
+    type: 'error',
+    content: '钉钉客户端出错了！\n' + JSON.stringify(err)
+  });
 }
 
 function onDingTalkApiFail(err, api) {
-    alert('钉钉接口调用出错了！\n' + api + '\n' + JSON.stringify(err))
+  //alert('钉钉接口调用出错了！\n' + api + '\n' + JSON.stringify(err))
+  Toast.show({
+    type: 'error',
+    content: '钉钉接口调用出错了！\n' + api + '\n' + JSON.stringify(err)
+  });
 }
 
 exports.httpRequestReportPayment = httpRequestReportPayment;

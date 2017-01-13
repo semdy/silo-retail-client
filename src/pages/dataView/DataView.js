@@ -20,9 +20,21 @@ const formatTime = (time, bytype) => {
       return new Date(time * 1000).getHours();
     case 'day':
       return new Date(time * 1000).getDate();
+    case 'week':
+      return Math.ceil(new Date(time * 1000).getDate()/7);
+    case 'month':
+      return new Date(time * 1000).getMonth() + 1;
     case 'year':
       return new Date(time * 1000).getFullYear();
   }
+};
+
+const UNIT_MAP = {
+  hour:   'h',
+  day:   '日',
+  week:  '周',
+  month: '月',
+  year:  '年'
 };
 
 //获取距离今天指定日期对象
@@ -72,20 +84,20 @@ const getGroupSum = (data, type) => {
 };
 
 //生成时间和数据的键值对
-const genKeyMap = (times, counts, amouts) => {
+const genKeyMap = (times, counts, amouts, formatType) => {
   let map = {};
   times.forEach((time, index) => {
-    map[formatTime(time, "hour") + "h"] = [counts[index], amouts[index]];
+    map[formatTime(time, formatType) + UNIT_MAP[formatType]] = [counts[index], amouts[index]];
   });
 
   return map;
 };
 
 //生成二维数组的键值对(用于合并多组x轴数据)
-const genGroupKeyMap = ( datas, cachData ) => {
+const genGroupKeyMap = ( datas, cachData, formatType ) => {
   let map = {};
   datas.forEach((data) => {
-    let itemMap = genKeyMap(data.axisX.time, data.axisY.count, data.axisY.rmb);
+    let itemMap = genKeyMap(data.axisX.time||[], data.axisY.count||[], data.axisY.rmb||[], formatType);
     if( cachData ) {
       cachData.push(itemMap);
     }
@@ -140,13 +152,14 @@ class Page extends React.Component {
     this.state = {
       isDataLoaded: false,
       activeIndex: 1,
+      isNextDisabled: true,
       statsData: [
         {
-          name: "订单量",
+          name: "总订单量",
           value: 0
         },
         {
-          name: "营业额",
+          name: "总营业额",
           value: 0
         }
       ],
@@ -160,10 +173,27 @@ class Page extends React.Component {
       },
       storeList: []
     };
+
+    this.legendNames = [];
+    this.filterUnit = 'hour';
+    this.fetchParams = [];
+    this.offset = defaultOffset;
+    //统一约束： 为1时表示同一家门店今天和昨天数据对比， 为2时表示多家门店之间的数据对比
+    this.compareType = 1;
   }
 
   fetchData(storeId = defaultStoreId, offset) {
-    return httpRequestReportPayment('retail.payment.report.hour', storeId, offset);
+    return new Promise((resolve, reject) => {
+      httpRequestReportPayment(`retail.payment.report.${this.filterUnit}`, storeId, offset).then((res) =>{
+        resolve(res);
+      }, (err) => {
+        reject(err);
+        Toast.show({
+          type: 'error',
+          content: "服务器异常或没有数据 code: " + err.result
+        });
+      });
+    });
   }
 
   fetchGroupData(groupPrams){
@@ -181,18 +211,11 @@ class Page extends React.Component {
         autoHide: false
     });
     
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       Promise.all(fetches).then(function (values) {
         resolve(values);
         Toast.hide();
-      }).catch(function (err) {
-          reject(err);
-          Toast.show({
-              type: 'err',
-              content: err
-          });
       });
-
     })
   }
 
@@ -200,19 +223,19 @@ class Page extends React.Component {
     let cacheData = [];
     const count = getGroupSum(values, "count");
     const amout = getGroupSum(values, "rmb");
-    const xAxisData = Object.keys( genGroupKeyMap(values, cacheData) ).sort((a, b)=>{return parseInt(a) - parseInt(b)});
+    const xAxisData = Object.keys( genGroupKeyMap(values, cacheData, this.filterUnit) ).sort((a, b)=>{return parseInt(a) - parseInt(b)});
     const yAxisData = extractYAxisData(zeroFill(cacheData, xAxisData));
 
     this.setState({
       isDataLoaded: true,
       statsData: [
         {
-          name: "订单量",
+          name: "总订单量",
           suffix: "单",
           value: count
         },
         {
-          name: "营业额",
+          name: "总营业额",
           suffix: getAmoutSuffix(amout),
           value: formatAmout(amout)
         }
@@ -225,15 +248,14 @@ class Page extends React.Component {
         },
         legendNames: legendNames
       },
-      date: getDateBefore(defaultOffset)
+      date: getDateBefore(this.offset)
     });
   }
 
   componentDidMount() {
-    this.fetchGroupData([{storeId: defaultStoreId, offset: defaultOffset},{storeId: defaultStoreId, offset: defaultOffset + 1}]).then(function (values) {
-      var legendNames = ["今日订单量", "今日营业额", "昨日订单量", "昨日营业额"];
-      this.setData(values, legendNames);
-    }.bind(this));
+    this.fetchParams = [{storeId: defaultStoreId, offset: this.offset},{storeId: defaultStoreId, offset: this.offset + 1}];
+    this.legendNames = ["今日订单量", "今日营业额", "昨日订单量", "昨日营业额"];
+    this.doQuery();
 
     //获得门店列表的数据
     httpRequestStoreList().then(function (storeList) {
@@ -250,6 +272,7 @@ class Page extends React.Component {
   rightBarClickHandle() {
     if (this.state.isDataLoaded) {
       this.refs.storeSelector.show();
+      this.refs.charts.hideToolTip();
     }
   }
 
@@ -263,20 +286,56 @@ class Page extends React.Component {
 
     this.refs.storeSelector.hide();
 
-    let fetchParams = [];
-    let legendNames = [];
+    let self = this;
+    this.compareType = 2;
+    this.fetchParams = [];
+    this.legendNames = [];
     storeList.forEach((store) => {
-      fetchParams.push({
+      self.fetchParams.push({
         storeId: store.storeId,
         offset: 0
       });
-      legendNames.push(`${store.storeName}订单量`, `${store.storeName}营业额`);
+      self.legendNames.push(`${store.storeName}订单量`, `${store.storeName}营业额`);
     });
 
-    this.fetchGroupData(fetchParams).then(function (values) {
-      this.setData(values, legendNames);
-      this.refs.charts.setOption();
-    }.bind(this));
+    this.doQuery();
+  }
+
+  setOffset(offset){
+    let self = this;
+    this.fetchParams.forEach((item, i) => {
+      self.fetchParams[i].offset = offset + ( self.compareType == 1 ? i : 0 );
+    });
+  }
+
+  doQuery(){
+    let self = this;
+    this.setOffset(this.offset);
+    return self.fetchGroupData(self.fetchParams).then((values) => {
+      self.setData(values, self.legendNames);
+      self.refs.charts.refresh();
+    });
+  }
+
+  queryPrev(){
+    this.offset += 1;
+    this.setState({
+      isNextDisabled: false
+    });
+    this.doQuery();
+  }
+
+  queryNext(){
+    if( this.offset == 0 ){
+      return;
+    }
+    this.offset = Math.max(0, --this.offset);
+    if( this.offset == 0 ) {
+      this.setState({
+        isNextDisabled: true
+      });
+    }
+    this.doQuery();
   }
 
   render() {
@@ -286,7 +345,7 @@ class Page extends React.Component {
         <div>
           <Stats statsData={this.state.statsData}>
           </Stats>
-          <DateNavigator date={this.state.date}>
+          <DateNavigator date={this.state.date} disabled={this.state.isNextDisabled} onPrev={this.queryPrev.bind(this)} onNext={this.queryNext.bind(this)}>
           </DateNavigator>
           <StoreSelector ref="storeSelector"
              onConfirm={this.handleConfirm.bind(this)}
@@ -294,7 +353,8 @@ class Page extends React.Component {
           >
           </StoreSelector>
           <Charts ref="charts" statsData={this.state.statsData}
-                  chartData={this.state.chartData}>
+                  chartData={this.state.chartData}
+          >
           </Charts>
         </div>
       )

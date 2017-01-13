@@ -1,0 +1,39 @@
+import './animation.css';
+
+let { PropTypes } = React;
+import RCAnimate from 'rc-animate';
+
+const AnimateEl = (props) => {
+  const { style, visible, removeable } = props;
+  if( !visible && removeable ) return <noscript></noscript>;
+  const newStyle = Object.assign(style || {}, {
+    display: visible ? '' : 'none',
+  });
+  return <div {...props} style={newStyle}></div>;
+};
+
+class Animate extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+  render(){
+      return (
+        <RCAnimate {...this.props} className="" style={{}}>
+          <AnimateEl {...this.props}></AnimateEl>
+        </RCAnimate>
+      );
+  }
+}
+
+Animate.PropTypes = {
+  component: PropTypes.string,
+  showProp: PropTypes.string
+};
+
+Animate.defaultProps = {
+  component: '',
+  showProp: 'visible'
+};
+
+module.exports = Animate;

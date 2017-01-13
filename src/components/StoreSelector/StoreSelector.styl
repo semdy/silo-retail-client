@@ -16,21 +16,30 @@ makeTransition(attrs){
   transition attrs
 }
 
+.store-backdrop
+  position fixed
+  left 0
+  right 0
+  top 0
+  bottom 0
+  background-color rgba(0,0,0,.4)
+  z-index 201
+
 .store-selector
   position fixed
   left 0
   right 0
   bottom 0
-  z-index 100
+  z-index 202
   border-top 1px solid #e0e0e0
   background-color #f9f9f9
   padding 10px 0
-  makeShadow(0, -5px, 12px, rgba(0,0,0,.12))
+/*  makeShadow(0, -5px, 12px, rgba(0,0,0,.12))
   makeTransform(translate3d(0, 100%, 0))
-  makeTransition(transform .5s ease)
+  makeTransition(transform .5s ease)*/
 
-  &.store-shown
-    makeTransform(translate3d(0, 0, 0))
+ /* &.store-shown
+    makeTransform(translate3d(0, 0, 0))*/
 
   .store-header{
     font-size 14px
@@ -44,7 +53,7 @@ makeTransition(attrs){
     overflow-x hidden
     overflow-y auto
     > li
-      padding 12px 8px
+      padding 12px 8px 12px 20px
       border-bottom 1px solid #f0f0f0
       &:active
         background-color rgba(0,0,0,.05)
@@ -53,7 +62,7 @@ makeTransition(attrs){
         pointer-events none
 
       > .t-icon
-        display inline-block
+        float right
         width 18px
         height 18px
         margin-right 12px

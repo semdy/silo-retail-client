@@ -21,19 +21,38 @@
     background-color #fff
     z-index 200
 
+    &.padL
+        padding-left 44px
+    &.padR
+        padding-right 44px
+
+.scroll-nav-contain
+    height 50px
+    overflow hidden
+
 .scroll-nav-bd
-    padding-left 40px
-    padding-right 40px
     width 100%
+    padding-bottom 10px
+    overflow-x auto
+    overflow-y hidden
+    -webkit-overflow-scrolling touch
+
+.scroll-nav-scroller
+    width 5000px
 
 .scroll-nav-item
     float left
-    padding 18px 12px
+    padding 0 12px
+    height 50px
+    line-height 50px
     font-size 14px
+    text-align center
     color #444
+    white-space nowrap
 
     &.active{
         color #06c
+        font-size 16px
     }
 
 .scroll-nav-toolbar

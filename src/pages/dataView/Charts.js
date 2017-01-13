@@ -1,14 +1,7 @@
 require('./Charts.styl');
+import classnames from 'classnames';
 
-const getChartBackground = (topColor, bottomColor) => {
-  return {normal: {
-    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-      offset: 0, color: topColor
-    }, {
-      offset: 1, color: bottomColor
-    }], false)
-  }}
-};
+const RESIZE_EVENT_NAME = 'onorientationchange' in window ? 'orientationchange' : 'resize';
 
 const getMax = (group) => {
   if( !Array.isArray(group) ) return 0;
@@ -34,22 +27,44 @@ class Charts extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          isFullScreen: false
+          isFullScreen: false,
+          width: window.innerWidth + "px",
+          height: window.innerHeight + "px"
         };
         this.chartInstance = null;
     }
 
     componentDidMount(){
+      let self = this;
+      let timeout;
       this.chartInstance = echarts.init(this.refs.chart);
-      this.setOption();
+      this.resizeHandler = function () {
+        if( timeout ) clearTimeout(timeout);
+        timeout = setTimeout(function(){
+          self.setState({
+            width: window.innerWidth + "px",
+            height: window.innerHeight + "px"
+          });
+          self.chartInstance.resize();
+        }, 200);
+      };
+      this.refresh();
+      window.addEventListener(RESIZE_EVENT_NAME, this.resizeHandler, false);
     }
 
-    setOption(){
+    refresh(){
       const {statsData, chartData} = this.props;
       const yAxisCount = chartData.yAxis.count;
       const yAxisMax = getSumMax(yAxisCount);
 
       this.chartInstance.clear();
+      let splitStyle = {
+        lineStyle: {
+          color: ["#ddd"],
+          type: 'dashed'
+        }
+      };
+
       let chartOptions = {
         title: {
           text: ''
@@ -84,11 +99,13 @@ class Charts extends React.Component {
           {
             type : 'value',
             max: yAxisMax - (yAxisMax > 50 ? yAxisMax%50 : 0), //将最大值设为50的整数倍
-            name: statsData[0].name
+            name: statsData[0].name,
+            splitLine: splitStyle
           },
           {
             type : 'value',
-            name: statsData[1].name
+            name: statsData[1].name,
+            splitLine: splitStyle
           }
         ],
         series: []
@@ -101,7 +118,7 @@ class Charts extends React.Component {
         chartOptions.legend.top = -5;
       }
 
-      chartData.yAxis.count.forEach((itemData, index) => {
+      yAxisCount.forEach((itemData, index) => {
         chartOptions.legend.data = chartData.legendNames;
         chartOptions.series.push({
             name: chartData.legendNames[index*2],
@@ -125,10 +142,18 @@ class Charts extends React.Component {
       });
 
       this.chartInstance.setOption(chartOptions);
+
+    }
+
+    hideToolTip(){
+      this.chartInstance.dispatchAction({
+        type: 'hideTip'
+      });
     }
 
     componentWillUnmount(){
-        this.chartInstance.dispose();
+      window.removeEventListener(RESIZE_EVENT_NAME, this.resizeHandler, false);
+      this.chartInstance.dispose();
     }
 
     changeViewMode(){
@@ -138,10 +163,13 @@ class Charts extends React.Component {
     }
 
     render() {
-      let { isFullScreen } = this.state;
-      return (<div className={"charts-container " + ( isFullScreen ? "charts-fullscreen" : "" )}>
-              {/*<span className={"tool-fullscreen " + (isFullScreen ? "open" : "")} onClick={this.changeViewMode.bind(this)}></span>*/}
-              <div ref="chart" className="charts-main" style={{width: isFullScreen ? window.innerHeight + "px" : "100%", height: isFullScreen ? window.innerWidth + "px" : window.innerHeight - 243 + "px"}}></div>
+      let { isFullScreen, width, height } = this.state;
+      setTimeout(function () {
+        this.chartInstance.resize();
+      }.bind(this), 100);
+      return (<div className={classnames("charts-container", {"charts-fullscreen": isFullScreen})}>
+              {<span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)}></span>}
+              <div ref="chart" className="charts-main" style={{top: isFullScreen ? -parseFloat(width)*0.5 + "px" : 0, left: isFullScreen ? -parseFloat(height)*0.5 + "px" : 0,  width: isFullScreen ? height : width, height: isFullScreen ? width : parseFloat(height) - 243 + "px"}}></div>
           </div>
       );
     }

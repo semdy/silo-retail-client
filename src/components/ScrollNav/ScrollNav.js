@@ -1,5 +1,6 @@
 require('./ScrollNav.styl');
 let { hashHistory } = ReactRouter;
+import classnames from 'classnames';
 
 class Page extends React.Component {
 
@@ -22,7 +23,23 @@ class Page extends React.Component {
                 {
                     text: "客流",
                     route: "passflow"
-                }
+                },
+              {
+                text: "客流",
+                route: "passflow"
+              },
+              {
+                text: "客流",
+                route: "passflow"
+              },
+              {
+                text: "客流",
+                route: "passflow"
+              },
+              {
+                text: "客流",
+                route: "passflow"
+              }
             ]
         };
     }
@@ -39,18 +56,19 @@ class Page extends React.Component {
     render() {
         let leftBar = "";
         let rightBar = "";
+        const {showLeftBar, showRightBar, leftBarClick, rightBarClick, activeIndex} = this.props;
 
-        if( this.props.showLeftBar ){
+        if( showLeftBar ){
             leftBar = (
-                <div className="scroll-nav-toolbar left" onClick={this.props.leftBarClick}>
+                <div className="scroll-nav-toolbar left" onClick={leftBarClick}>
                     <i className="icon icon-menu"></i>
                 </div>
             )
         }
 
-        if( this.props.showRightBar ) {
+        if( showRightBar ) {
             rightBar = (
-                <div className="scroll-nav-toolbar right" onClick={this.props.rightBarClick}>
+                <div className="scroll-nav-toolbar right" onClick={rightBarClick}>
                     <i className="icon icon-home"></i>
                 </div>
             )
@@ -58,21 +76,25 @@ class Page extends React.Component {
 
 
         return (
-            <div className="scroll-nav">
+            <div className={classnames("scroll-nav", {padL: showLeftBar, padR: showRightBar})}>
                 {leftBar}
-                <div className="scroll-nav-bd">
-                    {
-                        this.state.navs.map((item, index) => {
-                            return (
-                                <a href="javascript:;"
-                                   key={'nav' + index}
-                                   className={"scroll-nav-item " + ( this.props.activeIndex === index ? "active" : "" )}
-                                   onClick={this.handleRoute.bind(this, item.route)}>
-                                    <span>{item.text}</span>
-                                </a>
-                            )
-                        })
-                    }
+                <div className="scroll-nav-contain">
+                    <div className="scroll-nav-bd">
+                        <div className="scroll-nav-scroller">
+                            {
+                                this.state.navs.map((item, index) => {
+                                    return (
+                                        <a href="javascript:;"
+                                           key={'nav' + index}
+                                           className={classnames("scroll-nav-item", {active: activeIndex === index})}
+                                           onClick={this.handleRoute.bind(this, item.route)}>
+                                            <span>{item.text}</span>
+                                        </a>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
                 </div>
                 {rightBar}
             </div>
