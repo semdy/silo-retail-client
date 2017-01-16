@@ -1,7 +1,7 @@
 import './animation.css';
 
 let { PropTypes } = React;
-import RCAnimate from 'rc-animate';
+import RcAnimate from 'rc-animate';
 
 const AnimateEl = (props) => {
   const { style, visible, removeable } = props;
@@ -19,14 +19,14 @@ class Animate extends React.Component {
   }
   render(){
       return (
-        <RCAnimate {...this.props} className="" style={{}}>
+        <RcAnimate {...this.props} className="" style={{}}>
           <AnimateEl {...this.props}></AnimateEl>
-        </RCAnimate>
+        </RcAnimate>
       );
   }
 }
 
-Animate.PropTypes = {
+Animate.propTypes = {
   component: PropTypes.string,
   showProp: PropTypes.string
 };

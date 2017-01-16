@@ -1,7 +1,7 @@
 require('./Charts.styl');
-import classnames from 'classnames';
 
-const RESIZE_EVENT_NAME = 'onorientationchange' in window ? 'orientationchange' : 'resize';
+let { Context } = SaltUI;
+import classnames from 'classnames';
 
 const getMax = (group) => {
   if( !Array.isArray(group) ) return 0;
@@ -31,6 +31,7 @@ class Charts extends React.Component {
           width: window.innerWidth + "px",
           height: window.innerHeight + "px"
         };
+        this._lastScreenState = this.state.isFullScreen;
         this.chartInstance = null;
     }
 
@@ -49,7 +50,7 @@ class Charts extends React.Component {
         }, 200);
       };
       this.refresh();
-      window.addEventListener(RESIZE_EVENT_NAME, this.resizeHandler, false);
+      window.addEventListener(Context.RESIZE, this.resizeHandler, false);
     }
 
     refresh(){
@@ -152,24 +153,41 @@ class Charts extends React.Component {
     }
 
     componentWillUnmount(){
-      window.removeEventListener(RESIZE_EVENT_NAME, this.resizeHandler, false);
+      window.removeEventListener(Context.RESIZE, this.resizeHandler, false);
       this.chartInstance.dispose();
+    }
+
+    componentDidUpdate(){
+      //控制只在全屏和非全屏切换时去触发resize
+      if( this._lastScreenState != this.state.isFullScreen ) {
+        setTimeout(function () {
+          this.chartInstance.resize();
+        }.bind(this), 20);
+      }
+      this._lastScreenState = this.state.isFullScreen;
     }
 
     changeViewMode(){
       this.setState({
         isFullScreen: !this.state.isFullScreen
       });
+      //加点延迟，以保证状态已经被更新
+      setTimeout(function () {
+        this.props.changeViewMode(this.state.isFullScreen);
+      }.bind(this));
     }
 
     render() {
       let { isFullScreen, width, height } = this.state;
-      setTimeout(function () {
-        this.chartInstance.resize();
-      }.bind(this), 100);
       return (<div className={classnames("charts-container", {"charts-fullscreen": isFullScreen})}>
               {<span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)}></span>}
-              <div ref="chart" className="charts-main" style={{top: isFullScreen ? -parseFloat(width)*0.5 + "px" : 0, left: isFullScreen ? -parseFloat(height)*0.5 + "px" : 0,  width: isFullScreen ? height : width, height: isFullScreen ? width : parseFloat(height) - 243 + "px"}}></div>
+              <div ref="chart" className="charts-main"
+                   style={{
+                     left: isFullScreen ? -parseFloat(height)*0.5 + "px" : 0,
+                     top: isFullScreen ? -(parseFloat(width)-70)*0.5 + "px" : 0,
+                     width: isFullScreen ? height : width,
+                     height: isFullScreen ? parseFloat(width) - 70 : parseFloat(height) - 243 + "px"
+              }}></div>
           </div>
       );
     }

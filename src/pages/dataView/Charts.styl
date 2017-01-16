@@ -25,10 +25,15 @@ makeTransform(props)
     position fixed !important
     left 0
     top 0
-    z-index 2000;
+    z-index 200
     background-color #fff !important
     makeTransform(rotate(90deg) translate(50%, -50%))
 
   .tool-fullscreen
-    position fixed;
-    z-index 20000;
+    position fixed
+    z-index 20000
+    top -5px
+    left 0
+    right auto
+    background-image url(../../images/icons/screen-restore.png)
+    background-size 24px auto

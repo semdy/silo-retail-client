@@ -1,6 +1,6 @@
 import './DataView.styl';
 
-let { Toast } = SaltUI;
+let { Toast, Button } = SaltUI;
 import ScrollNav from '../../components/ScrollNav';
 import Stats from './Stats';
 import Charts from './Charts';
@@ -153,6 +153,7 @@ class Page extends React.Component {
       isDataLoaded: false,
       activeIndex: 1,
       isNextDisabled: true,
+      isFullScreen: false,
       statsData: [
         {
           name: "总订单量",
@@ -265,11 +266,11 @@ class Page extends React.Component {
     }.bind(this));
   }
 
-  leftBarClickHandle() {
+  showMenu() {
     alert("left click");
   }
 
-  rightBarClickHandle() {
+  showStoreList() {
     if (this.state.isDataLoaded) {
       this.refs.storeSelector.show();
       this.refs.charts.hideToolTip();
@@ -338,6 +339,17 @@ class Page extends React.Component {
     this.doQuery();
   }
 
+  changeViewMode(isFullScreen){
+    this.setState({
+      isFullScreen: isFullScreen
+    });
+  }
+
+  handleFilterItemClick(filterType){
+    this.filterUnit = filterType;
+    this.doQuery();
+  }
+
   render() {
     let components = "";
     if (this.state.isDataLoaded) {
@@ -345,14 +357,23 @@ class Page extends React.Component {
         <div>
           <Stats statsData={this.state.statsData}>
           </Stats>
-          <DateNavigator date={this.state.date} disabled={this.state.isNextDisabled} onPrev={this.queryPrev.bind(this)} onNext={this.queryNext.bind(this)}>
+          <DateNavigator
+            isFullScreen={this.state.isFullScreen}
+            showStoreList={this.showStoreList.bind(this)}
+            date={this.state.date}
+            disabled={this.state.isNextDisabled}
+            onPrev={this.queryPrev.bind(this)}
+            onNext={this.queryNext.bind(this)}
+            onItemClick={this.handleFilterItemClick.bind(this)}
+          >
           </DateNavigator>
           <StoreSelector ref="storeSelector"
              onConfirm={this.handleConfirm.bind(this)}
              data={this.state.storeList}
           >
           </StoreSelector>
-          <Charts ref="charts" statsData={this.state.statsData}
+          <Charts ref="charts" changeViewMode={this.changeViewMode.bind(this)}
+                  statsData={this.state.statsData}
                   chartData={this.state.chartData}
           >
           </Charts>
@@ -364,8 +385,8 @@ class Page extends React.Component {
         <ScrollNav activeIndex={this.state.activeIndex}
                    showLeftBar={true}
                    showRightBar={true}
-                   leftBarClick={this.leftBarClickHandle.bind(this)}
-                   rightBarClick={this.rightBarClickHandle.bind(this)}>
+                   leftBarClick={this.showMenu.bind(this)}
+                   rightBarClick={this.showStoreList.bind(this)}>
         </ScrollNav>
         {components}
       </div>

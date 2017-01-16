@@ -1,0 +1,66 @@
+.t-button-group
+  position relative
+  display inline-block
+
+  > .t-button
+    display inline-block;
+    font-size 14px
+    line-height 40px
+    padding-left 20px
+    padding-right 20px
+    vertical-align top
+
+  > .t-button:first-child:not(:last-child)
+    border-top-right-radius 0
+    border-bottom-right-radius 0
+
+  > .t-button:last-child:not(:first-child)
+    border-top-left-radius 0
+    border-bottom-left-radius 0
+
+  > .t-button:not(:first-child):not(:last-child)
+    border-radius 0
+
+  > .t-button + .t-button
+    margin-left -1px
+
+  > .t-button-small
+    line-height 24px
+
+.t-button-group-half
+  > .t-button-large:first-child:not(:last-child)
+    border-top-left-radius 22px
+    border-bottom-left-radius 22px
+
+  > .t-button-large:last-child:not(:first-child)
+    border-top-right-radius 22px
+    border-bottom-right-radius 22px
+
+.t-button-group-half
+  > .t-button:first-child
+    border-top-left-radius 20px
+    border-bottom-left-radius 20px
+
+  > .t-button:last-child
+    border-top-right-radius 20px
+    border-bottom-right-radius 20px
+
+.t-button-group-half
+  > .t-button-small:first-child:not(:last-child)
+    border-top-left-radius 12px
+    border-bottom-left-radius 12px
+
+  > .t-button-small:last-child:not(:first-child)
+    border-top-right-radius 12px
+    border-bottom-right-radius 12px
+
+
+.t-button-plain
+  color #333
+  border 1px solid #ddd
+  background-color #fff
+
+.t-button-selected
+  color #fff
+  background-color #008cee
+  border 1px solid #008cee

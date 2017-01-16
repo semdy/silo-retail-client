@@ -1,4 +1,7 @@
 require('./ScrollNav.styl');
+
+let { Context } = SaltUI;
+let { PropTypes } = React;
 let { hashHistory } = ReactRouter;
 import classnames from 'classnames';
 
@@ -101,5 +104,21 @@ class Page extends React.Component {
         );
     }
 }
+
+Page.propTypes = {
+  showLeftBar: PropTypes.bool,
+  showRightBar: PropTypes.bool,
+  leftBarClick: PropTypes.func,
+  rightBarClick: PropTypes.func,
+  activeIndex: PropTypes.number
+};
+
+Page.defaultProps = {
+  showLeftBar: true,
+  showRightBar: true,
+  leftBarClick: Context.noop,
+  rightBarClick: Context.noop,
+  activeIndex: 0
+};
 
 module.exports = Page;

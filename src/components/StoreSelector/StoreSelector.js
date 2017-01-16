@@ -1,7 +1,7 @@
 import './StoreSelector.styl';
 
 let { PropTypes } = React;
-let {Button, Boxs, Icon} = SaltUI;
+let {Button, Boxs, Icon, Context} = SaltUI;
 let HBox = Boxs.HBox;
 let Box = Boxs.Box;
 import Animate from '../../components/Animation';
@@ -121,14 +121,14 @@ class Page extends React.Component {
     }
 }
 
-Page.PropTypes = {
+Page.propTypes = {
   onItemClick: PropTypes.func,
   onCancel: PropTypes.func
 };
 
 Page.defaultProps = {
-    onItemClick: noop,
-    onCancel: noop
+    onItemClick: Context.noop,
+    onCancel: Context.noop
 };
 
 module.exports = Page;
