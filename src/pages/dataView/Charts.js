@@ -48,7 +48,7 @@ class Charts extends React.Component {
             height: window.innerHeight + "px"
           });
           self.chartInstance.resize();
-        }, 200);
+        }, 100);
       };
       this.refresh();
       window.addEventListener(Context.RESIZE, this.resizeHandler, false);
