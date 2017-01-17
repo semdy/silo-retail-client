@@ -32,6 +32,7 @@ class Charts extends React.Component {
           height: window.innerHeight + "px"
         };
         this._lastScreenState = this.state.isFullScreen;
+        this._lastLegendPadding = 0;
         this.chartInstance = null;
     }
 
@@ -76,7 +77,7 @@ class Charts extends React.Component {
         legend: {
           width: 250,
           left: "center",
-          padding: 0,
+          padding: this._lastLegendPadding,
           itemGap: 5,
           data: []
         },
@@ -164,6 +165,11 @@ class Charts extends React.Component {
       if( this._lastScreenState != this.state.isFullScreen ) {
         setTimeout(function () {
           this.chartInstance.resize();
+          this.chartInstance.setOption({
+              legend: {
+                padding: this._lastLegendPadding = (this.state.isFullScreen ? [10, 5, 5, 5] : 0)
+              }
+          });
         }.bind(this), 20);
       }
       this._lastScreenState = this.state.isFullScreen;
@@ -189,7 +195,8 @@ class Charts extends React.Component {
                      top: isFullScreen ? -(parseFloat(width)-70)*0.5 + "px" : 0,
                      width: isFullScreen ? height : width,
                      height: isFullScreen ? parseFloat(width) - 70 : parseFloat(height) - 243 + "px"
-              }}></div>
+                   }}>
+              </div>
           </div>
       );
     }

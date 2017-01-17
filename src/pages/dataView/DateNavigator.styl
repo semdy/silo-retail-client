@@ -2,6 +2,14 @@ makeTransform(props)
   -webkit-transform props
   transform props
 
+makeShadow(x, y, offset, color, isInset = false)
+  if isInset
+    -webkit-box-shadow x y offset color inset
+    box-shadow x y offset color inset
+  else
+    -webkit-box-shadow x y offset color
+    box-shadow x y offset color
+
 .date-navigator
   position relative
   margin-bottom 5px
@@ -52,7 +60,7 @@ makeTransform(props)
 
   .date
     position absolute
-    top 45px
+    top 52px
     left 1px
     color #333
 
@@ -60,3 +68,4 @@ makeTransform(props)
 .date-navigator-full
   position fixed
   makeTransform(rotate(90deg) translate(50%, -50%))
+  makeShadow(0, 12px, 20px, rgba(0,0,0,.05))
