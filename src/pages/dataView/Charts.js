@@ -76,6 +76,8 @@ class Charts extends React.Component {
         legend: {
           width: 250,
           left: "center",
+          padding: 0,
+          itemGap: 5,
           data: []
         },
         toolbox: {
