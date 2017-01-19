@@ -6,7 +6,7 @@ import Stats from './Stats';
 import Charts from './Charts';
 import DateNavigator from './DateNavigator';
 import StoreSelector from '../../components/StoreSelector';
-import {httpRequestReportPayment, httpRequestStoreList} from '../../services/auth';
+import {httpRequestReportPayment, httpRequestStoreList} from '../../services/storeService';
 
 //默认时间间隔(单位：小时|天|月|年)
 const defaultOffset = 0;
@@ -47,9 +47,9 @@ const getDateBefore = (numDays) => {
 //格式化金额，以'亿/万/元'计数
 const formatAmout = (value) => {
   if (value / 1e8 >= 1) {
-    return value / 1e8;
+    return (value / 1e8).toFixed(2);
   } else if (value / 1e4 >= 1) {
-    return value / 1e4;
+    return (value / 1e4).toFixed(2);
   } else {
     return value;
   }

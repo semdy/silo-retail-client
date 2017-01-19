@@ -1,5 +1,6 @@
-require('./app.styl');
 require('../pollyfill/');
+require('../services/auth').signIn();
+require('./app.styl');
 
 // 插入 demo svg
 let TingleIconSymbolsDemo = require('./../images/tingle-icon-symbols.svg');
