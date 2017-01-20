@@ -176,13 +176,15 @@ class Charts extends React.Component {
       }
       this._lastScreenState = this.state.isFullScreen;
 
+    }
+
+    toggleDiff(disabled) {
       ["昨日订单量", "昨日营业额"].forEach(function (legendName) {
         this.chartInstance.dispatchAction({
-          type: this.props.diffDisabled ? 'legendUnSelect' : 'legendSelect',
+          type: disabled ? 'legendUnSelect' : 'legendSelect',
           name: legendName
         });
       }.bind(this));
-
     }
 
     changeViewMode(){
@@ -198,7 +200,7 @@ class Charts extends React.Component {
     render() {
       let { isFullScreen, width, height } = this.state;
       return (<div className={classnames("charts-container", {"charts-fullscreen": isFullScreen})}>
-              {/*{<span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)}></span>}*/}
+              <span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)} style={{display: "none"}}></span>
               <div ref="chart" className="charts-main"
                    style={{
                      left: isFullScreen ? -parseFloat(height)*0.5 + "px" : 0,

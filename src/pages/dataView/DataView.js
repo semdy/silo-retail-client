@@ -400,6 +400,10 @@ class Page extends React.Component {
     this.setState({
       diffDisabled: !this.state.diffDisabled
     });
+    //加点延迟，以保证状态已经被更新
+    setTimeout(function () {
+      this.refs.charts.toggleDiff(this.state.diffDisabled);
+    }.bind(this));
   }
 
   render() {
@@ -428,7 +432,6 @@ class Page extends React.Component {
           >
           </StoreSelector>
           <Charts ref="charts"
-                  diffDisabled={this.state.diffDisabled}
                   changeViewMode={this.changeViewMode.bind(this)}
                   statsData={this.state.statsData}
                   chartData={this.state.chartData}
