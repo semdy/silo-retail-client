@@ -48,10 +48,8 @@ class Page extends React.Component {
         this.props.onCancel(this.getData());
     }
 
-    handleItemClick(e){
-        var $target = $(e.target);
-        var storeId = $target.attr("data-storeid");
-        var storeName = $target.attr("data-name");
+    handleItemClick(storeId, storeName, e){
+        let $target = $(e.target);
         if( $target.hasClass("selected") ){
             this.removeData(storeId);
             $target.removeClass("selected");
@@ -95,9 +93,9 @@ class Page extends React.Component {
                   <h4 className="store-header">请选择对比的门店(最多3个)</h4>
                   <ul className="store-list">
                     {
-                      this.props.data.map((item, index)=>{
+                      this.props.data.map((item, index) => {
                         return (
-                          <li key={index} data-storeid={item.storeId} data-name={item.name} onClick={this.handleItemClick.bind(this)}>
+                          <li key={index} onClick={this.handleItemClick.bind(this, item.storeId, item.name)}>
                               <Icon name="check" />
                               <span>{item.name}</span>
                           </li>

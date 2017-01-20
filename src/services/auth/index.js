@@ -65,6 +65,7 @@ const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
       },
       error: (xhr, status, err) => {
         reject(xhr, status, err);
+        error(`与服务器失去连接, code: ${status}`);
       }
     });
   });
@@ -90,8 +91,8 @@ function httpRequestSignIn(code, corpId) {
   return new Promise((resolve, reject) => {
     request({url: '7003.json', body: {corpId, code}}).then((json) => {
       if (json.session) {
-        session.set(sessionInfo);
-        resolve(sessionInfo);
+        session.set(json.session);
+        resolve(json.session);
       }
     }, (err) => {
       reject(err);
@@ -144,37 +145,24 @@ const username = urlParams.user;
 const password = urlParams.pass;
 
 function signIn() {
-  return new Promise((resolve, reject) => {
-    if( !isDD ){
-      return resolve();
-    }
-    if (sessionOK) {
-      resolve(sessionInfo);
-    } else {
-      let sessionInfo = session.get();
-      if (sessionInfo) {
-        session.set(sessionInfo);
-        resolve(sessionInfo);
-      } else {
-        if (username && password) {
-          httpRequestSignInByUserPass(username, password).then(resolve, reject);
-        } else {
-          httpRequestConfig().then((json) => {
-            let config = json.config;
-            config.jsApiList = jsApiList;
-            dd.config(config);
-            dd.ready(() => {
-              onDingTalkYes(config.corpId).then(resolve, reject);
-            });
-            dd.error((err) => {
-              reject(err);
-              onDingTalkErr(err);
-            })
-          }, reject);
-        }
-      }
-    }
-  });
+  if( !isDD || sessionOK ){
+    return;
+  }
+  if (username && password) {
+    httpRequestSignInByUserPass(username, password);
+  } else {
+    httpRequestConfig().then((json) => {
+      let config = json.config;
+      config.jsApiList = jsApiList;
+      dd.config(config);
+      dd.ready(() => {
+        onDingTalkYes(config.corpId);
+      });
+      dd.error((err) => {
+        onDingTalkErr(err);
+      })
+    });
+  }
 }
 
 function onDingTalkErr(err) {

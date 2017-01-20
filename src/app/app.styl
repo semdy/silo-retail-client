@@ -17,3 +17,21 @@ body
 
 .inline
     display inline
+
+.t-icon
+    &.icon-has-bg
+        padding 1px
+        margin-left 5px
+        color #333
+        background-color #45a8e6
+        border-radius 50%
+
+        .t-icon-svg
+            vertical-align baseline
+
+    &.icon-has-bg
+        &.disabled
+            background-color #e0e0e0
+
+            svg
+                fill #777

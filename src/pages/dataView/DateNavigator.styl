@@ -19,8 +19,7 @@ makeShadow(x, y, offset, color, isInset = false)
   z-index 205
 
   .date
-    margin-right 25px
-    font-size 16px
+    margin-right 15px
 
   .date-arrow
     position absolute
@@ -30,10 +29,10 @@ makeShadow(x, y, offset, color, isInset = false)
     transform translateY(-50%)
 
     &.left
-      margin-left -132px
+      margin-left -112px
 
     &.right
-      margin-left 100px
+      margin-left 80px
 
     > svg
       width 30px
@@ -43,6 +42,19 @@ makeShadow(x, y, offset, color, isInset = false)
     &.disabled
       > svg
         fill #e0e0e0
+
+  .dropdown
+    position absolute
+    left 2px
+    top 3px
+
+  .diff-toggle
+    position absolute
+    right 15px
+    top 3px
+
+    .t-button
+      color #333
 
 .date-indicator
   .date-arrow

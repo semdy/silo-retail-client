@@ -52,6 +52,8 @@ class Charts extends React.Component {
       };
       this.refresh();
       window.addEventListener(Context.RESIZE, this.resizeHandler, false);
+      /*this.series = this.chartInstance.getOption().series;
+      console.log(this.series);*/
     }
 
     refresh(){
@@ -160,19 +162,27 @@ class Charts extends React.Component {
       this.chartInstance.dispose();
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
       //控制只在全屏和非全屏切换时去触发resize
-      if( this._lastScreenState != this.state.isFullScreen ) {
+      if (this._lastScreenState != this.state.isFullScreen) {
         setTimeout(function () {
           this.chartInstance.resize();
           this.chartInstance.setOption({
-              legend: {
-                padding: this._lastLegendPadding = (this.state.isFullScreen ? [10, 5, 5, 5] : 0)
-              }
+            legend: {
+              padding: this._lastLegendPadding = (this.state.isFullScreen ? [10, 5, 5, 5] : 0)
+            }
           });
         }.bind(this), 20);
       }
       this._lastScreenState = this.state.isFullScreen;
+
+      ["昨日订单量", "昨日营业额"].forEach(function (legendName) {
+        this.chartInstance.dispatchAction({
+          type: this.props.diffDisabled ? 'legendUnSelect' : 'legendSelect',
+          name: legendName
+        });
+      }.bind(this));
+
     }
 
     changeViewMode(){
@@ -188,7 +198,7 @@ class Charts extends React.Component {
     render() {
       let { isFullScreen, width, height } = this.state;
       return (<div className={classnames("charts-container", {"charts-fullscreen": isFullScreen})}>
-              {<span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)}></span>}
+              {/*{<span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)}></span>}*/}
               <div ref="chart" className="charts-main"
                    style={{
                      left: isFullScreen ? -parseFloat(height)*0.5 + "px" : 0,

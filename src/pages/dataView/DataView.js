@@ -38,10 +38,36 @@ const UNIT_MAP = {
 };
 
 //获取距离今天指定日期对象
-const getDateBefore = (numDays) => {
-  var now = new Date();
-  now.setDate(now.getDate() - numDays);
-  return now;
+const getDateBefore = (offset, filterType) => {
+  let date = new Date();
+  let dateFn;
+  let setFn;
+  switch ( filterType ){
+    case 'hour':
+      dateFn = "getDate";
+      setFn = "setDate";
+      break;
+    case 'day':
+      dateFn = "getMonth";
+      setFn = "setMonth";
+      break;
+    case 'week':
+      dateFn = "getMonth";
+      setFn = "setMonth";
+      break;
+    case 'month':
+      dateFn = "getFullYear";
+      setFn = "setYear";
+      break;
+    case 'year':
+      dateFn = "getFullYear";
+      setFn = "setYear";
+      break;
+  }
+  if( dateFn ) {
+    date[setFn](date[dateFn]() - offset);
+  }
+  return date;
 };
 
 //格式化金额，以'亿/万/元'计数
@@ -76,7 +102,7 @@ const getSum = (stack) => {
 
 //求二维数组的和
 const getGroupSum = (data, type) => {
-  var sum = 0;
+  let sum = 0;
   data.forEach((item) => {
     sum += getSum(item.axisY[type]);
   });
@@ -103,7 +129,7 @@ const genGroupKeyMap = ( datas, cachData, formatType ) => {
     }
     for(let i in itemMap){
       if( map[i] === undefined ){
-        map[ i ] = itemMap[ i ];
+        map[i] = itemMap[i];
       }
     }
   });
@@ -113,6 +139,7 @@ const genGroupKeyMap = ( datas, cachData, formatType ) => {
 
 //没有数据的时间节点补零
 const zeroFill = (targetData, timelines) => {
+  let newData = [];
   targetData.forEach((data) => {
     timelines.forEach(function (timeline) {
       if( data[timeline] === undefined ){
@@ -121,7 +148,17 @@ const zeroFill = (targetData, timelines) => {
     });
   });
 
-  return targetData;
+  //按时间先后顺序重新排序
+  targetData.forEach((item) => {
+    let obj = {};
+    let keys = Object.keys(item).sort((a, b) => { return parseInt(a) - parseInt(b) });
+    keys.forEach((key) => {
+      obj[key] = item[key];
+    });
+    newData.push(obj);
+  });
+
+  return newData;
 };
 
 //提取y轴的订单量和营业额数据, 返回一个二维数组
@@ -132,8 +169,8 @@ const extractYAxisData = (dataMap) => {
     let count = [];
     let amout = [];
     for(let i in data) {
-      count.push(data[ i ][ 0 ]);
-      amout.push(data[ i ][ 1 ]);
+      count.push(data[ i ][0]);
+      amout.push(data[ i ][1]);
     }
     counts.push(count);
     amouts.push(amout);
@@ -154,6 +191,8 @@ class Page extends React.Component {
       activeIndex: 1,
       isNextDisabled: true,
       isFullScreen: false,
+      diffDisabled: false,
+      hideDiff: false,
       statsData: [
         {
           name: "总订单量",
@@ -176,7 +215,7 @@ class Page extends React.Component {
     };
 
     this.legendNames = [];
-    this.filterUnit = 'hour';
+    this.filterType = 'hour';
     this.fetchParams = [];
     this.offset = defaultOffset;
     //统一约束： 为1时表示同一家门店今天和昨天数据对比， 为2时表示多家门店之间的数据对比
@@ -185,7 +224,7 @@ class Page extends React.Component {
 
   fetchData(storeId = defaultStoreId, offset) {
     return new Promise((resolve, reject) => {
-      httpRequestReportPayment(`retail.payment.report.${this.filterUnit}`, storeId, offset).then((res) =>{
+      httpRequestReportPayment(`retail.payment.report.${this.filterType}`, storeId, offset).then((res) =>{
         resolve(res);
       }, (err) => {
         reject(err);
@@ -224,7 +263,7 @@ class Page extends React.Component {
     let cacheData = [];
     const count = getGroupSum(values, "count");
     const amout = getGroupSum(values, "rmb");
-    const xAxisData = Object.keys( genGroupKeyMap(values, cacheData, this.filterUnit) ).sort((a, b)=>{return parseInt(a) - parseInt(b)});
+    const xAxisData = Object.keys( genGroupKeyMap(values, cacheData, this.filterType) ).sort((a, b)=>{return parseInt(a) - parseInt(b)});
     const yAxisData = extractYAxisData(zeroFill(cacheData, xAxisData));
 
     this.setState({
@@ -249,7 +288,7 @@ class Page extends React.Component {
         },
         legendNames: legendNames
       },
-      date: getDateBefore(this.offset)
+      date: getDateBefore(this.offset, this.filterType)
     });
   }
 
@@ -300,6 +339,11 @@ class Page extends React.Component {
     });
 
     this.doQuery();
+
+    //多门店对比时隐藏环比功能
+    this.setState({
+      hideDiff: true
+    });
   }
 
   setOffset(offset){
@@ -346,8 +390,16 @@ class Page extends React.Component {
   }
 
   handleFilterItemClick(filterType){
-    this.filterUnit = filterType;
+    //切换筛选类型时将offset置为0
+    this.offset = 0;
+    this.filterType = filterType;
     this.doQuery();
+  }
+
+  toggleDiff(){
+    this.setState({
+      diffDisabled: !this.state.diffDisabled
+    });
   }
 
   render() {
@@ -361,10 +413,13 @@ class Page extends React.Component {
             isFullScreen={this.state.isFullScreen}
             showStoreList={this.showStoreList.bind(this)}
             date={this.state.date}
-            disabled={this.state.isNextDisabled}
+            nextDisabled={this.state.isNextDisabled}
+            diffDisabled={this.state.diffDisabled}
+            hideDiff={this.state.hideDiff}
             onPrev={this.queryPrev.bind(this)}
             onNext={this.queryNext.bind(this)}
             onItemClick={this.handleFilterItemClick.bind(this)}
+            toggleDiff={this.toggleDiff.bind(this)}
           >
           </DateNavigator>
           <StoreSelector ref="storeSelector"
@@ -372,7 +427,9 @@ class Page extends React.Component {
              data={this.state.storeList}
           >
           </StoreSelector>
-          <Charts ref="charts" changeViewMode={this.changeViewMode.bind(this)}
+          <Charts ref="charts"
+                  diffDisabled={this.state.diffDisabled}
+                  changeViewMode={this.changeViewMode.bind(this)}
                   statsData={this.state.statsData}
                   chartData={this.state.chartData}
           >

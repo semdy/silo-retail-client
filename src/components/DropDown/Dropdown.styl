@@ -1,0 +1,51 @@
+makeTransform(props)
+    -webkit-transform props
+    transform props
+
+makeTransition(props)
+    -webkit-transition props
+    transition props
+
+.dropdown
+    position relative
+    display inline-block
+
+    .t-button
+        padding 0 22px
+        color #333
+
+    .t-icon
+        position absolute
+        right 2px
+        top 50%
+        margin-top -10px
+        makeTransition(transform .4s)
+
+    &.open
+      .t-icon
+        makeTransform(rotate(180deg))
+
+
+.dropdown-list
+    position absolute
+    left 0
+    right 0
+    top 100%
+    border 1px solid #dcdcdc
+    background-color #fff
+    list-style none
+
+.dropdown-item
+    padding 12px
+    text-align center
+    border-bottom 1px solid #dcdcdc
+
+    &:last-child
+        border-bottom-color transparent
+
+    &.active
+        color #45a8e6
+
+    &.disabled
+        color #999
+        cursor not-allowed

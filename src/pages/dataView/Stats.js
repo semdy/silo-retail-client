@@ -10,7 +10,7 @@ class StatItem extends React.Component {
     }
 
     render() {
-        var suffix = "";
+        let suffix = "";
         if( this.props.suffix ){
             suffix = (
               <em>{this.props.suffix}</em>

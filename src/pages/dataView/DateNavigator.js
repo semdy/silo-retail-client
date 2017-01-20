@@ -2,13 +2,14 @@ require('./DateNavigator.styl');
 
 let { Icon, Button } = SaltUI;
 import ButtonGroup from '../../components/ButtonGroup';
+import DropDown from '../../components/DropDown';
 import classnames from 'classnames';
 
-const formatDate = (dateUTC) => {
-  var year = dateUTC.getFullYear();
-  var month = dateUTC.getMonth() + 1;
-  var date = dateUTC.getDate();
-  return `${year}年${month}月${date}日`;
+const formatDate = (dateUTC, filterType) => {
+  var year = dateUTC.getFullYear() + "年";
+  var month = /^(?:hour|day|week)$/.test(filterType) ? (dateUTC.getMonth() + 1) + "月" : "";
+  var date = filterType === 'hour' ? dateUTC.getDate() + "日" : "";
+  return `${year}${month}${date}`;
 };
 
 const getDay = (dateUTC) => {
@@ -23,8 +24,32 @@ class DateNavigator extends React.Component {
       this.state = {
         activeIndex: 0,
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
+        options: [
+          {
+            value: 'hour',
+            text: '按时'
+          },
+          {
+            value: 'day',
+            text: '按天'
+          },
+          {
+            value: 'week',
+            text: '按周'
+          },
+          {
+            value: 'month',
+            text: '按月'
+          },
+          {
+            value: 'year',
+            text: '按年'
+          }
+        ]
       };
+
+      this.filterType = 'hour';
   }
 
   showStoreList(){
@@ -35,18 +60,22 @@ class DateNavigator extends React.Component {
     this.setState({
       activeIndex: itemIndex
     });
+    this.filterType = filterType;
     this.props.onItemClick(filterType);
   }
 
   render() {
-      const {date, disabled, onPrev, onNext, isFullScreen} = this.props;
-      let { width, height } = this.state;
+      const {date, nextDisabled, diffDisabled, onPrev, onNext, isFullScreen, hideDiff} = this.props;
+      let { width, height, options } = this.state;
       let dateIndicator = (
         <div>
           <Icon name="angle-left" className="date-arrow left" onClick={onPrev} />
-          <span className="date">{formatDate(date)}</span>
-          <span className="day">{`星期${getDay(date)}`}</span>
-          <Icon name="angle-right" className={classnames("date-arrow right", {disabled: disabled})} onClick={onNext} />
+          <span className="date">{formatDate(date, this.filterType)}</span>
+          {
+            this.filterType !== 'hour' ? "" :
+            <span className="day">{`星期${getDay(date)}`}</span>
+          }
+          <Icon name="angle-right" className={classnames("date-arrow right", {disabled: nextDisabled})} onClick={onNext} />
         </div>
       );
       return (<div className={classnames("date-navigator", {"date-navigator-full": isFullScreen})} style={{
@@ -55,8 +84,24 @@ class DateNavigator extends React.Component {
         width: isFullScreen ? height + "px" : ""
       }}>
           {
-            !isFullScreen ? dateIndicator : (
+            !isFullScreen ?
               <div>
+                <DropDown options={options} activeIndex={this.state.activeIndex} onItemClick={this.itemClick.bind(this)}></DropDown>
+                {dateIndicator}
+                {hideDiff ? "" :
+                  <div className="diff-toggle" onClick={this.props.toggleDiff}>
+                    <Button type="text">
+                      环比
+                      <Icon name="check" className={classnames("icon-has-bg", {disabled: diffDisabled})}
+                            width={16}
+                            height={12}
+                            fill="#fff"/>
+                    </Button>
+                  </div>
+                }
+              </div>
+              :
+              (<div>
                 <ButtonGroup half={true} className="date-indicator">
                   <Button type="minor">{dateIndicator}</Button>
                 </ButtonGroup>
