@@ -28620,12 +28620,12 @@ define('zrender/core/event', ['require', '../mixin/Eventful', './env'], function
         // This well-known method below does not support css transform.
         var box = getBoundingClientRect(el);
         var canvas = e.target;
-        if( canvas.width < canvas.height ) {
-          out.zrX = e.clientX - box.left;
-          out.zrY = e.clientY - box.top;
-        } else {
+        if( canvas.width % window.innerHeight == 0 ) {
           out.zrX = e.clientY - box.left;
           out.zrY = e.clientX - box.top;
+        } else {
+          out.zrX = e.clientX - box.left;
+          out.zrY = e.clientY - box.top;
         }
     }
     /**
