@@ -306,7 +306,7 @@ class Page extends React.Component {
   }
 
   showMenu() {
-    alert("left click");
+    alert("show menu");
   }
 
   showStoreList() {
@@ -399,47 +399,12 @@ class Page extends React.Component {
   toggleDiff(){
     this.setState({
       diffDisabled: !this.state.diffDisabled
-    });
-    //加点延迟，以保证状态已经被更新
-    setTimeout(function () {
+    }, function () {
       this.refs.charts.toggleDiff(this.state.diffDisabled);
     }.bind(this));
   }
 
   render() {
-    let components = "";
-    if (this.state.isDataLoaded) {
-      components = (
-        <div>
-          <Stats statsData={this.state.statsData}>
-          </Stats>
-          <DateNavigator
-            isFullScreen={this.state.isFullScreen}
-            showStoreList={this.showStoreList.bind(this)}
-            date={this.state.date}
-            nextDisabled={this.state.isNextDisabled}
-            diffDisabled={this.state.diffDisabled}
-            hideDiff={this.state.hideDiff}
-            onPrev={this.queryPrev.bind(this)}
-            onNext={this.queryNext.bind(this)}
-            onItemClick={this.handleFilterItemClick.bind(this)}
-            toggleDiff={this.toggleDiff.bind(this)}
-          >
-          </DateNavigator>
-          <StoreSelector ref="storeSelector"
-             onConfirm={this.handleConfirm.bind(this)}
-             data={this.state.storeList}
-          >
-          </StoreSelector>
-          <Charts ref="charts"
-                  changeViewMode={this.changeViewMode.bind(this)}
-                  statsData={this.state.statsData}
-                  chartData={this.state.chartData}
-          >
-          </Charts>
-        </div>
-      )
-    }
     return (
       <div>
         <ScrollNav activeIndex={this.state.activeIndex}
@@ -448,7 +413,38 @@ class Page extends React.Component {
                    leftBarClick={this.showMenu.bind(this)}
                    rightBarClick={this.showStoreList.bind(this)}>
         </ScrollNav>
-        {components}
+        {
+          !this.state.isDataLoaded ? "" :
+            <div>
+              <Stats statsData={this.state.statsData}>
+              </Stats>
+              <DateNavigator
+                isFullScreen={this.state.isFullScreen}
+                showStoreList={this.showStoreList.bind(this)}
+                date={this.state.date}
+                nextDisabled={this.state.isNextDisabled}
+                diffDisabled={this.state.diffDisabled}
+                hideDiff={this.state.hideDiff}
+                onPrev={this.queryPrev.bind(this)}
+                onNext={this.queryNext.bind(this)}
+                onItemClick={this.handleFilterItemClick.bind(this)}
+                toggleDiff={this.toggleDiff.bind(this)}
+              >
+              </DateNavigator>
+              <StoreSelector ref="storeSelector"
+                             isFullScreen={this.state.isFullScreen}
+                             onConfirm={this.handleConfirm.bind(this)}
+                             data={this.state.storeList}
+              >
+              </StoreSelector>
+              <Charts ref="charts"
+                      changeViewMode={this.changeViewMode.bind(this)}
+                      statsData={this.state.statsData}
+                      chartData={this.state.chartData}
+              >
+              </Charts>
+            </div>
+        }
       </div>
     )
 

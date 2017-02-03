@@ -1,5 +1,5 @@
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {alert(1);
+    if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], factory);
     } else if (typeof module === 'object' && module.exports) {
@@ -28619,14 +28619,8 @@ define('zrender/core/event', ['require', '../mixin/Eventful', './env'], function
     function defaultGetZrXY(el, e, out) {
         // This well-known method below does not support css transform.
         var box = getBoundingClientRect(el);
-        var canvas = e.target;
-        if( canvas.width < canvas.height ) {
-          out.zrX = e.clientX - box.left;
-          out.zrY = e.clientY - box.top;
-        } else {
-          out.zrX = e.clientY - box.left;
-          out.zrY = e.clientX - box.top;
-        }
+        out.zrX = e.clientX - box.left;
+        out.zrY = e.clientY - box.top;
     }
     /**
      * 如果存在第三方嵌入的一些dom触发的事件，或touch事件，需要转换一下事件坐标.

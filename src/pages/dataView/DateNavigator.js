@@ -57,6 +57,7 @@ class DateNavigator extends React.Component {
   }
 
   itemClick(itemIndex, filterType){
+    if( itemIndex === this.state.activeIndex ) return;
     this.setState({
       activeIndex: itemIndex
     });

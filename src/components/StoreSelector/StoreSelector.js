@@ -80,6 +80,7 @@ class Page extends React.Component {
 
     render() {
         let {isShow} = this.state;
+        let { isFullScreen } = this.props;
         return (
           <div className="store-container">
               <Animate
@@ -89,9 +90,14 @@ class Page extends React.Component {
                 onClick={()=>this.setState({isShow: false})}
                 >
               </Animate>
-              <Animate transitionName="popup" className="store-selector" visible={isShow}>
+              <Animate transitionName={isFullScreen ? "rotate-popup" : "popup"} className="store-selector" visible={isShow} style={{
+                width: isFullScreen ? "400px" : "",
+                height: isFullScreen ? window.innerWidth + "px" : "",
+                left: isFullScreen ? "-200px" : "",
+                top: isFullScreen ? window.innerHeight - 400 - window.innerWidth/2 + "px" : ""
+              }}>
                   <h4 className="store-header">请选择对比的门店(最多3个)</h4>
-                  <ul className="store-list">
+                  <ul className="store-list" style={{height: isFullScreen ? window.innerWidth - 94 + "px" : ""}}>
                     {
                       this.props.data.map((item, index) => {
                         return (

@@ -34,6 +34,7 @@ class Charts extends React.Component {
         this._lastScreenState = this.state.isFullScreen;
         this._lastLegendPadding = 0;
         this.chartInstance = null;
+        this.docBody = $(document.body);
     }
 
     componentDidMount(){
@@ -175,7 +176,11 @@ class Charts extends React.Component {
         }.bind(this), 20);
       }
       this._lastScreenState = this.state.isFullScreen;
-
+      if( this.state.isFullScreen ){
+        this.docBody.addClass("page-fullscreen");
+      } else {
+        this.docBody.removeClass("page-fullscreen");
+      }
     }
 
     toggleDiff(disabled) {
@@ -190,9 +195,7 @@ class Charts extends React.Component {
     changeViewMode(){
       this.setState({
         isFullScreen: !this.state.isFullScreen
-      });
-      //加点延迟，以保证状态已经被更新
-      setTimeout(function () {
+      }, function () {
         this.props.changeViewMode(this.state.isFullScreen);
       }.bind(this));
     }
@@ -200,7 +203,7 @@ class Charts extends React.Component {
     render() {
       let { isFullScreen, width, height } = this.state;
       return (<div className={classnames("charts-container", {"charts-fullscreen": isFullScreen})}>
-              <span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)} style={{display: "none"}}></span>
+              <span className={classnames("tool-fullscreen",{open: isFullScreen})} onClick={this.changeViewMode.bind(this)} style={{display: ""}}></span>
               <div ref="chart" className="charts-main"
                    style={{
                      left: isFullScreen ? -parseFloat(height)*0.5 + "px" : 0,

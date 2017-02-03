@@ -81,3 +81,16 @@ makeShadow(x, y, offset, color, isInset = false)
   position fixed
   makeTransform(rotate(90deg) translate(50%, -50%))
   makeShadow(0, 12px, 20px, rgba(0,0,0,.05))
+
+@media (max-width: 320px)
+  .date-navigator
+    .date-arrow
+      &.left
+        margin-left -102px
+
+      &.right
+        margin-left 70px
+
+    .diff-toggle
+      right 8px
+
