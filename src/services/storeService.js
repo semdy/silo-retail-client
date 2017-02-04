@@ -1,6 +1,5 @@
 
 import { fetch } from './fetch';
-import { session } from './auth';
 
 export const httpRequestReportPayment = (query, storeId, offset) => {
   let params = {
