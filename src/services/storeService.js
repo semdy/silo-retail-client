@@ -1,10 +1,9 @@
 
 import { fetch } from './fetch';
-import { getSessionHeader } from './auth';
+import { session } from './auth';
 
 export const httpRequestReportPayment = (query, storeId, offset) => {
   let params = {
-    protoc2S: getSessionHeader(),
     query,
     storeId,
     offset

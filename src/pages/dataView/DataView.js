@@ -10,8 +10,6 @@ import {httpRequestReportPayment, httpRequestStoreList} from '../../services/sto
 
 //默认时间间隔(单位：小时|天|月|年)
 const defaultOffset = 0;
-//默认门店ID
-const defaultStoreId = 'Kp-FLKdBQmK-ctjDEF0XsQ';
 
 //格式化时间
 const formatTime = (time, bytype) => {
@@ -222,7 +220,7 @@ class Page extends React.Component {
     this.compareType = 1;
   }
 
-  fetchData(storeId = defaultStoreId, offset) {
+  fetchData(storeId, offset) {
     return new Promise((resolve, reject) => {
       httpRequestReportPayment(`retail.payment.report.${this.filterType}`, storeId, offset).then((res) =>{
         resolve(res);
@@ -293,15 +291,16 @@ class Page extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchParams = [{storeId: defaultStoreId, offset: this.offset},{storeId: defaultStoreId, offset: this.offset + 1}];
-    this.legendNames = ["今日订单量", "今日营业额", "昨日订单量", "昨日营业额"];
-    this.doQuery();
-
     //获得门店列表的数据
     httpRequestStoreList().then(function (storeList) {
       this.setState({
         storeList: storeList
       });
+      //取第一家店铺的storeId
+      let storeId = storeList[0].storeId;
+      this.fetchParams = [{storeId: storeId, offset: this.offset},{storeId: storeId, offset: this.offset + 1}];
+      this.legendNames = ["今日订单量", "今日营业额", "昨日订单量", "昨日营业额"];
+      this.doQuery();
     }.bind(this));
   }
 

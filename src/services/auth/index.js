@@ -3,16 +3,12 @@
 import { env, urlParams } from '../config';
 import { isDD, error } from '../../utils';
 
-const urlDingTalk = 'http://it.zaofans.com/silo/app/retail/';
-const cheatCode = urlParams.cheat;
-
 const jsApiList = ['runtime.info', 'biz.contact.choose',
   'device.notification.confirm', 'device.notification.alert',
   'device.notification.prompt', 'biz.ding.post',
   'biz.util.openLink'];
 
 let sessionInfo = null;
-let sessionHeader = '';
 let sessionOK = false;
 
 let readyQueue = [];
@@ -25,7 +21,6 @@ const session = {
       return;
     }
     sessionInfo = info;
-    sessionHeader = { sessionId: info.sessionId };
     localStorage.setItem('session', JSON.stringify(info));
     sessionOK = true;
   },
@@ -41,7 +36,6 @@ const session = {
 
   clear() {
     sessionInfo = null;
-    sessionHeader = null;
     localStorage.removeItem('session');
     sessionOK = false;
   }
@@ -75,7 +69,7 @@ const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
 function httpRequestConfig() {
   let req = { keyCorp: 1000, keyApp: env.keyApp };
   return new Promise((resolve, reject) => {
-    request({url: `${urlDingTalk}7001.json`, body: req}).then((data) => {
+    request({url: '7001.json', body: req}).then((data) => {
       resolve(data);
     }, (err) => {
       reject(err);
@@ -110,6 +104,7 @@ function httpRequestSignInByUserPass(username, password) {
       if (json.session) {
         session.set(json.session);
         resolve(json.session);
+        triggerReady();
       }
     }, (err) => {
       reject(err);
@@ -127,7 +122,7 @@ function onDingTalkYes(corpId) {
       onSuccess: (result) => {
         httpRequestSignIn(result.code, corpId).then((sessionInfo) => {
           resolve(sessionInfo);
-          triggerReady(sessionInfo);
+          triggerReady();
         }, (err) => {
           reject(err);
           onDingTalkApiFail(err);
@@ -145,23 +140,34 @@ const username = urlParams.user;
 const password = urlParams.pass;
 
 function signIn() {
-  if( !isDD || sessionOK ){
+  if( sessionOK ){
     return;
   }
-  if (username && password) {
-    httpRequestSignInByUserPass(username, password);
+
+  let sessionInfo = session.get();
+  if( sessionInfo ){
+    session.set(sessionInfo);
+    triggerReady();
   } else {
-    httpRequestConfig().then((json) => {
-      let config = json.config;
-      config.jsApiList = jsApiList;
-      dd.config(config);
-      dd.ready(() => {
-        onDingTalkYes(config.corpId);
+    if (isDD) {
+      httpRequestConfig().then((json) => {
+        let config = json.config;
+        config.jsApiList = jsApiList;
+        dd.config(config);
+        dd.ready(() => {
+          onDingTalkYes(config.corpId);
+        });
+        dd.error((err) => {
+          onDingTalkErr(err);
+        })
       });
-      dd.error((err) => {
-        onDingTalkErr(err);
-      })
-    });
+    } else {
+      if (username && password) {
+        httpRequestSignInByUserPass(username, password);
+      } else {
+        alert("没有权限访问");
+      }
+    }
   }
 }
 
@@ -175,7 +181,7 @@ function onDingTalkApiFail(err, api) {
 
 function ready(fun) {
   if( typeof fun == 'function' ) {
-    if (isDD && !isReady) {
+    if ( !isReady ) {
       readyQueue.push(fun);
     } else {
       fun();
@@ -186,7 +192,7 @@ function ready(fun) {
 function triggerReady() {
   isReady = true;
   readyQueue.forEach((itemFun) => {
-    itemFun(sessionInfo, sessionHeader);
+    itemFun(sessionInfo);
   });
 }
 
@@ -194,11 +200,5 @@ signIn.ready = ready;
 
 module.exports = {
   session,
-  signIn,
-  getSessionHeader: () => {
-    return sessionHeader;
-  },
-  getSessionInfo: () => {
-    return sessionInfo;
-  }
+  signIn
 };

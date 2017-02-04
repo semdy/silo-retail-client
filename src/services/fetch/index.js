@@ -4,6 +4,7 @@ import { error } from '../../utils';
 
 let request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
   return new Promise((resolve, reject) => {
+    body = $.extend({ protoc2S: {sessionId: session.get().sessionId}}, body);
     $.ajax({
       type: method,
       url: /^https?:\/\//.test( url ) ? url : env.urlAppRoot + url,
