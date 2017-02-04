@@ -8,9 +8,6 @@ const jsApiList = ['runtime.info', 'biz.contact.choose',
   'device.notification.prompt', 'biz.ding.post',
   'biz.util.openLink'];
 
-let sessionInfo = null;
-let sessionOK = false;
-
 let readyQueue = [];
 let isReady = false;
 
@@ -20,9 +17,7 @@ const session = {
     if (info == null) {
       return;
     }
-    sessionInfo = info;
     localStorage.setItem('session', JSON.stringify(info));
-    sessionOK = true;
   },
 
   get(){
@@ -35,9 +30,7 @@ const session = {
   },
 
   clear() {
-    sessionInfo = null;
     localStorage.removeItem('session');
-    sessionOK = false;
   }
 
 };
@@ -140,10 +133,6 @@ const username = urlParams.user;
 const password = urlParams.pass;
 
 function signIn() {
-  if( sessionOK ){
-    return;
-  }
-
   let sessionInfo = session.get();
   if( sessionInfo ){
     session.set(sessionInfo);
@@ -192,7 +181,7 @@ function ready(fun) {
 function triggerReady() {
   isReady = true;
   readyQueue.forEach((itemFun) => {
-    itemFun(sessionInfo);
+    itemFun();
   });
 }
 
