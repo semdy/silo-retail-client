@@ -24,10 +24,10 @@ class ButtonGroup extends React.Component {
             </Button>
           })
       }
-    </div>);
+    </div>)
   }
 
-};
+}
 
 ButtonGroup.propTypes = {
   flexable: PropTypes.bool,
