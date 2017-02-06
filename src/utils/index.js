@@ -30,7 +30,8 @@ const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
 const error = (errMsg) => {
   return Toast.show({
     type: 'error',
-    content: errMsg
+    content: errMsg,
+    duration: 3000
   });
 };
 

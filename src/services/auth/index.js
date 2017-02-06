@@ -133,9 +133,6 @@ function onDingTalkYes(corpId) {
   });
 }
 
-const username = urlParams.user;
-const password = urlParams.pass;
-
 function signIn() {
   let sessionInfo = session.get();
   if( sessionInfo ){
@@ -155,6 +152,8 @@ function signIn() {
         })
       });
     } else {
+      let username = urlParams.user;
+      let password = urlParams.pass;
       if (username && password) {
         httpRequestSignInByUserPass(username, password);
       } else {
