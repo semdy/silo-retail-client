@@ -80,6 +80,8 @@ function httpRequestSignIn(code, corpId) {
       if (json.session) {
         session.set(json.session);
         resolve(json.session);
+      } else {
+        error("用户信息获取失败");
       }
     }, (err) => {
       reject(err);
@@ -98,11 +100,13 @@ function httpRequestSignInByUserPass(username, password) {
         session.set(json.session);
         resolve(json.session);
         triggerReady();
+      } else {
+        error('用户名或密码错误');
       }
     }, (err) => {
       reject(err);
       if( typeof err == 'number' ) {
-        error(`用户名密码登录出錯, code: ${err}`);
+        error(`登录出错, code: ${err}`);
       }
     });
   });
