@@ -53,8 +53,6 @@ class Charts extends React.Component {
       };
       this.refresh();
       window.addEventListener(Context.RESIZE, this.resizeHandler, false);
-      /*this.series = this.chartInstance.getOption().series;
-      console.log(this.series);*/
     }
 
     refresh(){

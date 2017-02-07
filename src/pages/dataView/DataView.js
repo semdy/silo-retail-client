@@ -176,7 +176,7 @@ const extractYAxisData = (dataMap) => {
 
   return {
     counts: counts,
-    amouts: amouts,
+    amouts: amouts
   }
 };
 
