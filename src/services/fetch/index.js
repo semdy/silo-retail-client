@@ -4,12 +4,19 @@ import { error } from '../../utils';
 
 let request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
   return new Promise((resolve, reject) => {
-    body = Object.assign({ protoc2S: {sessionId: session.get().sessionId}}, body);
+    //body = Object.assign({ protoc2S: {sessionId: session.get().sessionId}}, body);
+    let sessionId = session.get().sessionId;
     $.ajax({
       type: method,
       url: /^https?:\/\//.test( url ) ? url : env.urlAppRoot + url,
       data: isRPC ? JSON.stringify(body) : body,
       dataType: dataType,
+      beforeSend: function (xhr) {
+          if (sessionId) {
+              xhr.withCredentials = true
+              xhr.setRequestHeader("Authorization", "silo " + btoa(sessionId))
+          }
+      },
       success: (recv) => {
         let code = recv.protocError;
         if (code === 0) {
