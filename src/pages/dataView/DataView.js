@@ -1,6 +1,7 @@
 import './DataView.styl';
 
 let { Toast, Button } = SaltUI;
+import { getWeekNumber } from '../../utils/dateUtils';
 import ScrollNav from '../../components/ScrollNav';
 import Stats from './Stats';
 import Charts from './Charts';
@@ -13,18 +14,28 @@ const defaultOffset = 0;
 
 //格式化时间
 const formatTime = (time, bytype) => {
+  var ret = 0;
+  var date = new Date(time * 1000);
+  var year = date.getFullYear();
   switch (bytype) {
     case 'hour':
-      return new Date(time * 1000).getHours();
+      ret = date.getHours();
+      break;
     case 'day':
-      return new Date(time * 1000).getDate();
+      ret = date.getDate();
+      break;
     case 'week':
-      return Math.ceil(new Date(time * 1000).getDate()/7);
+      ret = getWeekNumber(date);
+      break;
     case 'month':
-      return new Date(time * 1000).getMonth() + 1;
+      ret = date.getMonth() + 1;
+      break;
     case 'year':
-      return new Date(time * 1000).getFullYear();
+      ret = year;
+      break;
   }
+
+  return ret;
 };
 
 const UNIT_MAP = {
@@ -149,7 +160,7 @@ const zeroFill = (targetData, timelines) => {
   //按时间先后顺序重新排序
   targetData.forEach((item) => {
     let obj = {};
-    let keys = Object.keys(item).sort((a, b) => { return parseInt(a) - parseInt(b) });
+    let keys = Object.keys(item).sort((a, b) => { return parseFloat(a) - parseFloat(b) });
     keys.forEach((key) => {
       obj[key] = item[key];
     });
@@ -213,7 +224,7 @@ class Page extends React.Component {
     };
 
     this.legendNames = [];
-    this.filterType = 'hour';
+    this.filterType = 'hour'; //默认过滤方式
     this.fetchParams = [];
     this.offset = defaultOffset;
     //统一约束： 为1时表示同一家门店今天和昨天数据对比， 为2时表示多家门店之间的数据对比
@@ -261,7 +272,7 @@ class Page extends React.Component {
     let cacheData = [];
     const count = getGroupSum(values, "count");
     const amout = getGroupSum(values, "rmb");
-    const xAxisData = Object.keys( genGroupKeyMap(values, cacheData, this.filterType) ).sort((a, b)=>{return parseInt(a) - parseInt(b)});
+    const xAxisData = Object.keys( genGroupKeyMap(values, cacheData, this.filterType) ).sort((a, b)=>{return parseFloat(a) - parseFloat(b)});
     const yAxisData = extractYAxisData(zeroFill(cacheData, xAxisData));
 
     this.setState({
@@ -424,6 +435,7 @@ class Page extends React.Component {
                 nextDisabled={this.state.isNextDisabled}
                 diffDisabled={this.state.diffDisabled}
                 hideDiff={this.state.hideDiff}
+                defaultFilterType={this.filterType}
                 onPrev={this.queryPrev.bind(this)}
                 onNext={this.queryNext.bind(this)}
                 onItemClick={this.handleFilterItemClick.bind(this)}

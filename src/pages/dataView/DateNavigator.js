@@ -1,6 +1,7 @@
 require('./DateNavigator.styl');
 
 let { Icon, Button } = SaltUI;
+import { getWeekNumber } from '../../utils/dateUtils';
 import ButtonGroup from '../../components/ButtonGroup';
 import DropDown from '../../components/DropDown';
 import classnames from 'classnames';
@@ -17,39 +18,49 @@ const getDay = (dateUTC) => {
   return n[dateUTC.getDay()];
 };
 
+const getFilterTypeIndex = (options, type) => {
+    for(let i = 0; i < options.length; i++){
+      if( options[i].value === type )
+        return i;
+    }
+
+    return 0;
+};
+
 class DateNavigator extends React.Component {
 
   constructor(props) {
       super(props);
+      this.filterType = this.props.defaultFilterType;
+      let options = [
+        {
+          value: 'hour',
+          text: '按时'
+        },
+        {
+          value: 'day',
+          text: '按天'
+        },
+        {
+          value: 'week',
+          text: '按周'
+        },
+        {
+          value: 'month',
+          text: '按月'
+        },
+        {
+          value: 'year',
+          text: '按年'
+        }
+      ];
+
       this.state = {
-        activeIndex: 0,
+        activeIndex: getFilterTypeIndex(options, this.filterType),
         width: window.innerWidth,
         height: window.innerHeight,
-        options: [
-          {
-            value: 'hour',
-            text: '按时'
-          },
-          {
-            value: 'day',
-            text: '按天'
-          },
-          {
-            value: 'week',
-            text: '按周'
-          },
-          {
-            value: 'month',
-            text: '按月'
-          },
-          {
-            value: 'year',
-            text: '按年'
-          }
-        ]
+        options: options
       };
-
-      this.filterType = 'hour';
   }
 
   showStoreList(){
@@ -72,10 +83,7 @@ class DateNavigator extends React.Component {
         <div>
           <Icon name="angle-left" className="date-arrow left" onClick={onPrev} />
           <span className="date">{formatDate(date, this.filterType)}</span>
-          {
-            this.filterType !== 'hour' ? "" :
-            <span className="day">{`星期${getDay(date)}`}</span>
-          }
+          <span className="day">{this.filterType !== 'hour' ? "" : `星期${getDay(date)}`}</span>
           <Icon name="angle-right" className={classnames("date-arrow right", {disabled: nextDisabled})} onClick={onNext} />
         </div>
       );
