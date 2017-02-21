@@ -12,7 +12,7 @@ import {httpRequestReportPayment, httpRequestStoreList} from '../../services/sto
 //默认时间间隔(单位：小时|天|月|年)
 const defaultOffset = 0;
 
-//格式化时间
+//格式化时间, 带上年份方便后续排序
 const formatTime = (time, bytype) => {
   var ret = 0;
   var date = new Date(time * 1000);
@@ -35,7 +35,7 @@ const formatTime = (time, bytype) => {
       break;
   }
 
-  return ret;
+  return year + "." + ( ret < 10 ? "0" + ret : ret );
 };
 
 const UNIT_MAP = {
@@ -150,7 +150,7 @@ const genGroupKeyMap = ( datas, cachData, formatType ) => {
 const zeroFill = (targetData, timelines) => {
   let newData = [];
   targetData.forEach((data) => {
-    timelines.forEach(function (timeline) {
+    timelines.forEach((timeline) => {
       if( data[timeline] === undefined ){
         data[timeline] = [0, 0];
       }
@@ -202,6 +202,7 @@ class Page extends React.Component {
       isFullScreen: false,
       diffDisabled: false,
       hideDiff: false,
+      timelines: [],
       statsData: [
         {
           name: "总订单量",
@@ -250,9 +251,7 @@ class Page extends React.Component {
     if( !Array.isArray(groupPrams) )
       throw new Error("fetchGroupData arguments must be typeof Array!");
 
-    let fetches = groupPrams.map(function (item) {
-        return this.fetchData(item.storeId, item.offset);
-    }.bind(this));
+    let fetches = groupPrams.map( item => this.fetchData(item.storeId, item.offset));
 
     Toast.show({
         type: 'loading',
@@ -260,8 +259,8 @@ class Page extends React.Component {
         autoHide: false
     });
     
-    return new Promise(function (resolve) {
-      Promise.all(fetches).then(function (values) {
+    return new Promise((resolve) => {
+      Promise.all(fetches).then((values) => {
         resolve(values);
         Toast.hide();
       });
@@ -272,11 +271,13 @@ class Page extends React.Component {
     let cacheData = [];
     const count = getGroupSum(values, "count");
     const amout = getGroupSum(values, "rmb");
-    const xAxisData = Object.keys( genGroupKeyMap(values, cacheData, this.filterType) ).sort((a, b)=>{return parseFloat(a) - parseFloat(b)});
-    const yAxisData = extractYAxisData(zeroFill(cacheData, xAxisData));
+    const timelines = Object.keys( genGroupKeyMap(values, cacheData, this.filterType) ).sort((a, b)=>{return parseFloat(a) - parseFloat(b)});
+    const xAxisData = timelines.map(xdata => xdata.charAt(5) == "0" ? xdata.substr(6) : xdata.substr(5));
+    const yAxisData = extractYAxisData(zeroFill(cacheData, timelines));
 
     this.setState({
       isDataLoaded: true,
+      timelines: timelines,
       statsData: [
         {
           name: "总订单量",
@@ -303,7 +304,7 @@ class Page extends React.Component {
 
   componentDidMount() {
     //获得门店列表的数据
-    httpRequestStoreList().then(function (storeList) {
+    httpRequestStoreList().then((storeList) => {
       this.setState({
         storeList: storeList
       });
@@ -312,7 +313,7 @@ class Page extends React.Component {
       this.fetchParams = [{storeId: storeId, offset: this.offset},{storeId: storeId, offset: this.offset + 1}];
       this.legendNames = ["今日订单量", "今日营业额", "昨日订单量", "昨日营业额"];
       this.doQuery();
-    }.bind(this));
+    });
   }
 
   showMenu() {
@@ -409,9 +410,7 @@ class Page extends React.Component {
   toggleDiff(){
     this.setState({
       diffDisabled: !this.state.diffDisabled
-    }, function () {
-      this.refs.charts.toggleDiff(this.state.diffDisabled);
-    }.bind(this));
+    }, () => this.refs.charts.toggleDiff(this.state.diffDisabled));
   }
 
   render() {
@@ -432,6 +431,7 @@ class Page extends React.Component {
                 isFullScreen={this.state.isFullScreen}
                 showStoreList={this.showStoreList.bind(this)}
                 date={this.state.date}
+                timelines={this.state.timelines}
                 nextDisabled={this.state.isNextDisabled}
                 diffDisabled={this.state.diffDisabled}
                 hideDiff={this.state.hideDiff}

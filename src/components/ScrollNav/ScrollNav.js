@@ -48,8 +48,11 @@ class Page extends React.Component {
     }
 
     componentDidMount() {
-        let className = document.body.className;
-        document.body.className = className + ' page-scrollNav';
+      $("body").addClass("page-scrollNav");
+    }
+
+    componentWillUnmount() {
+      $("body").removeClass("page-scrollNav");
     }
 
     handleRoute(route) {

@@ -11,6 +11,20 @@ class Dropdown extends React.Component {
         this.state = {
           visible: false
         };
+
+        this._handleDocClick = this._handleDocClick.bind(this)
+    }
+
+    componentDidMount(){
+      $(document).on("click", this._handleDocClick);
+    }
+
+    componentWillUnmount() {
+      $(document).off('click', this._handleDocClick);
+    }
+
+    _handleDocClick(){
+      this.hide();
     }
 
     show(){
@@ -32,11 +46,11 @@ class Dropdown extends React.Component {
     }
 
     handleItemClick(itemIndex, value, text){
-        this.hide();
         this.props.onItemClick(itemIndex, value, text);
     }
 
-    handleClick(){
+    handleClick(e){
+        e.nativeEvent.stopImmediatePropagation();
         this.toggle();
         this.props.onClick();
     }

@@ -18,8 +18,8 @@ makeShadow(x, y, offset, color, isInset = false)
   background-color #fff
   z-index 205
 
-  .date
-    margin-right 15px
+  .day
+    margin-left 12px
 
   .date-arrow
     position absolute
@@ -59,7 +59,7 @@ makeShadow(x, y, offset, color, isInset = false)
 .date-indicator
   .date-arrow
     &.left
-      margin-left 0
+      margin-left 0 !important
       left 0
     &.right
       margin-left 0
@@ -67,7 +67,6 @@ makeShadow(x, y, offset, color, isInset = false)
       right 0
 
   .day
-    margin-left 12px
     margin-right 12px
 
   .date
@@ -93,4 +92,3 @@ makeShadow(x, y, offset, color, isInset = false)
 
     .diff-toggle
       right 8px
-

@@ -1,16 +1,23 @@
 require('./DateNavigator.styl');
 
 let { Icon, Button } = SaltUI;
-import { getWeekNumber } from '../../utils/dateUtils';
 import ButtonGroup from '../../components/ButtonGroup';
 import DropDown from '../../components/DropDown';
 import classnames from 'classnames';
 
-const formatDate = (dateUTC, filterType) => {
-  var year = dateUTC.getFullYear() + "年";
-  var month = /^(?:hour|day|week)$/.test(filterType) ? (dateUTC.getMonth() + 1) + "月" : "";
-  var date = filterType === 'hour' ? dateUTC.getDate() + "日" : "";
-  return `${year}${month}${date}`;
+const formatDate = (dateUTC, timelines, filterType) => {
+  if( /^(?:hour|day)$/.test(filterType) ) {
+    var year = dateUTC.getFullYear() + "年";
+    var month = (dateUTC.getMonth() + 1) + "月";
+    var date = filterType === 'hour' ? dateUTC.getDate() + "日" : "";
+    return `${year}${month}${date}`;
+  } else {
+    if( filterType == 'year' ){
+      return [timelines[0].substr(5), timelines[timelines.length - 1].substr(5)].join("~");
+    } else {
+      return [timelines[0], timelines[timelines.length - 1]].join("~");
+    }
+  }
 };
 
 const getDay = (dateUTC) => {
@@ -71,18 +78,19 @@ class DateNavigator extends React.Component {
     if( itemIndex === this.state.activeIndex ) return;
     this.setState({
       activeIndex: itemIndex
+    }, () => {
+      this.filterType = filterType;
     });
-    this.filterType = filterType;
     this.props.onItemClick(filterType);
   }
 
   render() {
-      const {date, nextDisabled, diffDisabled, onPrev, onNext, isFullScreen, hideDiff} = this.props;
+      const {date, nextDisabled, diffDisabled, onPrev, onNext, isFullScreen, hideDiff, timelines} = this.props;
       let { width, height, options } = this.state;
       let dateIndicator = (
         <div>
           <Icon name="angle-left" className="date-arrow left" onClick={onPrev} />
-          <span className="date">{formatDate(date, this.filterType)}</span>
+          <span className="date">{formatDate(date, timelines, this.filterType)}</span>
           <span className="day">{this.filterType !== 'hour' ? "" : `星期${getDay(date)}`}</span>
           <Icon name="angle-right" className={classnames("date-arrow right", {disabled: nextDisabled})} onClick={onNext} />
         </div>
@@ -95,7 +103,8 @@ class DateNavigator extends React.Component {
           {
             !isFullScreen ?
               <div>
-                <DropDown options={options} activeIndex={this.state.activeIndex} onItemClick={this.itemClick.bind(this)}></DropDown>
+                <DropDown options={options} activeIndex={this.state.activeIndex} onItemClick={this.itemClick.bind(this)}>
+                </DropDown>
                 {dateIndicator}
                 {hideDiff ? "" :
                   <div className="diff-toggle" onClick={this.props.toggleDiff}>

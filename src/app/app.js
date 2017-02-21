@@ -44,14 +44,13 @@ ReactDOM.render(
     <Router history={hashHistory}>
       <Route name="app" path="/" component={App}>
         {/*<IndexRoute component={PageHome}/>*/}
-        <IndexRoute component={DataView}/>
        {/* <Route path="button" component={PageButton}/>
         <Route path="list" component={PageList}/>
         <Route path="form" component={PageForm}/>
         <Route path="icon" component={PageIcon}/>
         <Route path="dialog" component={PageDialog}/>
         <Route path="scene" component={PageScene}/>*/}
-        <Route path="saleDataView" component={DataView}/>
+        <Route path="saleDataView" component={PageHome}/>
       </Route>
     </Router>, document.getElementById('App')
 );

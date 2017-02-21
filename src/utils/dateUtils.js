@@ -51,7 +51,7 @@ export const getWeekNumber = (dateObject) => {
  * @returns {Number}
  */
 export const getDayNumber = (dateObject) => {
-   var year = dateObject.getFullYear(),
+    var year = dateObject.getFullYear(),
     month = dateObject.getMonth(),
     days = dateObject.getDate();
 
