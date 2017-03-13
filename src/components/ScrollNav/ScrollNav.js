@@ -34,7 +34,9 @@ class Page extends React.Component {
 
   componentDidMount() {
     let curPath = location.hash.substr(1).split("?")[0];
-    actions.scrollTo(this._getNavIndex(curPath));
+    if( curPath !== "/" ){
+      actions.scrollTo(this._getNavIndex(curPath));
+    }
   }
 
   _getNavIndex(path) {
@@ -94,12 +96,12 @@ Page.defaultProps = {
   rightBarClick: Context.noop,
   navs: [
     {
-      text: "商品信息",
-      path: "/goodsInfo"
-    },
-    {
       text: "销售数据",
       path: "/dataview"
+    },
+    {
+      text: "商品信息",
+      path: "/goodsInfo"
     },
     {
       text: "优惠",

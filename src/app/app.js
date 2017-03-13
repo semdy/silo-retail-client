@@ -84,7 +84,7 @@ reactMixin.onClass(App, Reflux.connect(store));
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route name="app" path="/" component={App}>
-      <IndexRoute component={Index}/>
+      <IndexRoute component={DataView}/>
       <Route path="dataview" component={DataView}/>
       {/* <Route path="list" component={PageList}/>
        <Route path="form" component={PageForm}/>
