@@ -4,6 +4,8 @@ let { Icon, Button } = SaltUI;
 import ButtonGroup from '../../components/ButtonGroup';
 import DropDown from '../../components/DropDown';
 import classnames from 'classnames';
+import reactMixin from 'react-mixin';
+import store from  '../../app/store';
 
 const formatDate = (dateUTC, timelines, filterType) => {
   if( /^(?:hour|day)$/.test(filterType) ) {
@@ -70,10 +72,6 @@ class DateNavigator extends React.Component {
       };
   }
 
-  showStoreList(){
-      this.props.showStoreList();
-  }
-
   itemClick(itemIndex, filterType){
     if( itemIndex === this.state.activeIndex ) return;
     this.setState({
@@ -85,8 +83,8 @@ class DateNavigator extends React.Component {
   }
 
   render() {
-      const {date, nextDisabled, diffDisabled, onPrev, onNext, isFullScreen, hideDiff, timelines} = this.props;
-      let { width, height, options } = this.state;
+      const {date, nextDisabled, diffDisabled, onPrev, onNext, hideDiff, timelines} = this.props;
+      let { width, height, options, isFullScreen } = this.state;
       let dateIndicator = (
         <div>
           <Icon name="angle-left" className="date-arrow left" onClick={onPrev} />
@@ -112,7 +110,7 @@ class DateNavigator extends React.Component {
                       环比
                       <Icon name="check" className={classnames("icon-has-bg", {disabled: diffDisabled})}
                             width={16}
-                            height={12}
+                            height={16}
                             fill="#fff"/>
                     </Button>
                   </div>
@@ -131,7 +129,7 @@ class DateNavigator extends React.Component {
                   <Button type="minor" className="t-button-plain" onClick={this.itemClick.bind(this, 4, 'year')}>年</Button>
                 </ButtonGroup>
                 <ButtonGroup half={true}>
-                  <Button type="minor" className="t-button-plain" onClick={this.showStoreList.bind(this)}>
+                  <Button type="minor" className="t-button-plain" onClick={this.props.showStoreList.bind(this)}>
                     选择对比门店<span className="caret"></span>
                   </Button>
                 </ButtonGroup>
@@ -141,5 +139,7 @@ class DateNavigator extends React.Component {
       </div>);
   }
 }
+
+reactMixin.onClass(DateNavigator, Reflux.connect(store));
 
 module.exports = DateNavigator;

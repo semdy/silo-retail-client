@@ -1,127 +1,133 @@
 require('./ScrollNav.styl');
 
-let { Context } = SaltUI;
-let { PropTypes } = React;
-let { hashHistory } = ReactRouter;
+let {Context, Icon} = SaltUI;
+let {PropTypes} = React;
+let {hashHistory} = ReactRouter;
+import reactMixin from 'react-mixin';
+import actions from '../../app/actions';
+import store from  '../../app/store';
 import classnames from 'classnames';
 
 class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      navs: this.props.navs
+    };
+  }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            navs: [
-                {
-                    text: "商品信息",
-                    route: "goodsInfo"
-                },
-                {
-                    text: "销售数据",
-                    route: "saleDataView"
-                },
-                {
-                    text: "优惠",
-                    route: "saleDataView"
-                },
-                {
-                    text: "客流",
-                    route: "passflow"
-                },
+  handleRoute(path, index) {
+    hashHistory.replace(path);
+    actions.scrollTo(index);
+    //this.refs.scroller.scrollLeft = (index + 1)*100;
+  }
+
+  handleMenuFun() {
+    actions.toggleNavigation();
+    this.props.leftBarClick();
+  }
+
+  rightFun() {
+    actions.showStoreSelector();
+    this.props.rightBarClick();
+  }
+
+  componentDidMount() {
+    let curPath = location.hash.substr(1).split("?")[0];
+    actions.scrollTo(this._getNavIndex(curPath));
+  }
+
+  _getNavIndex(path) {
+    var navs = this.state.navs;
+    for (var i = 0; i < navs.length; i++) {
+      if (navs[i].path == path) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  render() {
+    let {scrollNavIndex, scrollNavVisible, navs} = this.state;
+
+    return (
+      <div className="scroll-nav padL padR" style={{display: scrollNavVisible ? "block" : "none"}}>
+        <div className="scroll-nav-toolbar left" onClick={this.handleMenuFun.bind(this)}>
+          <Icon name="menu" width={20} height={20}/>
+        </div>
+        <div className="scroll-nav-contain">
+          <div ref="scroller" className="scroll-nav-bd">
+            <div className="scroll-nav-scroller">
               {
-                text: "客流",
-                route: "passflow"
-              },
-              {
-                text: "客流",
-                route: "passflow"
-              },
-              {
-                text: "客流",
-                route: "passflow"
-              },
-              {
-                text: "客流",
-                route: "passflow"
+                navs.map((item, index) => {
+                  return (
+                    <a href="javascript:;"
+                       key={'nav' + index}
+                       className={classnames("scroll-nav-item", {active: scrollNavIndex == index})}
+                       onClick={this.handleRoute.bind(this, item.path, index)}>
+                      <span>{item.text}</span>
+                    </a>
+                  )
+                })
               }
-            ]
-        };
-    }
-
-    componentDidMount() {
-      $("body").addClass("page-scrollNav");
-    }
-
-    componentWillUnmount() {
-      $("body").removeClass("page-scrollNav");
-    }
-
-    handleRoute(route) {
-        hashHistory.replace(route);
-    }
-
-    render() {
-        let leftBar = "";
-        let rightBar = "";
-        const {showLeftBar, showRightBar, leftBarClick, rightBarClick, activeIndex} = this.props;
-
-        if( showLeftBar ){
-            leftBar = (
-                <div className="scroll-nav-toolbar left" onClick={leftBarClick}>
-                    <i className="icon icon-menu"></i>
-                </div>
-            )
-        }
-
-        if( showRightBar ) {
-            rightBar = (
-                <div className="scroll-nav-toolbar right" onClick={rightBarClick}>
-                    <i className="icon icon-home"></i>
-                </div>
-            )
-        }
-
-
-        return (
-            <div className={classnames("scroll-nav", {padL: showLeftBar, padR: showRightBar})}>
-                {leftBar}
-                <div className="scroll-nav-contain">
-                    <div className="scroll-nav-bd">
-                        <div className="scroll-nav-scroller">
-                            {
-                                this.state.navs.map((item, index) => {
-                                    return (
-                                        <a href="javascript:;"
-                                           key={'nav' + index}
-                                           className={classnames("scroll-nav-item", {active: activeIndex === index})}
-                                           onClick={this.handleRoute.bind(this, item.route)}>
-                                            <span>{item.text}</span>
-                                        </a>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
-                </div>
-                {rightBar}
             </div>
-        );
-    }
+          </div>
+        </div>
+        <div className="scroll-nav-toolbar right" onClick={this.rightFun.bind(this)}>
+          <Icon name="store" width={20} height={20}/>
+        </div>
+      </div>
+    );
+  }
 }
 
 Page.propTypes = {
-  showLeftBar: PropTypes.bool,
-  showRightBar: PropTypes.bool,
   leftBarClick: PropTypes.func,
   rightBarClick: PropTypes.func,
-  activeIndex: PropTypes.number
+  navs: PropTypes.arrayOf(
+    PropTypes.object
+  ).isRequired
 };
 
 Page.defaultProps = {
-  showLeftBar: true,
-  showRightBar: true,
   leftBarClick: Context.noop,
   rightBarClick: Context.noop,
-  activeIndex: 0
+  navs: [
+    {
+      text: "商品信息",
+      path: "/goodsInfo"
+    },
+    {
+      text: "销售数据",
+      path: "/dataview"
+    },
+    {
+      text: "优惠",
+      path: "/saleDataView"
+    },
+    {
+      text: "客流",
+      path: "/passflow"
+    },
+    {
+      text: "客流",
+      path: "/passflow"
+    },
+    {
+      text: "客流",
+      path: "/passflow"
+    },
+    {
+      text: "客流",
+      path: "/passflow"
+    },
+    {
+      text: "客流",
+      path: "/passflow"
+    }
+  ]
 };
+
+reactMixin.onClass(Page, Reflux.connect(store));
 
 module.exports = Page;

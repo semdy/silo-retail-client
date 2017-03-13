@@ -1,0 +1,63 @@
+transform(x = 0, y = 0, z = 0)
+  -webkit-transform translate3d(x, y, z)
+  transform translate3d(x, y, z)
+
+transition(dur = 0.3s, ease = linear)
+  -webkit-transition -webkit-transform dur ease;
+  transition transform dur ease;
+
+.sidenavigation
+  display none
+  position absolute
+  left 0
+  top: 0
+  width 100%
+  height 100%
+  overflow-x hidden
+  overflow-y auto
+  background-color #131313
+  transform(-80px)
+  transition(0.3s, ease-out)
+  -webkit-overflow-scrolling touch
+
+  li
+    margin-bottom 12px
+
+  li > a
+    display block
+    color #e5e5e5
+    font-size 16px
+    padding 12px 0 12px 15px
+
+    .t-icon
+      margin-right 5px;
+
+    &:active
+      background-color #000
+
+  li
+    &.current
+      a
+        color #008cee
+
+.navigation-list
+  margin-top 50px
+
+.page-container
+  transform(0)
+  transition(0.3s, ease-out)
+
+.sidenavigation
+  &.show-sidebar
+    display block
+    transform(0)
+
+.page-container
+  &.show-sidebar
+    transform(200px)
+
+.sidenavigation
+  &.hide-sidebar
+    display block
+
+

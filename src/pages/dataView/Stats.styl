@@ -15,10 +15,11 @@ makeShadow(x, y, offset, color, isInset = false)
 
 .stats-container
   position relative
-  margin 10px 5px
-  /*makeGradient(#7d8bfe, #3b57d4)*/
-  background-color gblue
-  makeShadow(0, 3px, 5px, rgba(0,0,0,.2))
+  padding 10px 5px
+  .stats-bd
+    /*makeGradient(#7d8bfe, #3b57d4)*/
+    background-color gblue
+    makeShadow(0, 3px, 5px, rgba(0, 0, 0, .2))
   .stats-item
     float left
     width 50%
@@ -40,5 +41,6 @@ makeShadow(x, y, offset, color, isInset = false)
     top 0
     bottom 0
     width 1px
-    background-color rgba(255,255,255,.3)
-    /*makeGradient(rgba(255,255,255,.1), rgba(255,255,255,.4))*/
+    background-color rgba(255, 255, 255, .3)
+
+/*makeGradient(rgba(255,255,255,.1), rgba(255,255,255,.4))*/

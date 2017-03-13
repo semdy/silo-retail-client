@@ -2,6 +2,7 @@
 
 import { env, urlParams } from '../config';
 import { isDD, error } from '../../utils';
+let { Toast } = SaltUI;
 
 const jsApiList = ['runtime.info', 'biz.contact.choose',
   'device.notification.confirm', 'device.notification.alert',
@@ -35,7 +36,19 @@ const session = {
 
 };
 
+let requestCount = 0;
+
 const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
+  requestCount++;
+
+  if( requestCount == 1 ) {
+    Toast.show({
+      type: 'loading',
+      content: '应用启动中...',
+      autoHide: false
+    });
+  }
+
   return new Promise((resolve, reject) => {
     $.ajax({
       type: method,
@@ -53,6 +66,11 @@ const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
       error: (xhr, status, err) => {
         reject(xhr, status, err);
         error(`与服务器失去连接, code: ${status}`);
+      },
+      complete: () => {
+        if(--requestCount == 0){
+          //Toast.hide();
+        }
       }
     });
   });
@@ -186,6 +204,7 @@ function triggerReady() {
   readyQueue.forEach((itemFun) => {
     itemFun();
   });
+  readyQueue = [];
 }
 
 signIn.ready = ready;

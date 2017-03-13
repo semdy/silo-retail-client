@@ -1,13 +1,14 @@
 import './DataView.styl';
 
-let { Toast, Button } = SaltUI;
+let {Toast} = SaltUI;
 import { getWeekNumber } from '../../utils/dateUtils';
-import ScrollNav from '../../components/ScrollNav';
+import { error } from '../../utils';
 import Stats from './Stats';
 import Charts from './Charts';
 import DateNavigator from './DateNavigator';
-import StoreSelector from '../../components/StoreSelector';
-import {httpRequestReportPayment, httpRequestStoreList} from '../../services/storeService';
+import actions from '../../app/actions';
+import store from '../../app/store';
+import {httpRequestReportPayment, httpRequestStoreList} from '../../services/StoreService';
 
 //默认时间间隔(单位：小时|天|月|年)
 const defaultOffset = 0;
@@ -39,11 +40,11 @@ const formatTime = (time, bytype) => {
 };
 
 const UNIT_MAP = {
-  hour:   'h',
-  day:   '日',
-  week:  '周',
+  hour: 'h',
+  day: '日',
+  week: '周',
   month: '月',
-  year:  '年'
+  year: '年'
 };
 
 //获取距离今天指定日期对象
@@ -51,7 +52,7 @@ const getDateBefore = (offset, filterType) => {
   let date = new Date();
   let dateFn;
   let setFn;
-  switch ( filterType ){
+  switch (filterType) {
     case 'hour':
       dateFn = "getDate";
       setFn = "setDate";
@@ -73,7 +74,7 @@ const getDateBefore = (offset, filterType) => {
       setFn = "setYear";
       break;
   }
-  if( dateFn ) {
+  if (dateFn) {
     date[setFn](date[dateFn]() - offset);
   }
   return date;
@@ -129,15 +130,15 @@ const genKeyMap = (times, counts, amouts, formatType) => {
 };
 
 //生成二维数组的键值对(用于合并多组x轴数据)
-const genGroupKeyMap = ( datas, cachData, formatType ) => {
+const genGroupKeyMap = (datas, cachData, formatType) => {
   let map = {};
   datas.forEach((data) => {
-    let itemMap = genKeyMap(data.axisX.time||[], data.axisY.count||[], data.axisY.rmb||[], formatType);
-    if( cachData ) {
+    let itemMap = genKeyMap(data.axisX.time || [], data.axisY.count || [], data.axisY.rmb || [], formatType);
+    if (cachData) {
       cachData.push(itemMap);
     }
-    for(let i in itemMap){
-      if( map[i] === undefined ){
+    for (let i in itemMap) {
+      if (map[i] === undefined) {
         map[i] = itemMap[i];
       }
     }
@@ -151,7 +152,7 @@ const zeroFill = (targetData, timelines) => {
   let newData = [];
   targetData.forEach((data) => {
     timelines.forEach((timeline) => {
-      if( data[timeline] === undefined ){
+      if (data[timeline] === undefined) {
         data[timeline] = [0, 0];
       }
     });
@@ -160,7 +161,9 @@ const zeroFill = (targetData, timelines) => {
   //按时间先后顺序重新排序
   targetData.forEach((item) => {
     let obj = {};
-    let keys = Object.keys(item).sort((a, b) => { return parseFloat(a) - parseFloat(b) });
+    let keys = Object.keys(item).sort((a, b) => {
+      return parseFloat(a) - parseFloat(b)
+    });
     keys.forEach((key) => {
       obj[key] = item[key];
     });
@@ -177,9 +180,9 @@ const extractYAxisData = (dataMap) => {
   dataMap.forEach((data) => {
     let count = [];
     let amout = [];
-    for(let i in data) {
-      count.push(data[ i ][0]);
-      amout.push(data[ i ][1]);
+    for (let i in data) {
+      count.push(data[i][0]);
+      amout.push(data[i][1]);
     }
     counts.push(count);
     amouts.push(amout);
@@ -199,7 +202,6 @@ class Page extends React.Component {
       isDataLoaded: false,
       activeIndex: 1,
       isNextDisabled: true,
-      isFullScreen: false,
       diffDisabled: false,
       hideDiff: false,
       timelines: [],
@@ -234,44 +236,43 @@ class Page extends React.Component {
 
   fetchData(storeId, offset) {
     return new Promise((resolve, reject) => {
-      httpRequestReportPayment(`retail.payment.report.${this.filterType}`, storeId, offset).then((res) =>{
+      httpRequestReportPayment(`retail.payment.report.${this.filterType}`, storeId, offset).then((res) => {
         resolve(res);
       }, (err) => {
         reject(err);
-        Toast.show({
-          type: 'error',
-          content: "服务器异常或没有数据 code: " + err.result
-        });
+        /*error("服务器异常或没有数据 code: " + err.result);*/
       });
     });
   }
 
-  fetchGroupData(groupPrams){
+  fetchGroupData(groupPrams) {
 
-    if( !Array.isArray(groupPrams) )
+    if (!Array.isArray(groupPrams))
       throw new Error("fetchGroupData arguments must be typeof Array!");
 
-    let fetches = groupPrams.map( item => this.fetchData(item.storeId, item.offset));
+    let fetches = groupPrams.map(item => this.fetchData(item.storeId, item.offset));
 
-    Toast.show({
-        type: 'loading',
-        content: '拼命加载中...',
-        autoHide: false
-    });
-    
+    /*Toast.show({
+      type: 'loading',
+      content: '拼命加载中...',
+      autoHide: false
+    });*/
+
     return new Promise((resolve) => {
       Promise.all(fetches).then((values) => {
         resolve(values);
-        Toast.hide();
+        //Toast.hide();
       });
     })
   }
 
-  setData( values, legendNames ){
+  setData(values, legendNames) {
     let cacheData = [];
     const count = getGroupSum(values, "count");
     const amout = getGroupSum(values, "rmb");
-    const timelines = Object.keys( genGroupKeyMap(values, cacheData, this.filterType) ).sort((a, b)=>{return parseFloat(a) - parseFloat(b)});
+    const timelines = Object.keys(genGroupKeyMap(values, cacheData, this.filterType)).sort((a, b) => {
+      return parseFloat(a) - parseFloat(b)
+    });
     const xAxisData = timelines.map(xdata => xdata.charAt(5) == "0" ? xdata.substr(6) : xdata.substr(5));
     const yAxisData = extractYAxisData(zeroFill(cacheData, timelines));
 
@@ -310,32 +311,29 @@ class Page extends React.Component {
       });
       //取第一家店铺的storeId
       let storeId = storeList[0].storeId;
-      this.fetchParams = [{storeId: storeId, offset: this.offset},{storeId: storeId, offset: this.offset + 1}];
+      this.fetchParams = [{storeId: storeId, offset: this.offset}, {storeId: storeId, offset: this.offset + 1}];
       this.legendNames = ["今日订单量", "今日营业额", "昨日订单量", "昨日营业额"];
       this.doQuery();
     });
+
+    store.emitter.on("setSelectedStore", this._storeHandler, this);
+
   }
 
-  showMenu() {
-    alert("show menu");
+  componentWillUnmount() {
+    store.off("setSelectedStore", this._storeHandler);
   }
 
-  showStoreList() {
-    if (this.state.isDataLoaded) {
-      this.refs.storeSelector.show();
-      this.refs.charts.hideToolTip();
-    }
-  }
-
-  handleConfirm( storeList ) {
-    if( storeList.length > 3 ){
-        return Toast.show({
-            type: 'error',
-            content: "门店最多只能选3个"
-        });
+  _storeHandler(storeList) {
+    if( storeList.length == 0 ){
+      return error("请至少选择一个门店");
     }
 
-    this.refs.storeSelector.hide();
+    if (storeList.length > 3) {
+      return error("门店最多只能选3个");
+    }
+
+    actions.hideStoreSelector();
 
     let self = this;
     this.compareType = 2;
@@ -346,7 +344,7 @@ class Page extends React.Component {
         storeId: store.storeId,
         offset: 0
       });
-      self.legendNames.push(`${store.storeName}订单量`, `${store.storeName}营业额`);
+      self.legendNames.push(`${store.name}订单量`, `${store.name}营业额`);
     });
 
     this.doQuery();
@@ -357,14 +355,19 @@ class Page extends React.Component {
     });
   }
 
-  setOffset(offset){
+  showStoreList() {
+    actions.showStoreSelector();
+    this.refs.charts.hideToolTip();
+  }
+
+  setOffset(offset) {
     let self = this;
     this.fetchParams.forEach((item, i) => {
       self.fetchParams[i].offset = offset + ( self.compareType == 1 ? i : 0 );
     });
   }
 
-  doQuery(){
+  doQuery() {
     let self = this;
     this.setOffset(this.offset);
     return self.fetchGroupData(self.fetchParams).then((values) => {
@@ -373,7 +376,7 @@ class Page extends React.Component {
     });
   }
 
-  queryPrev(){
+  queryPrev() {
     this.offset += 1;
     this.setState({
       isNextDisabled: false
@@ -381,12 +384,12 @@ class Page extends React.Component {
     this.doQuery();
   }
 
-  queryNext(){
-    if( this.offset == 0 ){
+  queryNext() {
+    if (this.offset == 0) {
       return;
     }
     this.offset = Math.max(0, --this.offset);
-    if( this.offset == 0 ) {
+    if (this.offset == 0) {
       this.setState({
         isNextDisabled: true
       });
@@ -394,20 +397,14 @@ class Page extends React.Component {
     this.doQuery();
   }
 
-  changeViewMode(isFullScreen){
-    this.setState({
-      isFullScreen: isFullScreen
-    });
-  }
-
-  handleFilterItemClick(filterType){
+  handleFilterItemClick(filterType) {
     //切换筛选类型时将offset置为0
     this.offset = 0;
     this.filterType = filterType;
     this.doQuery();
   }
 
-  toggleDiff(){
+  toggleDiff() {
     this.setState({
       diffDisabled: !this.state.diffDisabled
     }, () => this.refs.charts.toggleDiff(this.state.diffDisabled));
@@ -416,19 +413,12 @@ class Page extends React.Component {
   render() {
     return (
       <div>
-        <ScrollNav activeIndex={this.state.activeIndex}
-                   showLeftBar={true}
-                   showRightBar={true}
-                   leftBarClick={this.showMenu.bind(this)}
-                   rightBarClick={this.showStoreList.bind(this)}>
-        </ScrollNav>
         {
           !this.state.isDataLoaded ? "" :
             <div>
               <Stats statsData={this.state.statsData}>
               </Stats>
               <DateNavigator
-                isFullScreen={this.state.isFullScreen}
                 showStoreList={this.showStoreList.bind(this)}
                 date={this.state.date}
                 timelines={this.state.timelines}
@@ -442,14 +432,7 @@ class Page extends React.Component {
                 toggleDiff={this.toggleDiff.bind(this)}
               >
               </DateNavigator>
-              <StoreSelector ref="storeSelector"
-                             isFullScreen={this.state.isFullScreen}
-                             onConfirm={this.handleConfirm.bind(this)}
-                             data={this.state.storeList}
-              >
-              </StoreSelector>
               <Charts ref="charts"
-                      changeViewMode={this.changeViewMode.bind(this)}
                       statsData={this.state.statsData}
                       chartData={this.state.chartData}
               >

@@ -1,5 +1,5 @@
 
-import { fetch } from './fetch';
+import { fetch } from '../fetch';
 
 export const httpRequestReportPayment = (query, storeId, offset) => {
   let params = {

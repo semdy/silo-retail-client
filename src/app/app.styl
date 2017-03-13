@@ -1,41 +1,68 @@
+*
+  -webkit-tap-highlight-color transparent
+
 body
-    color #333
-    background-color #eee
+  color #333
+  -webkit-overflow-scrolling touch
+
+html, body, #App, .app-body, .page-container, .page-content
+  width 100%
+  height 100%
+
+html, body
+  touch-action: pan-y;
+  overflow-x hidden
+
+.page-container
+  background-color #eee
+
+.page-content
+  overflow-x hidden
+  overflow-y auto
 
 .t-toast-content
-    word-break break-all
-    word-wrap break-word
+  word-break break-all
+  word-wrap break-word
 
 .caret
-    display inline-block
-    width 0
-    height 0
-    border-width 6px
-    border-style solid dashed dashed
-    border-color #333 transparent transparent
-    vertical-align -4px
-    margin-left 5px
+  display inline-block
+  width 0
+  height 0
+  border-width 6px
+  border-style solid dashed dashed
+  border-color #333 transparent transparent
+  vertical-align -4px
+  margin-left 5px
 
 .inline-block
-    display inline-block
+  display inline-block
 
 .inline
-    display inline
+  display inline
+
+.t-toast
+  color #fff
 
 .t-icon
-    &.icon-has-bg
-        padding 1px
-        margin-left 5px
-        color #333
-        background-color #45a8e6
-        border-radius 50%
+  display inline-block
+  vertical-align middle
 
-        .t-icon-svg
-            vertical-align baseline
+  &.icon-has-bg
+    padding 1px
+    margin-left 5px
+    color #fff
+    background-color #45a8e6
+    border-radius 50%
 
-    &.icon-has-bg
-        &.disabled
-            background-color #e0e0e0
+  &.icon-has-bg
+    &.disabled
+      background-color #e0e0e0
+      color #777
 
-            svg
-                fill #777
+.t-icon-svg
+  fill currentColor
+  vertical-align top
+
+svg:not(:root) {
+  overflow hidden
+}

@@ -25,6 +25,9 @@ makeShadow(x, y, offset, color, isInset = false)
     position absolute
     top:50%
     left 50%
+    width 30px
+    height 30px
+    color #999
     -webkit-transform translateY(-50%)
     transform translateY(-50%)
 
@@ -33,11 +36,6 @@ makeShadow(x, y, offset, color, isInset = false)
 
     &.right
       margin-left 80px
-
-    > svg
-      width 30px
-      height 30px
-      fill #999
 
     &.disabled
       > svg
