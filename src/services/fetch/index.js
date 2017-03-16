@@ -1,6 +1,7 @@
 import { isRPC, env } from '../config'
 import { signIn, session } from '../auth';
 import { error } from '../../utils';
+import config from '../../config';
 let { Toast } = SaltUI;
 
 let requestCount = 0;
@@ -9,6 +10,7 @@ let request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
   return new Promise((resolve, reject) => {
     //body = Object.assign({ protoc2S: {sessionId: session.get().sessionId}}, body);
     let sessionId = session.get().sessionId;
+    body = Object.assign(body, {lang: config.lang});
 
     requestCount++;
 
@@ -62,11 +64,11 @@ let fetch = ( args ) => {
   return new Promise((resolve, reject) => {
     signIn.ready(() => {
       request(args).then((res) => {
-        if (res.result == 0) {
-          resolve(res.data);
-        } else {
+        //if (res.result == 0) {
+          resolve(res);
+        /*} else {
           reject(res);
-        }
+        }*/
       });
     });
   });

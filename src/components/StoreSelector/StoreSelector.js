@@ -9,7 +9,8 @@ import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import classnames from 'classnames';
-import {httpRequestStoreList} from '../../services/StoreService';
+import { getStoreList } from '../../services/store';
+import locale, {storeLocale} from '../../locale';
 
 
 class Page extends React.Component {
@@ -61,7 +62,7 @@ class Page extends React.Component {
 
   componentDidMount() {
     //获得门店列表的数据
-    httpRequestStoreList().then((storeList) => {
+    getStoreList().then((storeList) => {
       this.setState({
         storeList: storeList
       });
@@ -87,7 +88,7 @@ class Page extends React.Component {
                    left: isFullScreen ? "-200px" : "",
                    top: isFullScreen ? window.innerHeight - 400 - window.innerWidth / 2 + "px" : ""
                  }}>
-          <h4 className="store-header">请选择对比的门店(最多3个)</h4>
+          <h4 className="store-header">{storeLocale.title}</h4>
           <ul className="store-list" style={{height: isFullScreen ? window.innerWidth - 94 + "px" : ""}}>
             {
               storeList.map((item, index) => {
@@ -106,10 +107,10 @@ class Page extends React.Component {
           <div className="store-actions t-PL16 t-PR16">
             <HBox>
               <Box flex={1} className="t-PR8">
-                <Button type="minor" onClick={this.handleCancel.bind(this)}>取消</Button>
+                <Button type="minor" onClick={this.handleCancel.bind(this)}>{locale.cancel}</Button>
               </Box>
               <Box flex={1} className="t-PL8">
-                <Button type="primary" onClick={this.handleConfirm.bind(this)}>确定</Button>
+                <Button type="primary" onClick={this.handleConfirm.bind(this)}>{locale.ok}</Button>
               </Box>
             </HBox>
           </div>

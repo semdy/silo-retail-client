@@ -1,5 +1,4 @@
 const actions = require('./actions');
-//const EventEmitter = require('../utils/EventEmitter');
 
 module.exports = Reflux.createStore({
   listenables: [actions],
@@ -8,16 +7,14 @@ module.exports = Reflux.createStore({
     navVisible: false,
     //是否显示顶部滚动导航
     scrollNavVisible: true,
-    //侧边栏导航高亮索引值, -1时均不高亮
-    navIndex: -1,
-    //顶部滚动导航高亮索引值
-    scrollNavIndex: 0,
     //是否显示店铺
     showStore: false,
     //是否全屏
     isFullScreen: false,
     //店铺列表是否单选
-    storeMultiable: true
+    storeMultiable: true,
+    //是否显示店铺列表
+    storeListVisible: false
   },
 
   //隐藏侧边栏导航
@@ -46,18 +43,9 @@ module.exports = Reflux.createStore({
     this.updateComponent();
   },
 
-  //侧边栏导航跳转
-  onNavGoto (index) {
-    this.state.scrollNavIndex = -1; //取消顶部导航所有高亮
-    this.state.navIndex = index;
-    this.updateComponent();
-  },
-
   //顶部导航跳转
   onScrollTo (index) {
-    this.state.navIndex = -1; //取消侧边栏导航所有高亮
-    this.state.scrollNavIndex = index;
-    this.updateComponent();
+    //this.updateComponent();
   },
 
   //显示门店弹窗
@@ -84,10 +72,24 @@ module.exports = Reflux.createStore({
     this.updateComponent();
   },
 
+  //显示店铺列表
+  onShowStoreList(){
+    this.state.storeListVisible = true;
+    this.updateComponent();
+  },
+
+  //隐藏店铺列表
+  onHideStoreList(){
+    this.state.storeListVisible = false;
+    this.updateComponent();
+  },
+
+  //更新组件状态
   updateComponent () {
     this.trigger(this.state);
   },
 
+  //初始化组件状态池
   getInitialState () {
     return this.state;
   }

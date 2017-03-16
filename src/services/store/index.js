@@ -1,5 +1,6 @@
 import {fetch} from '../fetch';
 import { signIn } from '../auth';
+import actions from '../../app/actions';
 
 /**
  *获取店铺相关销售数据
@@ -8,7 +9,7 @@ import { signIn } from '../auth';
  * @param {number} 时间间隔, 根据query里指定数据单元，0取当前单元数据，-1取上一单元数据，-2取上上单元数据 e.g.
  * @return http promise
  * */
-export const httpRequestReportPayment = (query, storeId, offset) => {
+export const fetchReportPayment = (query, storeId, offset) => {
   let params = {
     query,
     storeId,
@@ -41,18 +42,19 @@ function triggerReady() {
   readyQueue = [];
 }
 
-const doStoreRequest = () => {
+export const fetchStoreList = () => {
   fetch.post('7103.json').then((stores) => {
-    storeList = stores;
+    storeList = stores.data;
     triggerReady();
   }, (err) => {
     errMsg = err;
+    console.error("get storeList error:" + err);
     triggerReady();
   });
 };
 
 signIn.ready(() => {
-  doStoreRequest();
+  fetchStoreList();
 });
 
 
@@ -62,13 +64,20 @@ signIn.ready(() => {
  * 为了保证不同路由只发送一次请求，因此将接口放入队列里，请求成功后再返回storeList。
  * @return promise
  * */
-export const httpRequestStoreList = () => {
+export const getStoreList = () => {
   return new Promise((resolve, reject) => {
     ready(() => {
       if (errMsg) {
         reject(errMsg);
       } else {
-        resolve(storeList);
+        if( storeList.length == 0 ){
+          reject("empty storelist data");
+        } else {
+          if( storeList.length > 1 ){
+            actions.showStoreList();
+          }
+          resolve(storeList);
+        }
       }
     });
   });

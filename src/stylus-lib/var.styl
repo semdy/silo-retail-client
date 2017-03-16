@@ -1,0 +1,34 @@
+gblue = #008cee
+
+transform(attr){
+  -webkit-transform attr;
+  transform attr;
+}
+
+makeGradient(topColor, bottomColor)
+  background -webkit-linear-gradient(top, topColor, bottomColor)
+  background -webkit-gradient(linear, top, topColor, bottomColor)
+  background linear-gradient(top, topColor, bottomColor)
+
+makeShadow(x, y, offset, color, isInset = false)
+  if isInset
+    -webkit-box-shadow x y offset color inset
+    box-shadow x y offset color inset
+  else
+    -webkit-box-shadow x y offset color
+    box-shadow x y offset color
+
+shadow()
+  makeShadow(0, 3px, 8px, rgba(0, 0, 0, .12))
+
+panel()
+  position relative
+  background-color #fff
+  padding 15px
+  shadow()
+
+center()
+  position absolute
+  left 50%
+  top 50%
+  transform(translate(-50%, -50%))

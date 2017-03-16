@@ -1,0 +1,34 @@
+@import "../../stylus-lib/var.styl"
+
+.survey-item
+  text-align center
+
+  .item-prop
+    font-size 16px
+
+  .item-value
+    margin 8px 0 12px
+    color gblue
+    font-size 20px
+
+  .item-avg
+    color #888
+    font-size 13px
+    white-space nowrap
+
+.survey-item-cell
+  .t-icon
+    top -2px
+  &.trend-up
+    .t-icon
+      color green
+    .trend-ratio
+      color green
+
+  &.trend-down
+    .t-icon
+      color red
+      transform(rotate(180deg))
+
+    .trend-ratio
+      color red

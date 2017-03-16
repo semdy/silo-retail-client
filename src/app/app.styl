@@ -1,3 +1,5 @@
+@import "../stylus-lib/var.styl"
+
 *
   -webkit-tap-highlight-color transparent
 
@@ -66,3 +68,28 @@ html, body
 svg:not(:root) {
   overflow hidden
 }
+
+/*====panel====*/
+.panel
+  panel()
+
+  &:not(:last-child)
+    margin-bottom 10px
+
+  &.split
+    .panel-item
+      &:first-child
+        padding-right 15px
+        border-right 1px solid #ddd
+      &:last-child
+        padding-left 15px
+
+.card
+  position relative
+  padding-top 10px
+  padding-bottom 10px
+  background-color #fff
+
+  &:not(:last-child)
+    margin-bottom 10px
+

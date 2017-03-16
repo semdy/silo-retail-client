@@ -1,0 +1,12 @@
+makeTransform(props)
+  -webkit-transform props
+  transform props
+
+.page-fullscreen
+  .store-selector
+    makeTransform(rotate(90deg) translate(50%, -50%))
+  .store-list
+    max-height none
+
+  .t-toast
+    makeTransform(rotate(90deg) translateY(80%) translateX(-50%) !important)

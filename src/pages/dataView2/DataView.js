@@ -6,7 +6,6 @@ import { error } from '../../utils';
 import Stats from './Stats';
 import Charts from './Charts';
 import DateNavigator from './DateNavigator';
-import Distribution from './Distribution';
 import actions from '../../app/actions';
 import store from '../../app/store';
 import {fetchReportPayment, getStoreList} from '../../services/store';
@@ -326,13 +325,15 @@ class Page extends React.Component {
   }
 
   _storeHandler(storeList) {
+    if( storeList.length == 0 ){
+      return error("请至少选择一个门店");
+    }
+
     if (storeList.length > 3) {
       return error("门店最多只能选3个");
     }
 
     actions.hideStoreSelector();
-
-    if( storeList.length == 0 ) return;
 
     let self = this;
     this.compareType = 2;
@@ -436,8 +437,6 @@ class Page extends React.Component {
                       chartData={this.state.chartData}
               >
               </Charts>
-              <Distribution>
-              </Distribution>
             </div>
         }
       </div>
