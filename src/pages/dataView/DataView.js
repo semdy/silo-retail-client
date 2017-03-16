@@ -223,8 +223,7 @@ class Page extends React.Component {
           amount: []
         },
         legendNames: []
-      },
-      storeList: []
+      }
     };
 
     this.legendNames = [];
@@ -307,9 +306,6 @@ class Page extends React.Component {
   componentDidMount() {
     //获得门店列表的数据
     getStoreList().then((storeList) => {
-      this.setState({
-        storeList: storeList
-      });
       //取第一家店铺的storeId
       let storeId = storeList[0].storeId;
       this.fetchParams = [{storeId: storeId, offset: this.offset}, {storeId: storeId, offset: this.offset + 1}];
@@ -317,15 +313,15 @@ class Page extends React.Component {
       this.doQuery();
     });
 
-    store.emitter.on("setSelectedStore", this._storeHandler, this);
+    store.emitter.on("setSelectedStore", this._selectHandler, this);
 
   }
 
   componentWillUnmount() {
-    store.emitter.off("setSelectedStore", this._storeHandler);
+    store.emitter.off("setSelectedStore", this._selectHandler);
   }
 
-  _storeHandler(storeList) {
+  _selectHandler(storeList) {
     if (storeList.length > 3) {
       return error("门店最多只能选3个");
     }

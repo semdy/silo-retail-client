@@ -33,15 +33,15 @@ class Distribution extends React.Component {
       this.fetchData(storeList[0].storeId);
     });
 
-    store.emitter.on("setSelectedStore", this._storeHandler, this);
+    store.emitter.on("setSelectedStore", this._selectHandler, this);
 
   }
 
   componentWillUnmount() {
-    store.emitter.off("setSelectedStore", this._storeHandler);
+    store.emitter.off("setSelectedStore", this._selectHandler);
   }
 
-  _storeHandler(storeList) {
+  _selectHandler(storeList) {
     actions.hideStoreSelector();
     if( storeList.length > 0 ){
       this.fetchData(storeList[0].storeId);
