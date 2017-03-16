@@ -1,5 +1,6 @@
 
-import { queryUrlParams, error } from '../utils';
+let {Toast} = SaltUI;
+import { queryUrlParams } from '../utils';
 
 /* 基础配置 */
 let config = {};
@@ -29,7 +30,7 @@ if (!envKey) {
 }
 const env = envConfigs[envKey];
 if (!env) {
-  error('环境参数配置错误\n' + envKey);
+  Toast.error('环境参数配置错误\n' + envKey);
 }
 
 config.env = env || {};

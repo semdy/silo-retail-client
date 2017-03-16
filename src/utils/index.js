@@ -27,16 +27,7 @@ const queryUrlParams = () => {
 
 const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
 
-const error = (errMsg) => {
-  return Toast.show({
-    type: 'error',
-    content: errMsg,
-    duration: 3000
-  });
-};
-
 module.exports = {
   queryUrlParams,
-  error,
   isDD
 };

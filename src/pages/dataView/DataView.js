@@ -2,11 +2,9 @@ import './DataView.styl';
 
 let {Toast} = SaltUI;
 import { getWeekNumber } from '../../utils/dateUtils';
-import { error } from '../../utils';
 import Stats from './Stats';
 import Charts from './Charts';
 import DateNavigator from './DateNavigator';
-import Distribution from './Distribution';
 import actions from '../../app/actions';
 import store from '../../app/store';
 import {fetchReportPayment, getStoreList} from '../../services/store';
@@ -240,7 +238,7 @@ class Page extends React.Component {
         resolve(res.data);
       }, (err) => {
         reject(err);
-        /*error("服务器异常或没有数据 code: " + err.result);*/
+        /*Toast.error("服务器异常或没有数据 code: " + err.result);*/
       });
     });
   }
@@ -252,11 +250,7 @@ class Page extends React.Component {
 
     let fetches = groupPrams.map(item => this.fetchData(item.storeId, item.offset));
 
-    /*Toast.show({
-      type: 'loading',
-      content: '拼命加载中...',
-      autoHide: false
-    });*/
+    /*Toast.loading('拼命加载中...');*/
 
     return new Promise((resolve) => {
       Promise.all(fetches).then((values) => {
@@ -323,7 +317,7 @@ class Page extends React.Component {
 
   _selectHandler(storeList) {
     if (storeList.length > 3) {
-      return error("门店最多只能选3个");
+      return Toast.error("门店最多只能选3个");
     }
 
     actions.hideStoreSelector();
@@ -432,8 +426,6 @@ class Page extends React.Component {
                       chartData={this.state.chartData}
               >
               </Charts>
-              <Distribution>
-              </Distribution>
             </div>
         }
       </div>

@@ -2,6 +2,7 @@ import './Survey.styl';
 import {getStoreList} from '../../services/store';
 import {getStoreChartReport} from '../../services/survey';
 import Item from './Item';
+let {Toast} = SaltUI;
 
 class Index extends React.Component {
 
@@ -23,6 +24,8 @@ class Index extends React.Component {
           data: data,
           loaded: true
         });
+      }, (err) => {
+        Toast.error(err);
       });
     });
   }

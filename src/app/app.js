@@ -19,16 +19,6 @@ if (__LOCAL__ && window.chrome && window.chrome.webstore) { // This is a Chrome 
 // bind fastclick
 window.FastClick && FastClick.attach(document.body);
 
-/*const PageHome = require('../pages/home');*/
-/*const PageButton = require('../pages/button');
- const PageList = require('../pages/list');
- const PageForm = require('../pages/form');
- const PageIcon = require('../pages/icon');
- const PageDialog = require('../pages/dialog');
- const PageGallery = require('../pages/gallery');
- const PageScene = require('../pages/scene');*/
-const Survey = require('../pages/survey');
-const DataView = require('../pages/dataView');
 const {Router, Route, IndexRedirect, hashHistory} = ReactRouter;
 
 import {signIn} from '../services/auth';
@@ -40,7 +30,21 @@ import Navigation from '../components/navigation';
 import Navgationmask from '../components/navgationmask';
 import StoreSelector from '../components/StoreSelector';
 import {scrollNavItems, navItems} from '../models/navs';
-import {getStoreList} from '../services/store';
+
+/*const PageHome = require('../pages/home');*/
+/*const PageButton = require('../pages/button');
+ const PageList = require('../pages/list');
+ const PageForm = require('../pages/form');
+ const PageIcon = require('../pages/icon');
+ const PageDialog = require('../pages/dialog');
+ const PageGallery = require('../pages/gallery');
+ const PageScene = require('../pages/scene');*/
+import Survey from '../pages/survey';
+import DataView from '../pages/dataView';
+import PageApply from '../pages/permissionApply';
+import PageRcord from '../pages/permissionRecord';
+import PageApproval from '../pages/permissionApproval';
+import PageMembers from '../pages/permissionMembers';
 
 class App extends React.Component {
   constructor(props) {
@@ -86,14 +90,13 @@ reactMixin.onClass(App, Reflux.connect(store));
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route name="app" path="/" component={App}>
-      <IndexRedirect to="/survey"/>
-      <Route path="survey" component={Survey}/>
-      <Route path="dataview" component={DataView}/>
-      {/* <Route path="form" component={PageForm}/>
-       <Route path="icon" component={PageIcon}/>
-       <Route path="dialog" component={PageDialog}/>
-       <Route path="scene" component={PageScene}/>
-       <Route path="PageHome" component={PageHome}/>*/}
+      <IndexRedirect to="/report.survey"/>
+      <Route path="report.survey" component={Survey}/>
+      <Route path="report.sale" component={DataView}/>
+      <Route path="permission.apply" component={PageApply}/>
+      <Route path="permission.record" component={PageRcord}/>
+      <Route path="permission.approval" component={PageApproval}/>
+      <Route path="permission.members" component={PageMembers}/>
     </Route>
   </Router>, document.getElementById('App')
 );

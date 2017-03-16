@@ -1,8 +1,22 @@
 'use strict';
 
-import { env, urlParams } from '../config';
-import { isDD, error } from '../../utils';
 let { Toast } = SaltUI;
+
+//改写Toast
+["success", "error", "fail", "loading"].forEach((type) => {
+  Toast[type] = (msg, options) => {
+    return Toast.show({
+      type: type,
+      content: msg,
+      autoHide: type !== 'loading',
+      ...options
+    });
+  };
+});
+
+import { env, urlParams } from '../config';
+import { isDD } from '../../utils';
+let error = Toast.error;
 
 const jsApiList = ['runtime.info', 'biz.contact.choose',
   'device.notification.confirm', 'device.notification.alert',
@@ -42,11 +56,7 @@ const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
   requestCount++;
 
   if( requestCount == 1 ) {
-    Toast.show({
-      type: 'loading',
-      content: '应用启动中...',
-      autoHide: false
-    });
+    Toast.loading('应用启动中...');
   }
 
   return new Promise((resolve, reject) => {

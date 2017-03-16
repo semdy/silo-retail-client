@@ -1,6 +1,5 @@
 import { isRPC, env } from '../config'
 import { signIn, session } from '../auth';
-import { error } from '../../utils';
 import config from '../../config';
 let { Toast } = SaltUI;
 
@@ -15,11 +14,7 @@ let request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
     requestCount++;
 
     if( requestCount == 1 ) {
-      Toast.show({
-        type: 'loading',
-        content: '加载中, 请稍候...',
-        autoHide: false
-      });
+      Toast.loading('加载中, 请稍候...');
     }
 
     $.ajax({
@@ -44,12 +39,12 @@ let request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
           location.reload();
         } else {
           reject(code);
-          error('服务器异常或没有数据: ' + code);
+          Toast.error('服务器异常或没有数据: ' + code);
         }
       },
       error: (xhr, status, err) => {
         reject(xhr, status, err);
-        error(`与服务器失去连接, code: ${status}`);
+        Toast.error(`与服务器失去连接, code: ${status}`);
       },
       complete: () => {
         if(--requestCount == 0){
@@ -69,6 +64,8 @@ let fetch = ( args ) => {
         /*} else {
           reject(res);
         }*/
+      }, (err) => {
+        reject(err);
       });
     });
   });

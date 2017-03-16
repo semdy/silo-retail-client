@@ -2,7 +2,7 @@
  * Created by mcake on 2017/3/14.
  */
 
-import { permission, scrollNavItems } from '../locale';
+import {permission, scrollNavItems} from '../locale';
 
 export default {
   navItems: [
@@ -23,16 +23,22 @@ export default {
       icon: 'approval',
       visible: true,
       path: '/permission.approval'
+    },
+    {
+      text: permission.members,
+      icon: 'user',
+      visible: true,
+      path: '/permission.members'
     }],
 
   scrollNavItems: [
     {
       text: scrollNavItems.survey,
-      path: "/survey"
+      path: "/report.survey"
     },
     {
       text: scrollNavItems.dataview,
-      path: "/dataview"
+      path: "/report.sale"
     },
     {
       text: scrollNavItems.goodsInfo,

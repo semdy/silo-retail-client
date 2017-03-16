@@ -11,7 +11,7 @@ export const getStoreChartReport = (storeId, query = 'retail.dashboard.gist') =>
     fetch.post('7109.json', params).then((res) => {
       resolve(res.chart);
     }, (err) => {
-      reject(err);
+      reject("error: " + err);
     });
   });
 };

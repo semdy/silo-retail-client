@@ -2,6 +2,7 @@ import './Item.styl';
 
 let { PropTypes } = React;
 let { Icon } = SaltUI;
+let {hashHistory} = ReactRouter;
 import classnames from 'classnames';
 
 /**
@@ -18,6 +19,12 @@ class Item extends React.Component {
     super(props);
   }
 
+  handleRoute(params){
+    if( typeof params == 'object' && params.link ){
+      hashHistory.replace(params.link);
+    }
+  }
+
   render() {
     let {legend, data} = this.props;
     return (
@@ -28,13 +35,18 @@ class Item extends React.Component {
             return (
               <div className={classnames("panel-item survey-item-cell t-FB1", {"trend-up": trend > 0, "trend-down": trend < 0})}
                    key={i}
+                   onClick={this.handleRoute.bind(this, item.params)}
               >
                 <h4 className="item-prop">
                   <span>{item.name}</span>
                   <Icon name="arrow" width={18} height={18}>
                   </Icon>
                 </h4>
-                <div className="item-value">{item.value[0]}</div>
+                <div className="item-value">
+                  <span className="item-prefix">{item.params.prefix}</span>
+                  {item.value[0]}
+                  <span className="item-suffix">{item.params.unit}</span>
+                  </div>
                 <div className="item-avg">{legend} {item.value[1]} <em className="trend-ratio">{trend + "%"}</em></div>
               </div>
             )
