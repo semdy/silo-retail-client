@@ -1,4 +1,6 @@
 import './Survey.styl';
+import store from '../../app/store';
+import actions from '../../app/actions';
 import {getStoreList} from '../../services/store';
 import {getStoreChartReport} from '../../services/survey';
 import Item from './Item';
@@ -15,19 +17,43 @@ class Index extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
-    getStoreList().then(function (storeList) {
+    getStoreList().then((storeList) => {
       let storeId = storeList[0].storeId;
-      getStoreChartReport(storeId).then(function (data) {
-        data.series = self._setDataGroup(data.series);
-        self.setState({
-          data: data,
-          loaded: true
-        });
-      }, (err) => {
-        Toast.error(err);
-      });
+      this.doRequest(storeId);
     });
+
+    actions.setStoreMultiable(false);
+    store.emitter.on("setSelectedStore", this._selectHandler, this);
+
+  }
+
+  doRequest(storeId){
+    getStoreChartReport(storeId).then((data) => {
+      data.series = this._setDataGroup(data.series);
+      this.setState({
+        data: data,
+        loaded: true
+      });
+    }, (err) => {
+      Toast.error(err);
+    });
+  }
+
+
+  componentWillUnmount() {
+    store.emitter.off("setSelectedStore", this._selectHandler);
+  }
+
+  _selectHandler(storeList) {
+    if (storeList.length > 3) {
+      return Toast.error("门店最多只能选3个");
+    }
+
+    actions.hideStoreSelector();
+
+    if (storeList.length == 0) return;
+
+    this.doRequest(storeList[0].storeId);
   }
 
   /**

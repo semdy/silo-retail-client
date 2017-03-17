@@ -2,6 +2,7 @@ require('./Header.styl');
 
 let {Icon} = SaltUI;
 let {hashHistory} = ReactRouter;
+import {getStoreModel} from '../../services/store';
 
 class Header extends React.Component {
 
@@ -10,12 +11,21 @@ class Header extends React.Component {
     this.state = {};
   }
 
+  handleClick() {
+    if (getStoreModel().length == 0) {
+      hashHistory.replace('/permission.record');
+    } else {
+      //hashHistory.goBack();
+      hashHistory.replace('/report.survey');
+    }
+  }
+
   render() {
     let {title, children} = this.props;
     return (
       <div className="header">
         <div className="h-toolbar let">
-          <Icon name="angle-left" width={30} height={30} onClick={hashHistory.goBack}>
+          <Icon name="angle-left-l" width={20} height={20} onClick={this.handleClick}>
           </Icon>
         </div>
         <h1 className="header-title">{title}{children}</h1>

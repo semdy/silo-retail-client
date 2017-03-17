@@ -14,7 +14,11 @@ module.exports = Reflux.createStore({
     //店铺列表是否单选
     storeMultiable: true,
     //是否显示店铺列表
-    storeListVisible: false
+    storeListVisible: false,
+    //是否显示顶部header
+    showHeader: false,
+    //header标题
+    headerTitle: ''
   },
 
   //隐藏侧边栏导航
@@ -81,6 +85,20 @@ module.exports = Reflux.createStore({
   //隐藏店铺列表
   onHideStoreList(){
     this.state.storeListVisible = false;
+    this.updateComponent();
+  },
+
+  //显示顶部header
+  onShowHeader(title){
+    this.state.headerTitle = title;
+    this.state.showHeader = true;
+    this.updateComponent();
+  },
+
+  //隐藏顶部header
+  onHideHeader(){
+    this.state.headerTitle = '';
+    this.state.showHeader = false;
     this.updateComponent();
   },
 

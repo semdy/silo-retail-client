@@ -26,7 +26,7 @@ export default {
     },
     {
       text: permission.members,
-      icon: 'user',
+      icon: 'users',
       visible: true,
       path: '/permission.members'
     }],
@@ -39,7 +39,7 @@ export default {
     {
       text: scrollNavItems.dataview,
       path: "/report.sale"
-    },
+    }/*,
     {
       text: scrollNavItems.goodsInfo,
       path: "/goodsInfo"
@@ -47,5 +47,5 @@ export default {
     {
       text: scrollNavItems.passflow,
       path: "/passflow"
-    }]
+    }*/]
 }

@@ -1,4 +1,4 @@
-let {Toast} = SaltUI;
+let {hashHistory} = ReactRouter;
 import {fetch} from '../fetch';
 import {signIn} from '../auth';
 import actions from '../../app/actions';
@@ -8,7 +8,7 @@ const AUTHTYPE = 17001;
 
 /**
  *获取店铺相关销售数据
- * @param {string} 后端请求key, 取值如：retail.payment.report.hour|retail.payment.report.day|retail.payment.report.week e.g.
+ * @param {string} 后端请求key, 取值如：retail.payment.report.hour|retail.payment.report.day|retail.payment.report.week etc.
  * @param {string} 店铺id
  * @param {number} 时间间隔, 根据query里指定数据单元，0取当前单元数据，-1取上一单元数据，-2取上上单元数据 e.g.
  * @return http promise
@@ -48,13 +48,13 @@ function triggerReady() {
 }
 
 export const fetchStoreList = () => {
-  fetch.post('7103.json').then((res) => {
+  return fetch.post('7103.json').then((res) => {
     storeList = res.data;
     managerId = res.idAsManager;
     triggerReady();
   }, (err) => {
     errMsg = err;
-    console.error("get storeList error:" + err);
+    throw new Error("get storeList error:" + err);
     triggerReady();
   });
 };
@@ -62,6 +62,11 @@ export const fetchStoreList = () => {
 signIn.ready(() => {
   fetchStoreList();
 });
+
+/**
+ * 刷新店铺列表数据
+ * */
+export const refreshStoreList = fetchStoreList;
 
 
 /**
@@ -78,8 +83,13 @@ export const getStoreList = () => {
       } else {
         if (storeList.length == 0) {
           reject("empty storelist data");
+          //隐藏顶部导航
+          actions.showScrollNav(false);
+          hashHistory.replace('/report.index');
         } else {
           if (storeList.length > 1) {
+            //显示顶部导航
+            actions.showScrollNav(true);
             actions.showStoreList();
           }
           resolve(storeList);
@@ -87,6 +97,13 @@ export const getStoreList = () => {
       }
     });
   });
+};
+
+/**
+ * 获得店铺数据集
+ * */
+export const getStoreModel = () => {
+  return storeList;
 };
 
 /**
@@ -109,14 +126,8 @@ export const storeSearch = (keyword = '', pageSize = 50, pageCode = 1) => {
     pageSize,
     pageCode
   };
-  return new Promise((resolve, reject) => {
-    fetch.post('7107.json', params).then((res) => {
-      resolve(res.data);
-    }, (err) => {
-      reject(err);
-      Toast.error(err);
-    });
-  });
+
+  return fetch.post('7107.json', params);
 };
 
 /**
@@ -172,7 +183,7 @@ export const authorityApproval = (pageCode = 1, pageSize = 50) => {
         authType: AUTHTYPE,
         pageCode,
         pageSize,
-        authParamStr: getManagerId() //店长所有店铺storeId
+        authParamStr: getManagerId() //店长所在店铺storeId
       };
 
       fetch.post('7017.json', params).then((res) => {
@@ -212,7 +223,7 @@ export const authorityUserList = (pageCode = 1, pageSize = 50) => {
         pageSize,
         pageCode,
         authType: AUTHTYPE,
-        authParamStr: getManagerId() //获取店长所有店铺storeId
+        authParamStr: getManagerId() //获取店长所在店铺storeId
       };
 
       fetch.post('7019.json', params).then((res) => {
@@ -225,13 +236,18 @@ export const authorityUserList = (pageCode = 1, pageSize = 50) => {
   });
 };
 
+/**
+ * 移除店铺成员
+ * @param {string} 会员id
+ * @return http promise
+ * */
 export const authorityRemove = (userId) => {
   return new Promise((resolve, reject) => {
     ready(() => {
       let params = {
         userId,
         authType: AUTHTYPE,
-        authParamStr: getManagerId() //获取店长所有店铺storeId
+        authParamStr: getManagerId() //获取店长所在店铺storeId
       };
 
       fetch.post('7021.json', params).then((res) => {

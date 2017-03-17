@@ -2,10 +2,11 @@ require('./PageApply.styl');
 
 let {Button, Toast} = SaltUI;
 
-import Header from '../../components/header';
+import actions from '../../app/actions';
 import SearchBar from '../../components/searchbar';
 import ListItem from '../../components/listitem';
 import ButtonGroup from '../../components/ButtonGroup';
+import Empty from '../../components/empty';
 import {storeSearch, authorityApply} from '../../services/store';
 import classNames from 'classnames';
 import locale from '../../locale';
@@ -20,14 +21,23 @@ class Apply extends React.Component {
   }
 
   componentDidMount() {
+    //显示header并设置标题
+    actions.showHeader(locale.permission.apply);
     this.doSearch();
   }
 
+  componentWillUnmount(){
+    //隐藏header
+    actions.hideHeader();
+  }
+
   doSearch(keyword){
-    storeSearch(keyword).then((data) => {
+    storeSearch(keyword).then((res) => {
       this.setState({
-        data: data
+        data: res.data
       });
+    }, (err) => {
+      Toast.error(err);
     });
   }
 
@@ -56,14 +66,13 @@ class Apply extends React.Component {
     let {data} = this.state;
     return (
       <div className="permission-apply">
-        <Header>{locale.permission.apply}</Header>
         <SearchBar placeholder="请输入要查询的门店"
                    onSearch={this.handleSearch.bind(this)}
         >
         </SearchBar>
         <div className="group-wrapper">
           {
-            data.length > 0 && data.map((item, i) => {
+            data.length > 0 ? data.map((item, i) => {
               return (
                 item.progress == 'normal' &&
                 <ListItem key={i}>
@@ -79,6 +88,10 @@ class Apply extends React.Component {
                 </ListItem>
               )
             })
+            :
+            <Empty>
+              {locale.noDataFound}
+            </Empty>
           }
         </div>
       </div>

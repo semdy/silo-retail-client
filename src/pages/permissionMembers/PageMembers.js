@@ -2,8 +2,9 @@ require('./PageMembers.styl');
 
 let {Toast, Button, Icon} = SaltUI;
 
-import Header from '../../components/header';
+import actions from '../../app/actions';
 import ButtonGroup from '../../components/ButtonGroup';
+import Empty from '../../components/empty';
 import ListItem from '../../components/listitem';
 import {authorityUserList, authorityRemove} from '../../services/store';
 import locale from '../../locale';
@@ -18,6 +19,8 @@ class Members extends React.Component {
   }
 
   componentDidMount() {
+    //显示header并设置标题
+    actions.showHeader(locale.permission.members);
     authorityUserList().then((data) => {
       this.setState({
         data: data
@@ -25,6 +28,11 @@ class Members extends React.Component {
     }, (err) => {
       Toast.error("error: " + err);
     });
+  }
+
+  componentWillUnmount(){
+    //隐藏header
+    actions.hideHeader();
   }
 
   handleRemove(userId, index) {
@@ -47,36 +55,37 @@ class Members extends React.Component {
   render() {
     let {data} = this.state;
     return (
-      <div className="permission-record">
-        <Header>本店成员</Header>
-        <div className="group-wrapper">
-          {
-            data.length > 0 && data.map((item, i) => {
-              return (
-                <ListItem key={i}>
-                  <span className="group-item-text t-FB1">{item.realName}</span>
-                  {
-                    item.removed ?
-                      <span className="apply-status refused">
-                        <Icon name="minus-circle" width={18} height={18}>
-                        </Icon>
-                        {locale.removed}
-                        </span>
-                      :
-                      <ButtonGroup half={true}>
-                        <Button type="minor"
-                                className="no-bg"
-                                onClick={this.handleRemove.bind(this, item.userId, i)}
-                        >
-                          {locale.remove}
-                        </Button>
-                      </ButtonGroup>
-                  }
-                </ListItem>
-              )
-            })
-          }
-        </div>
+      <div className="group-wrapper permission-record">
+        {
+          data.length > 0 ? data.map((item, i) => {
+            return (
+              <ListItem key={i}>
+                <span className="group-item-text t-FB1">{item.realName}</span>
+                {
+                  item.removed ?
+                    <span className="apply-status refused">
+                      <Icon name="minus-circle" width={18} height={18}>
+                      </Icon>
+                      {locale.removed}
+                      </span>
+                    :
+                    <ButtonGroup half={true}>
+                      <Button type="minor"
+                              className="no-bg"
+                              onClick={this.handleRemove.bind(this, item.userId, i)}
+                      >
+                        {locale.remove}
+                      </Button>
+                    </ButtonGroup>
+                }
+              </ListItem>
+            )
+          })
+          :
+          <Empty>
+            {locale.noMembers}
+          </Empty>
+        }
       </div>
     );
   }

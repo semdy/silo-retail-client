@@ -35,5 +35,13 @@ export default {
   approveSuccess: '审批成功',
   approveError: '审批失败',
   removeSuccess: '移除成功',
-  removeError: '移除失败'
+  removeError: '移除失败',
+  go2Apply: '去申请',
+  viewRecord: '查看记录',
+  refresh: '刷新',
+  noDataFound: '未找到相关数据',
+  noApprovalData: '暂无审批申请',
+  noMembers: '暂时没有成员',
+  noAppliedRecord: '暂无申请记录',
+  noAssignStores: '你目前没有可查看的店铺'
 }

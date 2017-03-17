@@ -2,9 +2,10 @@ require('./PageApproval.styl');
 
 let {Toast, Button, Icon} = SaltUI;
 
+import actions from '../../app/actions';
 import ButtonGroup from '../../components/ButtonGroup';
-import Header from '../../components/header';
 import ListItem from '../../components/listitem';
+import Empty from '../../components/empty';
 import {authorityApproval, authorityApprove} from '../../services/store';
 import locale from '../../locale';
 
@@ -18,6 +19,8 @@ class Approval extends React.Component {
   }
 
   componentDidMount() {
+    //显示header并设置标题
+    actions.showHeader(locale.permission.approval);
     authorityApproval().then((data) => {
       this.setState({
         data: data
@@ -25,6 +28,11 @@ class Approval extends React.Component {
     }, (err) => {
       Toast.error("error: " + err);
     });
+  }
+
+  componentWillUnmount(){
+    //隐藏header
+    actions.hideHeader();
   }
 
   handleApproval(applyId, agreed, index) {
@@ -47,50 +55,51 @@ class Approval extends React.Component {
   render() {
     let {data} = this.state;
     return (
-      <div className="permission-approval">
-        <Header>{locale.permission.approval}</Header>
-        <div className="group-wrapper">
-          {
-            data.length > 0 && data.map((item, i) => {
-              return (
-                <ListItem key={i}>
-                  <span className="group-item-text t-FB1">{item.applicant}</span>
-                  {
-                    item.agreed === true ?
-                      <span className="apply-status ok">
-                        <Icon name="check" width={18} height={18}>
+      <div className="group-wrapper permission-approval">
+        {
+          data.length > 0 ? data.map((item, i) => {
+            return (
+              <ListItem key={i}>
+                <span className="group-item-text t-FB1">{item.applicant}</span>
+                {
+                  item.agreed === true ?
+                    <span className="apply-status ok">
+                      <Icon name="check" width={18} height={18}>
+                      </Icon>
+                      {locale.agreed}
+                    </span>
+                    :
+                    ( item.agreed == false ?
+                      <span className="apply-status refused">
+                        <Icon name="minus-circle" width={18} height={18}>
                         </Icon>
-                        {locale.agreed}
+                        {locale.refused}
                       </span>
-                      :
-                      ( item.agreed == false ?
-                        <span className="apply-status refused">
-                          <Icon name="minus-circle" width={18} height={18}>
-                          </Icon>
-                          {locale.refused}
-                        </span>
-                          :
-                        <ButtonGroup half={true}>
-                          <Button type="minor"
-                                  className="no-bg"
-                                  onClick={this.handleApproval.bind(this, item.applyId, true, i)}
-                          >
-                            {locale.agree}
-                          </Button>
-                          <Button type="minor"
-                                  className="no-bg"
-                                  onClick={this.handleApproval.bind(this, item.applyId, false, i)}
-                          >
-                            {locale.refuse}
-                          </Button>
-                        </ButtonGroup>
-                      )
-                  }
-                </ListItem>
-              )
-            })
-          }
-        </div>
+                        :
+                      <ButtonGroup half={true}>
+                        <Button type="minor"
+                                className="no-bg"
+                                onClick={this.handleApproval.bind(this, item.applyId, true, i)}
+                        >
+                          {locale.agree}
+                        </Button>
+                        <Button type="minor"
+                                className="no-bg"
+                                onClick={this.handleApproval.bind(this, item.applyId, false, i)}
+                        >
+                          {locale.refuse}
+                        </Button>
+                      </ButtonGroup>
+                    )
+                }
+              </ListItem>
+            )
+          })
+          :
+          <Empty>
+            {locale.noApprovalData}
+          </Empty>
+        }
       </div>
     );
   }
