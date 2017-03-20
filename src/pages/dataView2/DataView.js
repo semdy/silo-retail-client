@@ -1,7 +1,7 @@
 import './DataView.styl';
 
 let {Toast} = SaltUI;
-import { getWeekNumber } from '../../utils/dateUtils';
+import { getWeekNumber } from '../../utils/date';
 import Stats from './Stats';
 import Charts from './Charts';
 import DateNavigator from './DateNavigator';
@@ -204,24 +204,8 @@ class Page extends React.Component {
       diffDisabled: false,
       hideDiff: false,
       timelines: [],
-      statsData: [
-        {
-          name: "总订单量",
-          value: 0
-        },
-        {
-          name: "总营业额",
-          value: 0
-        }
-      ],
-      chartData: {
-        xAxisData: [],
-        yAxis: {
-          count: [],
-          amount: []
-        },
-        legendNames: []
-      },
+      statsData: [],
+      chartData: {},
       storeList: []
     };
 
@@ -311,6 +295,8 @@ class Page extends React.Component {
       this.doQuery();
     });
 
+    //将店铺设为可多选
+    actions.setStoreMultiable(true);
     store.emitter.on("setSelectedStore", this._storeHandler, this);
 
   }

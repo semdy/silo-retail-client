@@ -17,7 +17,7 @@ class StatItem extends React.Component {
             );
         }
         return (
-            <div key={this.props.key} className="stats-item">
+            <div className="stats-item">
                 <h4 className="stats-name">{this.props.name}</h4>
                 <div className="stats-value">{this.props.value}{suffix}</div>
             </div>

@@ -27,9 +27,8 @@ let readyQueue = [];
 let isReady = false;
 let storeList = [];
 let managerId = null;
-let errMsg = null;
 
-function ready(fun) {
+function storeReady(fun) {
   if (typeof fun == 'function') {
     if (!isReady) {
       readyQueue.push(fun);
@@ -47,54 +46,37 @@ function triggerReady() {
   readyQueue = [];
 }
 
-export const fetchStoreList = () => {
-  return fetch.post('7103.json').then((res) => {
-    storeList = res.data;
-    managerId = res.idAsManager;
-    triggerReady();
-  }, (err) => {
-    errMsg = err;
-    throw new Error("get storeList error:" + err);
-    triggerReady();
-  });
-};
-
-signIn.ready(() => {
-  fetchStoreList();
-});
-
 /**
- * 刷新店铺列表数据
- * */
-export const refreshStoreList = fetchStoreList;
-
-
-/**
- * 获取全部的店铺列表。
- * 由于每个页面都需要用到storeList,
- * 为了保证不同路由只发送一次请求，因此将接口放入队列里，请求成功后再返回storeList。
- * @return promise
- * */
+ * 远程获取店铺列表数据
+ * @return {Promise}
+ */
 export const getStoreList = () => {
+  isReady = false;
   return new Promise((resolve, reject) => {
-    ready(() => {
-      if (errMsg) {
-        reject(errMsg);
+    fetch.post('7103.json').then((res) => {
+      storeList = res.data;
+      managerId = res.idAsManager;
+
+      if (storeList.length == 0) {
+        reject("empty storelist data");
+        //隐藏顶部导航
+        actions.showScrollNav(false);
+        hashHistory.replace('/report.index');
       } else {
-        if (storeList.length == 0) {
-          reject("empty storelist data");
-          //隐藏顶部导航
-          actions.showScrollNav(false);
-          hashHistory.replace('/report.index');
-        } else {
-          if (storeList.length > 1) {
-            //显示顶部导航
-            actions.showScrollNav(true);
-            actions.showStoreList();
-          }
-          resolve(storeList);
+        if (storeList.length > 1) {
+          //填充店铺列表数据
+          actions.setStoreList(storeList);
+          //显示店铺
+          actions.showStoreList();
+          //显示顶部导航
+          actions.showScrollNav(true);
         }
+        resolve(storeList);
       }
+      triggerReady();
+    }, (err) => {
+      triggerReady();
+      reject("get storeList error:" + err);
     });
   });
 };
@@ -178,7 +160,7 @@ export const authorityApplyRecord = (pageCode = 1, pageSize = 50) => {
  * */
 export const authorityApproval = (pageCode = 1, pageSize = 50) => {
   return new Promise((resolve, reject) => {
-    ready(() => {
+    storeReady(() => {
       let params = {
         authType: AUTHTYPE,
         pageCode,
@@ -218,7 +200,7 @@ export const authorityApprove = (applyId, agreed) => {
  * */
 export const authorityUserList = (pageCode = 1, pageSize = 50) => {
   return new Promise((resolve, reject) => {
-    ready(() => {
+    storeReady(() => {
       let params = {
         pageSize,
         pageCode,
@@ -243,7 +225,7 @@ export const authorityUserList = (pageCode = 1, pageSize = 50) => {
  * */
 export const authorityRemove = (userId) => {
   return new Promise((resolve, reject) => {
-    ready(() => {
+    storeReady(() => {
       let params = {
         userId,
         authType: AUTHTYPE,
@@ -256,6 +238,32 @@ export const authorityRemove = (userId) => {
         reject(err);
       });
 
+    });
+  });
+};
+
+/**
+ * 获取店铺可视化数据
+ * @param {String} storeId 店铺storeId
+ * @param query 查询关键字
+ *  支持的query值:
+ *  retail.dashboard.gist      首页概要数据
+ *  retail.trade.shipment.type 配送方式
+ *  retail.trade.payment.mode  支付方式
+ * @return {Promise}
+ */
+export const getStoreChartReport = (storeId, offset = 0, query = 'retail.dashboard.gist') => {
+  let params = {
+    storeId,
+    query,
+    offset
+  };
+
+  return new Promise((resolve, reject) => {
+    fetch.post('7109.json', params).then((res) => {
+      resolve(res.chart);
+    }, (err) => {
+      reject("error: " + err);
     });
   });
 };

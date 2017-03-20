@@ -3,7 +3,7 @@ require('./Dropdown.styl');
 let { PropTypes } = React;
 let { Button, Icon, Context } = SaltUI;
 import classnames from 'classnames';
-import dom from '../../utils/domUtils';
+import dom from '../../utils/dom';
 
 class Dropdown extends React.Component {
 

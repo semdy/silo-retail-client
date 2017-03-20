@@ -1,0 +1,98 @@
+@import "../../stylus-lib/var.styl"
+
+.date-navigator
+  position relative
+  margin-bottom 5px
+  padding: 15px 0
+  text-align center
+  background-color #fff
+  z-index 205
+
+  .day
+    margin-left 5px
+
+  .date-arrow
+    position absolute
+    top:50%
+    left 50%
+    width 30px
+    height 30px
+    color gblue
+    -webkit-transform translateY(-50%)
+    transform translateY(-50%)
+
+    &.left
+      margin-left -122px
+
+    &.right
+      margin-left 90px
+
+    &.disabled
+      color #e0e0e0
+
+  .dropdown
+    position absolute
+    left 2px
+    top 3px
+
+  .diff-toggle
+    position absolute
+    right 15px
+    top 3px
+
+    .t-button
+      color #333
+
+  .store-name
+    margin-left 20px
+
+.date-indicator
+  .date-arrow
+    &.left
+      margin-left 0 !important
+      left 0
+    &.right
+      margin-left 0
+      left auto
+      right 0
+
+  .day
+    margin-right 10px
+
+  .date
+    position absolute
+    top 52px
+    left 1px
+    color #333
+
+//全屏样式重写
+.date-navigator
+  &.normal
+    .store-indict
+      position relative
+      margin-right 40px
+      min-width 166px
+    .date-cld
+      margin-right 5px
+      color #999
+
+  &.full
+    position fixed
+    transform(rotate(90deg) translate(50%, -50%))
+    makeShadow(0, 12px, 20px, rgba(0,0,0,.05))
+
+    .date-cld
+      margin-left 10px
+      top 12px
+
+@media (max-width: 320px)
+  .date-navigator
+    .date-arrow
+      &.left
+        margin-left -102px
+
+      &.right
+        margin-left 70px
+
+    .diff-toggle
+      right 8px

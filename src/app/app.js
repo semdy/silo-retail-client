@@ -10,7 +10,7 @@ symbols.className = 't-hide';
 (document.body || document.documentElement).appendChild(symbols);
 
 if (__LOCAL__ && window.chrome && window.chrome.webstore) { // This is a Chrome only hack
-                                                            // see https://github.com/livereload/livereload-extensions/issues/26
+  // see https://github.com/livereload/livereload-extensions/issues/26
   setInterval(function () {
     document.body.focus();
   }, 200);
@@ -46,6 +46,7 @@ import PageApply from '../pages/permissionApply';
 import PageRcord from '../pages/permissionRecord';
 import PageApproval from '../pages/permissionApproval';
 import PageMembers from '../pages/permissionMembers';
+import Distribution from '../pages/distribution';
 
 class App extends React.Component {
   constructor(props) {
@@ -65,7 +66,11 @@ class App extends React.Component {
 
   render() {
     let {isAppReady, storeListVisible, showHeader, headerTitle} = this.state;
-    if (!isAppReady) return (<noscript></noscript>);
+    if (!isAppReady)
+      return (
+        <noscript>
+        </noscript>
+      );
     return (
       <div className="app-body">
         <Navigation items={navItems}/>
@@ -95,15 +100,16 @@ reactMixin.onClass(App, Reflux.connect(store));
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route name="app" path="/" component={App}>
-      <IndexRedirect to="/report.index" />
+      <IndexRedirect to="/report.index"/>
       <Route path="report.index" component={Index}/>
       <Route path="report.survey" component={Survey}/>
       <Route path="report.sale" component={DataView}/>
+      <Route path="report.distribution" component={Distribution}/>
       <Route path="permission.apply" component={PageApply}/>
       <Route path="permission.record" component={PageRcord}/>
       <Route path="permission.approval" component={PageApproval}/>
       <Route path="permission.members" component={PageMembers}/>
-     {/* <Route path="*" component={NoMatch}/>*/}
+      {/* <Route path="*" component={NoMatch}/>*/}
     </Route>
   </Router>, document.getElementById('App')
 );

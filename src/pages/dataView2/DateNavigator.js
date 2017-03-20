@@ -93,7 +93,7 @@ class DateNavigator extends React.Component {
           <Icon name="angle-right" className={classnames("date-arrow right", {disabled: nextDisabled})} onClick={onNext} />
         </div>
       );
-      return (<div className={classnames("date-navigator", {"date-navigator-full": isFullScreen})} style={{
+      return (<div className={classnames("date-navigator", {"full": isFullScreen, "normal": !isFullScreen})} style={{
         left: isFullScreen ? (width - height*0.5 - 70) + "px" : "",
         top: isFullScreen ? -70*0.5 + "px" : "",
         width: isFullScreen ? height + "px" : ""

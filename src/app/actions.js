@@ -8,6 +8,7 @@ module.exports = Reflux.createActions([
   'showStoreSelector',
   'hideStoreSelector',
   'setFullScreen',
+  'setStoreList',
   'setStoreMultiable',
   'showStoreList',
   'hideStoreList',

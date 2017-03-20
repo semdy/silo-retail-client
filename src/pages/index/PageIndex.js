@@ -5,7 +5,6 @@ let {hashHistory} = ReactRouter;
 import Empty from '../../components/empty';
 import {getStoreList} from '../../services/store';
 import locale from '../../locale';
-import uitls from '../../utils/storage';
 
 class Index extends React.Component {
 

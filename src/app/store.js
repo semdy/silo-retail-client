@@ -1,4 +1,5 @@
 const actions = require('./actions');
+import locale from '../locale';
 
 module.exports = Reflux.createStore({
   listenables: [actions],
@@ -11,10 +12,14 @@ module.exports = Reflux.createStore({
     showStore: false,
     //是否全屏
     isFullScreen: false,
-    //店铺列表是否单选
-    storeMultiable: true,
+    //店铺列表数据
+    storeList: [],
+    //店铺列表是否多选
+    storeMultiable: false,
     //是否显示店铺列表
     storeListVisible: false,
+    //店铺弹层标题
+    storeSelectorTitle: locale.storeLocale.singleTitle,
     //是否显示顶部header
     showHeader: false,
     //header标题
@@ -67,6 +72,13 @@ module.exports = Reflux.createStore({
   //切换店铺列表是否单选
   onSetStoreMultiable(isMultiable){
     this.state.storeMultiable = isMultiable;
+    this.state.storeSelectorTitle = locale.storeLocale[isMultiable === true ? 'multTitle' : 'singleTitle'];
+    this.emitter.emit("storeSelectorReset");
+    this.updateComponent();
+  },
+
+  onSetStoreList(storeList){
+    this.state.storeList = storeList;
     this.updateComponent();
   },
 

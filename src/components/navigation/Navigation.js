@@ -6,7 +6,7 @@ let {Icon} = SaltUI;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import dom from '../../utils/domUtils';
+import dom from '../../utils/dom';
 
 class Navigation extends React.Component {
 

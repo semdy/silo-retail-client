@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import dom from '../../utils/domUtils';
+import dom from '../../utils/dom';
 
 const getMax = (group) => {
   if (!Array.isArray(group)) return 0;
@@ -185,15 +185,6 @@ class Charts extends React.Component {
     }
   }
 
-  toggleDiff(disabled) {
-    ["昨日订单量", "昨日营业额"].forEach((legendName) => {
-      this.chartInstance.dispatchAction({
-        type: disabled ? 'legendUnSelect' : 'legendSelect',
-        name: legendName
-      });
-    });
-  }
-
   changeViewMode() {
     actions.setFullScreen(this.state.isFullScreen = !this.state.isFullScreen);
   }
@@ -210,7 +201,7 @@ class Charts extends React.Component {
                left: isFullScreen ? -parseFloat(height) * 0.5 + "px" : 0,
                top: isFullScreen ? -(parseFloat(width) - 70) * 0.5 + "px" : 0,
                width: isFullScreen ? height : width,
-               height: isFullScreen ? parseFloat(width) - 70 : parseFloat(height) - 253 + "px"
+               height: isFullScreen ? parseFloat(width) - 70 : parseFloat(height) - 263 + "px"
              }}>
         </div>
       </div>

@@ -1,10 +1,10 @@
 let isLocalStorageSupported = function () {
-  let testKey = 'test', storage = window.localStorage;
+  var testKey = 'test', storage = window.localStorage;
   try {
     storage.setItem(testKey, '1');
     storage.removeItem(testKey);
     return true;
-  } catch (error) {
+  } catch (e) {
     return false;
   }
 }();
@@ -78,8 +78,7 @@ let cookie = {
     }
 
     return result;
-  }
-  ,
+  },
   remove (key) {
     if (this.get(key) !== null) {
       var arg = [].slice.call(arguments, 1);
@@ -88,6 +87,13 @@ let cookie = {
       return true;
     }
     return false;
+  },
+  clear(){
+    let keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+    if (keys) {
+      for (var i = keys.length; i--;)
+        document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
+    }
   }
 };
 
@@ -100,8 +106,7 @@ let localStorage = {
 
     if (isLocalStorageSupported) {
       window.localStorage.setItem(key, encodeURIComponent(value));
-    }
-    else {
+    } else {
       cookie.set(key, value, 3650);
     }
   },
@@ -120,6 +125,20 @@ let localStorage = {
       return val;
     }
 
+  },
+  remove (key){
+    if (isLocalStorageSupported) {
+      window.localStorage.removeItem(key);
+    } else {
+      cookie.remove(key);
+    }
+  },
+  clear(){
+    if (isLocalStorageSupported) {
+      window.localStorage.clear();
+    } else {
+      cookie.clear();
+    }
   }
 };
 
@@ -144,6 +163,20 @@ let sessionStorage = {
       } catch (e) {
         return val;
       }
+    }
+  },
+  remove (key){
+    if (isLocalStorageSupported) {
+      window.sessionStorage.removeItem(key);
+    } else {
+      cookie.remove(key);
+    }
+  },
+  clear(){
+    if (isLocalStorageSupported) {
+      window.sessionStorage.clear();
+    } else {
+      cookie.clear();
     }
   }
 };

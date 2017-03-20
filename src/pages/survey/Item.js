@@ -43,7 +43,7 @@ class Item extends React.Component {
                   </Icon>
                 </h4>
                 <div className="item-value">
-                  <span className="item-prefix">{item.params.prefix}</span>
+                  <span className="item-prefix"><ins>{item.params.prefix}</ins></span>
                   {item.value[0]}
                   <span className="item-suffix">{item.params.unit}</span>
                   </div>

@@ -5,7 +5,7 @@ let {Toast, Button} = SaltUI;
 import actions from '../../app/actions';
 import ListItem from '../../components/listitem';
 import Empty from '../../components/empty';
-import {authorityApplyRecord, refreshStoreList} from '../../services/store';
+import {authorityApplyRecord} from '../../services/store';
 import classNames from 'classnames';
 import locale from '../../locale';
 
@@ -29,9 +29,6 @@ class Record extends React.Component {
       this.setState({
         data: res.data
       });
-
-      //刷新店铺数据
-      refreshStoreList();
 
     }, (err) => {
       Toast.error("error: " + err);

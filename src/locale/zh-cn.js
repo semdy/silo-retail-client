@@ -3,21 +3,22 @@
  */
 export default {
   scrollNavItems: {
-    "survey": "概况",
-    "dataview": "销售数据",
-    "goodsInfo": "商品信息",
-    "passflow": "客流"
+    survey: "概况",
+    dataview: "销售数据",
+    distribution: "订单渠道",
+    passflow: "客流"
   },
   permission: {
-    "apply": "申请权限",
-    "record": "申请记录",
-    "approval": "权限审批",
-    "members": "本店成员"
+    apply: "申请权限",
+    record: "申请记录",
+    approval: "权限审批",
+    members: "本店成员"
   },
   ok: '确定',
   cancel: '取消',
   storeLocale: {
-    title: '请选择对比的门店(最多3个)'
+    multTitle: '请选择对比的门店(最多3个)',
+    singleTitle: '请选择查看的门店'
   },
   deliveryType: "配送类型",
   agree: '同意',

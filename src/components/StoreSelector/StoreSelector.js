@@ -9,7 +9,7 @@ import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import classnames from 'classnames';
-import { getStoreList } from '../../services/store';
+import {getStoreList} from '../../services/store';
 import locale, {storeLocale} from '../../locale';
 
 
@@ -17,9 +17,7 @@ class Page extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      storeList: []
-    };
+    this.state = {};
   }
 
   getData() {
@@ -29,7 +27,8 @@ class Page extends React.Component {
   }
 
   handleConfirm() {
-    store.emitter.emit("setSelectedStore", this.getData());
+    let stores = this.getData();
+    store.emitter.emit("setSelectedStore", stores);
   }
 
   handleCancel() {
@@ -60,18 +59,34 @@ class Page extends React.Component {
     this.props.onItemClick({storeId: curItem.storeId, name: curItem.name});
   }
 
-  componentDidMount() {
-    //获得门店列表的数据
-    getStoreList().then((storeList) => {
-      this.setState({
-        storeList: storeList
-      });
+  _resetHandler() {
+    this.state.storeList.forEach((store, i) => {
+      store.selected = false;
     });
   }
 
+  componentDidMount() {
+    //获得门店列表的数据
+/*    getStoreList().then((storeList) => {
+      this.setState({
+        storeList: storeList
+      });
+    });*/
+
+    store.emitter.on("storeSelectorReset", this._resetHandler, this);
+  }
+
+  componentWillUnmount() {
+    store.emitter.off("storeSelectorReset", this._resetHandler);
+  }
+
   render() {
-    let {showStore, storeList, isFullScreen} = this.state;
-    if (!storeList.length) return (<noscript></noscript>);
+    let {showStore, storeList, isFullScreen, storeSelectorTitle} = this.state;
+    if (!storeList.length)
+      return (
+        <noscript>
+        </noscript>
+      );
     return (
       <div className="store-container">
         <Animate
@@ -88,7 +103,7 @@ class Page extends React.Component {
                    left: isFullScreen ? "-200px" : "",
                    top: isFullScreen ? window.innerHeight - 400 - window.innerWidth / 2 + "px" : ""
                  }}>
-          <h4 className="store-header">{storeLocale.title}</h4>
+          <h4 className="store-header">{storeSelectorTitle}</h4>
           <ul className="store-list" style={{height: isFullScreen ? window.innerWidth - 94 + "px" : ""}}>
             {
               storeList.map((item, index) => {

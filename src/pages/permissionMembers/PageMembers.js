@@ -55,7 +55,7 @@ class Members extends React.Component {
   render() {
     let {data} = this.state;
     return (
-      <div className="group-wrapper permission-record">
+      <div className="group-wrapper permission-members">
         {
           data.length > 0 ? data.map((item, i) => {
             return (

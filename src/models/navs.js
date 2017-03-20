@@ -39,11 +39,11 @@ export default {
     {
       text: scrollNavItems.dataview,
       path: "/report.sale"
-    }/*,
-    {
-      text: scrollNavItems.goodsInfo,
-      path: "/goodsInfo"
     },
+    {
+      text: scrollNavItems.distribution,
+      path: "/report.distribution"
+    }/*,
     {
       text: scrollNavItems.passflow,
       path: "/passflow"

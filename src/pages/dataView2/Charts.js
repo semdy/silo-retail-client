@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import dom from '../../utils/domUtils';
+import dom from '../../utils/dom';
 
 const getMax = (group) => {
   if (!Array.isArray(group)) return 0;

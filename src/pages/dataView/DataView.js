@@ -1,10 +1,10 @@
 import './DataView.styl';
 
 let {Toast} = SaltUI;
-import { getWeekNumber } from '../../utils/dateUtils';
-import Stats from './Stats';
+import { getWeekNumber } from '../../utils/date';
+import Stats from '../../components/stats';
 import Charts from './Charts';
-import DateNavigator from './DateNavigator';
+import DateNavigator from './datenavigator';
 import actions from '../../app/actions';
 import store from '../../app/store';
 import {fetchReportPayment, getStoreList} from '../../services/store';
@@ -201,35 +201,17 @@ class Page extends React.Component {
       isDataLoaded: false,
       activeIndex: 1,
       isNextDisabled: true,
-      diffDisabled: false,
-      hideDiff: false,
       timelines: [],
-      statsData: [
-        {
-          name: "总订单量",
-          value: 0
-        },
-        {
-          name: "总营业额",
-          value: 0
-        }
-      ],
-      chartData: {
-        xAxisData: [],
-        yAxis: {
-          count: [],
-          amount: []
-        },
-        legendNames: []
-      }
+      currStore: {},
+      statsData: [],
+      chartData: {}
     };
 
+    this.currStore = {};
     this.legendNames = [];
     this.filterType = 'hour'; //默认过滤方式
     this.fetchParams = [];
     this.offset = defaultOffset;
-    //统一约束： 为1时表示同一家门店今天和昨天数据对比， 为2时表示多家门店之间的数据对比
-    this.compareType = 1;
   }
 
   fetchData(storeId, offset) {
@@ -249,8 +231,6 @@ class Page extends React.Component {
       throw new Error("fetchGroupData arguments must be typeof Array!");
 
     let fetches = groupPrams.map(item => this.fetchData(item.storeId, item.offset));
-
-    /*Toast.loading('拼命加载中...');*/
 
     return new Promise((resolve) => {
       Promise.all(fetches).then((values) => {
@@ -272,6 +252,7 @@ class Page extends React.Component {
 
     this.setState({
       isDataLoaded: true,
+      currStore: this.currStore,
       timelines: timelines,
       statsData: [
         {
@@ -302,8 +283,9 @@ class Page extends React.Component {
     getStoreList().then((storeList) => {
       //取第一家店铺的storeId
       let storeId = storeList[0].storeId;
+      this.currStore = storeList[0];
       this.fetchParams = [{storeId: storeId, offset: this.offset}, {storeId: storeId, offset: this.offset + 1}];
-      this.legendNames = ["今日订单量", "今日营业额", "昨日订单量", "昨日营业额"];
+      this.legendNames = ["当前订单量   ", "当前营业额", "前一日订单量", "前一日营业额"];
       this.doQuery();
     });
 
@@ -324,24 +306,11 @@ class Page extends React.Component {
 
     if( storeList.length == 0 ) return;
 
-    let self = this;
-    this.compareType = 2;
-    this.fetchParams = [];
-    this.legendNames = [];
-    storeList.forEach((store) => {
-      self.fetchParams.push({
-        storeId: store.storeId,
-        offset: 0
-      });
-      self.legendNames.push(`${store.name}订单量`, `${store.name}营业额`);
-    });
+    this.currStore = storeList[0];
+    let storeId = storeList[0].storeId;
+    this.fetchParams = [{storeId: storeId, offset: 0}, {storeId: storeId, offset: 1}];
 
     this.doQuery();
-
-    //多门店对比时隐藏环比功能
-    this.setState({
-      hideDiff: true
-    });
   }
 
   showStoreList() {
@@ -352,7 +321,7 @@ class Page extends React.Component {
   setOffset(offset) {
     let self = this;
     this.fetchParams.forEach((item, i) => {
-      self.fetchParams[i].offset = offset + ( self.compareType == 1 ? i : 0 );
+      self.fetchParams[i].offset = offset + i;
     });
   }
 
@@ -393,37 +362,30 @@ class Page extends React.Component {
     this.doQuery();
   }
 
-  toggleDiff() {
-    this.setState({
-      diffDisabled: !this.state.diffDisabled
-    }, () => this.refs.charts.toggleDiff(this.state.diffDisabled));
-  }
-
   render() {
+    let {statsData, chartData, date, timelines, isNextDisabled, currStore} = this.state;
     return (
       <div>
         {
           !this.state.isDataLoaded ? "" :
             <div>
-              <Stats statsData={this.state.statsData}>
+              <Stats data={statsData}>
               </Stats>
               <DateNavigator
                 showStoreList={this.showStoreList.bind(this)}
-                date={this.state.date}
-                timelines={this.state.timelines}
-                nextDisabled={this.state.isNextDisabled}
-                diffDisabled={this.state.diffDisabled}
-                hideDiff={this.state.hideDiff}
+                date={date}
+                timelines={timelines}
+                nextDisabled={isNextDisabled}
                 defaultFilterType={this.filterType}
+                storeName={currStore.name}
                 onPrev={this.queryPrev.bind(this)}
                 onNext={this.queryNext.bind(this)}
                 onItemClick={this.handleFilterItemClick.bind(this)}
-                toggleDiff={this.toggleDiff.bind(this)}
               >
               </DateNavigator>
               <Charts ref="charts"
-                      statsData={this.state.statsData}
-                      chartData={this.state.chartData}
+                      statsData={statsData}
+                      chartData={chartData}
               >
               </Charts>
             </div>
