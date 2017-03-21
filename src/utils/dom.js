@@ -15,5 +15,9 @@ let methods = {};
   };
 });
 
+methods.offset = function (dom) {
+  return $(dom).offset();
+};
+
 module.exports = methods;
 

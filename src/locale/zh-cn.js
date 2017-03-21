@@ -2,11 +2,14 @@
  * Created by mcake on 2017/3/15.
  */
 export default {
+  loading: '加载中, 请稍候...',
+  serverError: '服务器异常或没有数据',
+  disconnect: '与服务器连接失败',
   scrollNavItems: {
     survey: "概况",
     dataview: "销售数据",
     distribution: "订单渠道",
-    passflow: "客流"
+    payment: "支付方式"
   },
   permission: {
     apply: "申请权限",
@@ -20,7 +23,18 @@ export default {
     multTitle: '请选择对比的门店(最多3个)',
     singleTitle: '请选择查看的门店'
   },
-  deliveryType: "配送类型",
+  stats: {
+    title: {
+      pay: '支付总额',
+      promo: '优惠总额'
+    },
+    unit: {
+      pay: '元',
+      promo: '元'
+    }
+  },
+  deliveries: "配送类型",
+  payments: '支付方式',
   agree: '同意',
   apply: '申请',
   waiting: '等待中',

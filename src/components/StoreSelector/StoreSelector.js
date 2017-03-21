@@ -98,13 +98,13 @@ class Page extends React.Component {
         </Animate>
         <Animate transitionName={isFullScreen ? "rotate-popup" : "popup"} className="store-selector" visible={showStore}
                  style={{
-                   width: isFullScreen ? "400px" : "",
-                   height: isFullScreen ? window.innerWidth + "px" : "",
-                   left: isFullScreen ? "-200px" : "",
-                   top: isFullScreen ? window.innerHeight - 400 - window.innerWidth / 2 + "px" : ""
+                   width: isFullScreen ? "400px" : undefined,
+                   height: isFullScreen ? window.innerWidth + "px" : undefined,
+                   left: isFullScreen ? "-200px" : undefined,
+                   top: isFullScreen ? window.innerHeight - 400 - window.innerWidth / 2 + "px" : undefined
                  }}>
           <h4 className="store-header">{storeSelectorTitle}</h4>
-          <ul className="store-list" style={{height: isFullScreen ? window.innerWidth - 94 + "px" : ""}}>
+          <ul className="store-list" style={{height: isFullScreen ? window.innerWidth - 94 + "px" : undefined}}>
             {
               storeList.map((item, index) => {
                 return (

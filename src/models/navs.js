@@ -43,9 +43,9 @@ export default {
     {
       text: scrollNavItems.distribution,
       path: "/report.distribution"
-    }/*,
+    },
     {
-      text: scrollNavItems.passflow,
-      path: "/passflow"
-    }*/]
+      text: scrollNavItems.payment,
+      path: "/report.payment"
+    }]
 }

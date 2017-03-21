@@ -245,7 +245,8 @@ export const authorityRemove = (userId) => {
 /**
  * 获取店铺可视化数据
  * @param {String} storeId 店铺storeId
- * @param query 查询关键字
+ * @param {number} 倒推时间间隔，比如：1表示取昨天的数据，2表示取前天的数据， etc.
+ * @param {String} query 查询关键字
  *  支持的query值:
  *  retail.dashboard.gist      首页概要数据
  *  retail.trade.shipment.type 配送方式
@@ -259,11 +260,33 @@ export const getStoreChartReport = (storeId, offset = 0, query = 'retail.dashboa
     offset
   };
 
+  //7109 -> 测试
   return new Promise((resolve, reject) => {
-    fetch.post('7109.json', params).then((res) => {
+    fetch.post('7303.json', params).then((res) => {
       resolve(res.chart);
     }, (err) => {
       reject("error: " + err);
     });
   });
+};
+
+/**
+ * 获取店铺统计数据
+ * @param {String} storeId 店铺storeId
+ * @param {Number} offsetFrom 日期偏移量开始(0:今天 1:一天前 2:两天前)
+ * @param {Number} offsetDest 日期偏移量截止
+ * @param {Array} fieldList 需要的字段
+ *  pay   支付总金额
+ *  promo 消费总金额
+ * @return {Promise}
+ */
+export const getStoreStats = (storeId, offsetFrom = 0, offsetDest = 0, fieldList = []) => {
+  let params = {
+    storeId,
+    offsetFrom,
+    offsetDest,
+    fieldList
+  };
+
+  return fetch.post('7301.json', params);
 };

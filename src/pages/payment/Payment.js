@@ -1,8 +1,9 @@
-import './Distribution.styl';
+import './Payment.styl';
 
 import Stats from '../../components/stats';
 import PieChart from '../../components/piechart';
 import DateNavigator from '../../components/datenavigator';
+import Table from '../../components/table';
 import actions from '../../app/actions';
 import store from '../../app/store';
 import {getStoreList, getStoreChartReport, getStoreStats} from '../../services/store';
@@ -54,11 +55,37 @@ class Page extends React.Component {
       date: null,
       storeName: '',
       statsData: [],
-      chartData: {}
+      chartData: {},
+      tableRows: []
     };
 
     this.currStore = {};
     this.offset = 0;
+
+    this.tableFields = [
+      {
+        field: 'rowNumber',
+        width: 18
+      },
+      {
+        field: 'name',
+        name: '结算方式',
+        flex: 1
+      },
+      {
+        field: 'count',
+        name: '单量',
+        flex: 1
+      },
+      {
+        field: 'money',
+        name: '金额',
+        flex: 1,
+        formatter: function (value) {
+          return value + "元";
+        }
+      }
+    ];
   }
 
   setData(statsData, charts) {
@@ -68,21 +95,7 @@ class Page extends React.Component {
       storeName: this.currStore.name,
       date: getDateBefore(this.offset),
       tableRows: genTableRows(charts.series),
-      //statsData: genStatsData(statsData),
-      statsData: [
-        {
-          name: "门店订单量",
-          suffix: "单",
-          value: 100,
-          subAmount: 22984
-        },
-        {
-          name: "线上订单量",
-          suffix: "单",
-          value: 60,
-          subAmount: 29840
-        }
-      ]
+      statsData: genStatsData(statsData)
     });
   }
 
@@ -115,10 +128,9 @@ class Page extends React.Component {
 
   doQuery() {
     let storeId = this.currStore.storeId;
-
     Promise.all([
       getStoreStats(storeId, this.offset, 0, ['pay', 'promo']),
-      getStoreChartReport(storeId, this.offset, 'retail.trade.shipment.type')
+      getStoreChartReport(storeId, this.offset, 'retail.trade.payment.mode')
     ]).then((values) => {
       this.setData(values[0].data, values[1]);
       this.refs.charts.refresh();
@@ -147,7 +159,7 @@ class Page extends React.Component {
   }
 
   render() {
-    let {isDataLoaded, statsData, chartData, date, storeName, isNextDisabled} = this.state;
+    let {isDataLoaded, statsData, chartData, date, tableRows, storeName, isNextDisabled} = this.state;
     return (
       <div>
         {
@@ -164,11 +176,13 @@ class Page extends React.Component {
             >
             </DateNavigator>
             <PieChart ref="charts"
-                      chartName={locale.deliveries}
+                      chartName={locale.payments}
                       chartData={chartData}
-                      responsive={true}
+                      radius={['37%', '52%']}
             >
             </PieChart>
+            <Table fields={this.tableFields} rows={tableRows}>
+            </Table>
           </div>
         }
       </div>

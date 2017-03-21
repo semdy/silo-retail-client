@@ -1,6 +1,4 @@
-makeTransform(props)
-  -webkit-transform props
-  transform props
+@import "../../stylus-lib/var.styl"
 
 .charts-container
   width 100%
@@ -26,7 +24,7 @@ makeTransform(props)
     top 0
     z-index 200
     background-color #f5f5f5 !important
-    makeTransform(rotate(90deg) translate(50%, -50%))
+    transform(rotate(90deg) translate(50%, -50%))
 
     > div
       z-index 0

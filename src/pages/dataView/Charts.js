@@ -201,7 +201,7 @@ class Charts extends React.Component {
                left: isFullScreen ? -parseFloat(height) * 0.5 + "px" : 0,
                top: isFullScreen ? -(parseFloat(width) - 70) * 0.5 + "px" : 0,
                width: isFullScreen ? height : width,
-               height: isFullScreen ? parseFloat(width) - 70 : parseFloat(height) - 263 + "px"
+               height: isFullScreen ? parseFloat(width) - 70 : Math.max(parseFloat(height) - 263, 300) + "px"
              }}>
         </div>
       </div>
