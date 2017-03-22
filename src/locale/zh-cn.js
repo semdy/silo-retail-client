@@ -9,7 +9,8 @@ export default {
     survey: "概况",
     dataview: "销售数据",
     distribution: "订单渠道",
-    payment: "支付方式"
+    payment: "支付方式",
+    goodsInfo: "商品信息"
   },
   permission: {
     apply: "申请权限",
@@ -65,5 +66,14 @@ export default {
   noAppliedRecord: '暂无申请记录',
   noAssignStores: '你目前没有可查看的店铺',
   prompt: "提示",
-  confirm: '确定要进行此操作吗?'
+  confirm: '确定要进行此操作吗?',
+  rankDesc10: '畅销TOP10',
+  rankAsc10: '滞销TOP10',
+  categoryRatio: '品类占比',
+  productName: '品名',
+  avgPrice: '均价',
+  saleVolume: '销量',
+  saleAmount: '销售额',
+  emptyTableData: '暂无数据',
+  distribute: '连带率分布'
 }

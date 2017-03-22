@@ -47,5 +47,9 @@ export default {
     {
       text: scrollNavItems.payment,
       path: "/report.payment"
+    },
+    {
+      text: scrollNavItems.goodsInfo,
+      path: "/report.goodsInfo"
     }]
 }

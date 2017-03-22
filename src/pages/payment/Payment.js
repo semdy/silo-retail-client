@@ -7,43 +7,8 @@ import Table from '../../components/table';
 import actions from '../../app/actions';
 import store from '../../app/store';
 import {getStoreList, getStoreChartReport, getStoreStats} from '../../services/store';
+import {getDateBefore, genTableRows, genStatsData} from '../../utils';
 import locale from '../../locale';
-
-
-//获取距离今天指定日期对象
-const getDateBefore = (offset) => {
-  let date = new Date();
-  date.setDate(date.getDate() - offset);
-  return date;
-};
-
-//生成table datagrid标准的数据格式
-const genTableRows = (series) => {
-  let res = [];
-  series.forEach((item) => {
-    res.push({
-      name: item.name,
-      count: item.value[0],
-      money: item.params.money
-    });
-  });
-
-  return res;
-};
-
-//生成统计的标准的数据格式
-const genStatsData = (statsData) => {
-  let res = [];
-  statsData.forEach((stats) => {
-    res.push({
-      name: locale.stats.title[stats.field],
-      value: stats.value,
-      suffix: locale.stats.unit[stats.field]
-    });
-  });
-
-  return res;
-};
 
 class Page extends React.Component {
 
@@ -129,7 +94,7 @@ class Page extends React.Component {
   doQuery() {
     let storeId = this.currStore.storeId;
     Promise.all([
-      getStoreStats(storeId, this.offset, 0, ['pay', 'promo']),
+      getStoreStats(storeId, this.offset, this.offset, ['pay', 'promo']),
       getStoreChartReport(storeId, this.offset, 'retail.trade.payment.mode')
     ]).then((values) => {
       this.setData(values[0].data, values[1]);

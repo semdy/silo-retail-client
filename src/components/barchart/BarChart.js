@@ -1,10 +1,10 @@
-require('./PieChart.styl');
+require('./BarChart.styl');
 
 let {Context} = SaltUI;
 let {PropTypes} = React;
 import dom from '../../utils/dom';
 
-class PieChart extends React.Component {
+class BarChart extends React.Component {
 
   constructor(props) {
     super(props);
@@ -46,7 +46,7 @@ class PieChart extends React.Component {
   setPieSize(cb) {
     this.setState({
       pieWidth: window.innerWidth,
-      pieHeight: Math.max(300, window.innerHeight - dom.offset(this.refs.chart).top - 10)
+      pieHeight: window.innerHeight - dom.offset(this.refs.chart).top - 10
     }, cb);
   }
 
@@ -59,63 +59,78 @@ class PieChart extends React.Component {
     let chartData = this.props.chartData;
     this.chartInstance.clear();
 
-    let chartOptions = {
-      tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    let chartOptions =  {
+      //color: ['#3398DB'],
+      tooltip : {
+        trigger: 'axis',
+        axisPointer : { // 坐标轴指示器，坐标轴触发有效
+          type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+        }
       },
-      legend: {
-        x: 'center',
-        data: chartData.legend.data
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
       },
-      series: [
+      xAxis : [
         {
-          name: this.props.chartName,
-          type: 'pie',
-          center: ['50%', '62%'],
-          radius: this.props.radius,
-          data: chartData.series,
-          label: {
-            emphasis: {
-              formatter: function (params) {
-                var data = params.data;
-                return [data.name, data.value[0], data.params.money].join('\n');
-              }
-            }
+          type : 'category',
+          data : chartData.xAxis[0].data,
+          axisTick: {
+            alignWithLabel: true
           }
         }
-      ]
+      ],
+      yAxis : [
+        {
+          type : 'value'
+        }
+      ],
+      series : []
     };
+
+    chartData.series.forEach((item) => {
+      chartOptions.series.push(
+        {
+          name: this.props.chartName,
+          type:'bar',
+          barWidth: '60%',
+          data: item.data
+        }
+      );
+    });
+
     this.chartInstance.setOption(chartOptions);
   }
 
   render() {
     let {pieWidth, pieHeight} = this.state;
     return (
-      <div className="card" style={{display: this.props.visible ? '' : 'none'}}>
+      <div className="card">
+        <div className="barchart-title">
+          {this.props.chartName}
+        </div>
         <div ref="chart"
-             className="piechart"
+             className="barchart"
              style={{
                width: pieWidth + "px",
                height: pieHeight + "px"
              }}
         >
         </div>
-        <div className="piechart-title">
-          {this.props.chartName}
-        </div>
       </div>
     );
   }
 }
 
-PieChart.defaultProps = {
+BarChart.defaultProps = {
   chartName: '',
   responsive: false,
   radius: ['45%', '65%']
 };
 
-PieChart.propTypes = {
+BarChart.propTypes = {
   chartName: PropTypes.string.isRequired,
   responsive: PropTypes.bool,
   radius: PropTypes.arrayOf(
@@ -123,4 +138,4 @@ PieChart.propTypes = {
   )
 };
 
-module.exports = PieChart;
+module.exports = BarChart;

@@ -16,7 +16,8 @@ class Apply extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      loaded: false
     };
   }
 
@@ -26,15 +27,16 @@ class Apply extends React.Component {
     this.doSearch();
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     //隐藏header
     actions.hideHeader();
   }
 
-  doSearch(keyword){
+  doSearch(keyword) {
     storeSearch(keyword).then((res) => {
       this.setState({
-        data: res.data
+        data: res.data,
+        loaded: true
       });
     }, (err) => {
       Toast.error(err);
@@ -58,12 +60,12 @@ class Apply extends React.Component {
     });
   }
 
-  handleSearch(value){
+  handleSearch(value) {
     this.doSearch(value);
   }
 
   render() {
-    let {data} = this.state;
+    let {loaded, data} = this.state;
     return (
       <div className="permission-apply">
         <SearchBar placeholder="请输入要查询的门店"
@@ -72,26 +74,28 @@ class Apply extends React.Component {
         </SearchBar>
         <div className="group-wrapper">
           {
-            data.length > 0 ? data.map((item, i) => {
-              return (
-                item.progress == 'normal' &&
-                <ListItem key={i}>
-                  <span className="group-item-text t-FB1">{item.name}</span>
-                  <ButtonGroup half={true}>
-                    <Button type="minor"
-                            className={classNames("no-bg", {disabled: item.disabled})}
-                            onClick={this.handleApply.bind(this, item.storeId, i)}
-                    >
-                      {item.disabled ? locale.applyWait : locale.apply}
-                    </Button>
-                  </ButtonGroup>
-                </ListItem>
-              )
-            })
-            :
-            <Empty>
-              {locale.noDataFound}
-            </Empty>
+            loaded && (
+              data.length > 0 ? data.map((item, i) => {
+                  return (
+                    item.progress == 'normal' &&
+                    <ListItem key={i}>
+                      <span className="group-item-text t-FB1">{item.name}</span>
+                      <ButtonGroup half={true}>
+                        <Button type="minor"
+                                className={classNames("no-bg", {disabled: item.disabled})}
+                                onClick={this.handleApply.bind(this, item.storeId, i)}
+                        >
+                          {item.disabled ? locale.applyWait : locale.apply}
+                        </Button>
+                      </ButtonGroup>
+                    </ListItem>
+                  )
+                })
+                :
+                <Empty>
+                  {locale.noDataFound}
+                </Empty>
+            )
           }
         </div>
       </div>

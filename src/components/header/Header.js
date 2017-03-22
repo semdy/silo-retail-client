@@ -1,6 +1,6 @@
 require('./Header.styl');
 
-let {Icon} = SaltUI;
+let {Icon, Context} = SaltUI;
 let {hashHistory} = ReactRouter;
 
 class Header extends React.Component {
@@ -22,10 +22,16 @@ class Header extends React.Component {
     }
   }
 
+  componentDidMount(){
+    this.refs.el.addEventListener(Context.TOUCH_START, (e) => {
+      e.preventDefault();
+    });
+  }
+
   render() {
     let {title, children} = this.props;
     return (
-      <div className="header">
+      <div ref="el" className="header">
         <div className="h-toolbar left">
           <Icon name="angle-left-l" width={20} height={20} onClick={this.handleClick.bind(this)}>
           </Icon>

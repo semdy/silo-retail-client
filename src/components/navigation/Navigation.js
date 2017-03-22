@@ -62,20 +62,20 @@ class Navigation extends React.Component {
           {
             items.map((menu, i) => {
               return (
-                menu.visible ?
-                  <Link to={menu.path}
-                        key={i}
-                        className="navigation-item"
-                        activeClassName="active"
-                        onClick={actions.hideNavigation}
-                  >
-                    {
-                      !menu.icon ? "" :
-                        ( menu.icon.match(/\.(jpg|png|gif|svg)$/) ? <img src={menu.icon}/> :
-                          <Icon name={menu.icon} width={20} height={20}/> )
-                    }
-                    <span>{menu.text}</span>
-                  </Link> : ""
+                menu.visible &&
+                <Link to={menu.path}
+                      key={i}
+                      className="navigation-item"
+                      activeClassName="active"
+                      onClick={actions.hideNavigation}
+                >
+                  {
+                    !menu.icon ? "" :
+                      ( menu.icon.match(/\.(jpg|png|gif|svg)$/) ? <img src={menu.icon}/> :
+                        <Icon name={menu.icon} width={20} height={20}/> )
+                  }
+                  <span>{menu.text}</span>
+                </Link>
               )
             })
           }

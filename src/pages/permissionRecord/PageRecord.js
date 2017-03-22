@@ -14,7 +14,8 @@ class Record extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      loaded: false
     };
   }
 
@@ -27,7 +28,8 @@ class Record extends React.Component {
   doRequest() {
     authorityApplyRecord().then((res) => {
       this.setState({
-        data: res.data
+        data: res.data,
+        loaded: true
       });
 
     }, (err) => {
@@ -41,31 +43,33 @@ class Record extends React.Component {
   }
 
   render() {
-    let {data} = this.state;
+    let {loaded, data} = this.state;
     return (
       <div className="permission-record">
         <div className="group-wrapper">
           {
-            data.length > 0 ? data.map((item, i) => {
-                return (
-                  <ListItem key={i}>
-                    <span className="group-item-text t-FB1">{item.authParamStr}</span>
-                    <span className={classNames("apply-status", {
-                      ok: item.status == 0,
-                      refused: item.status == 1,
-                      wait: item.status == 2
-                    })}>
+            loaded && (
+              data.length > 0 ? data.map((item, i) => {
+                  return (
+                    <ListItem key={i}>
+                      <span className="group-item-text t-FB1">{item.authParamStr}</span>
+                      <span className={classNames("apply-status", {
+                        ok: item.status == 0,
+                        refused: item.status == 1,
+                        wait: item.status == 2
+                      })}>
                   {
                     item.status == 0 ? locale.agreed : ( item.status == 1 ? locale.refused : locale.waiting )
                   }
                 </span>
-                  </ListItem>
-                )
-              })
-              :
-              <Empty>
-                {locale.noAppliedRecord}
-              </Empty>
+                    </ListItem>
+                  )
+                })
+                :
+                <Empty>
+                  {locale.noAppliedRecord}
+                </Empty>
+            )
           }
         </div>
         <div className="permission-record-actions t-PT16 t-PB16 t-PL16 t-PR16">

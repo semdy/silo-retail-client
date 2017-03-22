@@ -3,6 +3,7 @@ require('./Table.styl');
 let {PropTypes} = React;
 import TableHeader from './TableHeader';
 import TableItem from './TableItem';
+import locale from '../../locale';
 
 class Table extends React.Component {
 
@@ -17,11 +18,14 @@ class Table extends React.Component {
       <div className="ui-table">
         <TableHeader fields={fields}/>
         {
-          rows.map((row, i) => {
-            return (
-              <TableItem key={i} rowNumber={i} fields={fields} row={row}/>
-            )
-          })
+          rows.length > 0 ?
+            rows.map((row, i) => {
+              return (
+                <TableItem key={i} rowNumber={i} fields={fields} row={row}/>
+              )
+            })
+            :
+            <span className="ui-table-empty">{locale.emptyTableData}</span>
         }
       </div>
     );

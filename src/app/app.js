@@ -48,6 +48,7 @@ import PageApproval from '../pages/permissionApproval';
 import PageMembers from '../pages/permissionMembers';
 import Distribution from '../pages/distribution';
 import Payment from '../pages/payment';
+import GoodsInfo from '../pages/goodsinfo';
 
 class App extends React.Component {
   constructor(props) {
@@ -107,6 +108,7 @@ ReactDOM.render(
       <Route path="report.sale" component={DataView}/>
       <Route path="report.distribution" component={Distribution}/>
       <Route path="report.payment" component={Payment}/>
+      <Route path="report.goodsinfo" component={GoodsInfo}/>
       <Route path="permission.apply" component={PageApply}/>
       <Route path="permission.record" component={PageRcord}/>
       <Route path="permission.approval" component={PageApproval}/>
