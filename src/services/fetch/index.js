@@ -66,11 +66,12 @@ let fetch = (args) => {
   return new Promise((resolve, reject) => {
     signIn.ready(() => {
       request(args).then((res) => {
-        //if (res.result == 0) {
-        resolve(res);
-        /*} else {
-         reject(res);
-         }*/
+        if (res.result == 0 || res.result === undefined) {
+          resolve(res);
+        } else {
+          reject(res);
+          alert("error code:" + res.result);
+        }
       }, (err) => {
         reject(err);
       });
