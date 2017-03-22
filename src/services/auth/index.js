@@ -1,6 +1,6 @@
 'use strict';
 
-let { Toast } = SaltUI;
+let {Toast} = SaltUI;
 
 //改写Toast
 ["success", "error", "fail", "loading"].forEach((type) => {
@@ -14,8 +14,8 @@ let { Toast } = SaltUI;
   };
 });
 
-import { env, urlParams } from '../config';
-import { isDD } from '../../utils';
+import {env, urlParams} from '../config';
+import {isDD} from '../../utils';
 let error = Toast.error;
 
 const jsApiList = ['runtime.info', 'biz.contact.choose',
@@ -37,7 +37,7 @@ const session = {
 
   get(){
     let sessionStr = localStorage.getItem('session');
-    if( sessionStr ){
+    if (sessionStr) {
       return JSON.parse(sessionStr);
     } else {
       return null;
@@ -52,17 +52,17 @@ const session = {
 
 let requestCount = 0;
 
-const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
+const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
   requestCount++;
 
-  if( requestCount == 1 ) {
+  if (requestCount == 1) {
     Toast.loading('应用启动中...');
   }
 
   return new Promise((resolve, reject) => {
     $.ajax({
       type: method,
-      url: /^https?:\/\//.test( url ) ? url : env.urlAppRoot + url,
+      url: /^https?:\/\//.test(url) ? url : env.urlAppRoot + url,
       data: JSON.stringify(body),
       dataType: dataType,
       success: (recv) => {
@@ -78,7 +78,7 @@ const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
         error(`与服务器失去连接, code: ${status}`);
       },
       complete: () => {
-        if(--requestCount == 0){
+        if (--requestCount == 0) {
           //Toast.hide();
         }
       }
@@ -88,7 +88,7 @@ const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
 
 /* 请求钉钉的JS-API签名信息 */
 function httpRequestConfig() {
-  let req = { keyCorp: 1000, keyApp: env.keyApp };
+  let req = {keyCorp: 1000, keyApp: env.keyApp};
   return new Promise((resolve, reject) => {
     request({url: '7001.json', body: req}).then((data) => {
       resolve(data);
@@ -113,7 +113,7 @@ function httpRequestSignIn(code, corpId) {
       }
     }, (err) => {
       reject(err);
-      if( typeof err == 'number' ) {
+      if (typeof err == 'number') {
         error(`钉钉登录出错, code: ${err}`);
       }
     });
@@ -123,7 +123,7 @@ function httpRequestSignIn(code, corpId) {
 /* 请求使用用户名密码登录 */
 function httpRequestSignInByUserPass(username, password) {
   return new Promise((resolve, reject) => {
-    request({url: '1003.json', body: { username, password }}).then((json) => {
+    request({url: '1003.json', body: {username, password}}).then((json) => {
       if (json.session) {
         session.set(json.session);
         resolve(json.session);
@@ -133,7 +133,7 @@ function httpRequestSignInByUserPass(username, password) {
       }
     }, (err) => {
       reject(err);
-      if( typeof err == 'number' ) {
+      if (typeof err == 'number') {
         error(`登录出错, code: ${err}`);
       }
     });
@@ -163,7 +163,7 @@ function onDingTalkYes(corpId) {
 
 function signIn() {
   let sessionInfo = session.get();
-  if( sessionInfo ){
+  if (sessionInfo) {
     session.set(sessionInfo);
     triggerReady();
   } else {
@@ -200,8 +200,8 @@ function onDingTalkApiFail(err, api) {
 }
 
 function ready(fun) {
-  if( typeof fun == 'function' ) {
-    if ( !isReady ) {
+  if (typeof fun == 'function') {
+    if (!isReady) {
       readyQueue.push(fun);
     } else {
       fun();

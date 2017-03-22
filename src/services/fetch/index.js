@@ -38,7 +38,7 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
         } else if (code === 403) {
           session.clear();
           reject(code);
-          //alert("登录超时！");
+          alert(locale.loginTimeout);
           location.reload();
         } else {
           reject(code);

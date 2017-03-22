@@ -9,7 +9,6 @@ import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import classnames from 'classnames';
-import {getStoreList} from '../../services/store';
 import locale, {storeLocale} from '../../locale';
 
 
@@ -66,13 +65,6 @@ class Page extends React.Component {
   }
 
   componentDidMount() {
-    //获得门店列表的数据
-/*    getStoreList().then((storeList) => {
-      this.setState({
-        storeList: storeList
-      });
-    });*/
-
     store.emitter.on("storeSelectorReset", this._resetHandler, this);
   }
 

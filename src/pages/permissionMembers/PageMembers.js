@@ -7,6 +7,7 @@ import ButtonGroup from '../../components/ButtonGroup';
 import Empty from '../../components/empty';
 import ListItem from '../../components/listitem';
 import {authorityUserList, authorityRemove} from '../../services/store';
+import {isDD} from '../../utils';
 import locale from '../../locale';
 
 class Members extends React.Component {
@@ -26,7 +27,7 @@ class Members extends React.Component {
         data: data
       });
     }, (err) => {
-      Toast.error("error: " + err);
+      Toast.error("authorityUserList error: " + err);
     });
   }
 
@@ -35,7 +36,7 @@ class Members extends React.Component {
     actions.hideHeader();
   }
 
-  handleRemove(userId, index) {
+  doRemove(userId, index) {
     authorityRemove(userId).then((res) => {
       if (res.result == 0) {
         this.state.data[index].removed = true;
@@ -50,6 +51,28 @@ class Members extends React.Component {
     }, (err) => {
       Toast.error(err);
     });
+  }
+
+  handleRemove(userId, index){
+    let self = this;
+    if( isDD ) {
+      dd.device.notification.confirm({
+        message: locale.confirm,
+        title: locale.prompt,
+        buttonLabels: [locale.ok, locale.cancel],
+        onSuccess: function (result) {
+          if( result.buttonIndex == 0 ) {
+            self.doRemove(userId, index);
+          }
+        },
+        onFail: function (err) {
+        }
+      });
+    } else {
+      if( confirm(locale.confirm) ){
+        self.doRemove(userId, index);
+      }
+    }
   }
 
   render() {

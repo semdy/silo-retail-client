@@ -23,39 +23,15 @@ export const fetchReportPayment = (query, storeId, offset) => {
 };
 
 
-let readyQueue = [];
-let isReady = false;
-let storeList = [];
-let managerId = null;
-
-function storeReady(fun) {
-  if (typeof fun == 'function') {
-    if (!isReady) {
-      readyQueue.push(fun);
-    } else {
-      fun();
-    }
-  }
-}
-
-function triggerReady() {
-  isReady = true;
-  readyQueue.forEach((itemFun) => {
-    itemFun();
-  });
-  readyQueue = [];
-}
-
 /**
  * 远程获取店铺列表数据
  * @return {Promise}
  */
 export const getStoreList = () => {
-  isReady = false;
   return new Promise((resolve, reject) => {
     fetch.post('7103.json').then((res) => {
-      storeList = res.data;
-      managerId = res.idAsManager;
+      let storeList = res.data;
+      let managerId = res.idAsManager;
 
       if (storeList.length == 0) {
         reject("empty storelist data");
@@ -71,28 +47,12 @@ export const getStoreList = () => {
           //显示顶部导航
           actions.showScrollNav(true);
         }
-        resolve(storeList);
+        resolve(storeList, managerId);
       }
-      triggerReady();
     }, (err) => {
-      triggerReady();
       reject("get storeList error:" + err);
     });
   });
-};
-
-/**
- * 获得店铺数据集
- * */
-export const getStoreModel = () => {
-  return storeList;
-};
-
-/**
- * 获取店长所有店铺storeId
- * */
-export const getManagerId = () => {
-  return managerId;
 };
 
 /**
@@ -160,12 +120,12 @@ export const authorityApplyRecord = (pageCode = 1, pageSize = 50) => {
  * */
 export const authorityApproval = (pageCode = 1, pageSize = 50) => {
   return new Promise((resolve, reject) => {
-    storeReady(() => {
+    getStoreList().then((storeList, managerId) => {
       let params = {
         authType: AUTHTYPE,
         pageCode,
         pageSize,
-        authParamStr: getManagerId() //店长所在店铺storeId
+        authParamStr: managerId //店长所在店铺storeId
       };
 
       fetch.post('7017.json', params).then((res) => {
@@ -200,12 +160,12 @@ export const authorityApprove = (applyId, agreed) => {
  * */
 export const authorityUserList = (pageCode = 1, pageSize = 50) => {
   return new Promise((resolve, reject) => {
-    storeReady(() => {
+    getStoreList().then((storeList, managerId) => {
       let params = {
         pageSize,
         pageCode,
         authType: AUTHTYPE,
-        authParamStr: getManagerId() //获取店长所在店铺storeId
+        authParamStr: managerId //获取店长所在店铺storeId
       };
 
       fetch.post('7019.json', params).then((res) => {
@@ -225,11 +185,11 @@ export const authorityUserList = (pageCode = 1, pageSize = 50) => {
  * */
 export const authorityRemove = (userId) => {
   return new Promise((resolve, reject) => {
-    storeReady(() => {
+    getStoreList().then((storeList, managerId) => {
       let params = {
         userId,
         authType: AUTHTYPE,
-        authParamStr: getManagerId() //获取店长所在店铺storeId
+        authParamStr: managerId //获取店长所在店铺storeId
       };
 
       fetch.post('7021.json', params).then((res) => {

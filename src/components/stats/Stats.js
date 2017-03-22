@@ -1,5 +1,7 @@
 require('./Stats.styl');
 
+import classnames from 'classnames';
+
 class StatItem extends React.Component {
 
   constructor(props) {
@@ -16,12 +18,14 @@ class StatItem extends React.Component {
       );
     }
     return (
-      <div className="stats-item">
+      <div className="t-FB1 stats-item">
         <h4 className="stats-name">{name}</h4>
         <div className="stats-value">{value}{suffixStr}</div>
         {
           subAmount !== undefined &&
-          <div className="stats-amout"><ins>￥</ins> {subAmount}</div>
+          <div className="stats-amout">
+            <ins>￥</ins>
+            {subAmount}</div>
         }
 
       </div>
@@ -37,24 +41,26 @@ class Stats extends React.Component {
   }
 
   render() {
-    return (<div className="stats-container">
-      <div className="stats-bd t-clear">
-        {
-          this.props.data.map((item, index) => {
-            return (
-              <StatItem key={index}
-                        name={item.name}
-                        value={item.value}
-                        suffix={item.suffix}
-                        subAmount={item.subAmount}
-              >
+    let {data} = this.props;
+    return (
+      <div className={classnames("stats-container", {double: data.length > 1})}>
+        <div className="t-FBH stats-bd">
+          {
+            data.map((item, index) => {
+              return (
+                <StatItem key={index}
+                          name={item.name}
+                          value={item.value}
+                          suffix={item.suffix}
+                          subAmount={item.subAmount}
+                >
 
-              </StatItem>
-            )
-          })
-        }
-      </div>
-    </div>);
+                </StatItem>
+              )
+            })
+          }
+        </div>
+      </div>);
   }
 }
 

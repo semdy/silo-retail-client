@@ -51,7 +51,7 @@ class Page extends React.Component {
     this.state = {
       isDataLoaded: false,
       isNextDisabled: true,
-      date: null,
+      date: new Date(),
       storeName: '',
       statsData: [],
       chartData: {}
@@ -153,8 +153,7 @@ class Page extends React.Component {
         {
           isDataLoaded &&
           <div>
-            <Stats data={statsData}>
-            </Stats>
+            <Stats data={statsData}/>
             <DateNavigator
               date={date}
               nextDisabled={isNextDisabled}

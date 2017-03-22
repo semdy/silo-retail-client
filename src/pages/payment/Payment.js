@@ -52,7 +52,7 @@ class Page extends React.Component {
     this.state = {
       isDataLoaded: false,
       isNextDisabled: true,
-      date: null,
+      date: new Date(),
       storeName: '',
       statsData: [],
       chartData: {},
@@ -69,20 +69,20 @@ class Page extends React.Component {
       },
       {
         field: 'name',
-        name: '结算方式',
+        name: locale.settleWay,
         flex: 1
       },
       {
         field: 'count',
-        name: '单量',
+        name: locale.singularQuantity,
         flex: 1
       },
       {
         field: 'money',
-        name: '金额',
+        name: locale.amount,
         flex: 1,
         formatter: function (value) {
-          return value + "元";
+          return value + locale.yuan;
         }
       }
     ];
@@ -165,8 +165,7 @@ class Page extends React.Component {
         {
           isDataLoaded &&
           <div>
-            <Stats data={statsData}>
-            </Stats>
+            <Stats data={statsData}/>
             <DateNavigator
               date={date}
               nextDisabled={isNextDisabled}
@@ -181,8 +180,7 @@ class Page extends React.Component {
                       radius={['37%', '52%']}
             >
             </PieChart>
-            <Table fields={this.tableFields} rows={tableRows}>
-            </Table>
+            <Table fields={this.tableFields} rows={tableRows}/>
           </div>
         }
       </div>

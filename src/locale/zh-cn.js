@@ -33,8 +33,13 @@ export default {
       promo: '元'
     }
   },
+  loginTimeout: '登录超时！',
   deliveries: "配送类型",
   payments: '支付方式',
+  settleWay: '结算方式',
+  singularQuantity: '单量',
+  amount: '金额',
+  yuan: "元",
   agree: '同意',
   apply: '申请',
   waiting: '等待中',
@@ -58,5 +63,7 @@ export default {
   noApprovalData: '暂无审批申请',
   noMembers: '暂时没有成员',
   noAppliedRecord: '暂无申请记录',
-  noAssignStores: '你目前没有可查看的店铺'
+  noAssignStores: '你目前没有可查看的店铺',
+  prompt: "提示",
+  confirm: '确定要进行此操作吗?'
 }

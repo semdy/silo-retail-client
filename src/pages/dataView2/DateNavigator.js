@@ -5,7 +5,9 @@ import ButtonGroup from '../../components/ButtonGroup';
 import DropDown from '../../components/DropDown';
 import classnames from 'classnames';
 import reactMixin from 'react-mixin';
+import actions from '../../app/actions';
 import store from  '../../app/store';
+import dom from '../../utils/dom';
 
 const formatDate = (dateUTC, timelines, filterType) => {
   if( /^(?:hour|day)$/.test(filterType) ) {
@@ -82,6 +84,13 @@ class DateNavigator extends React.Component {
     this.props.onItemClick(filterType);
   }
 
+  componentWillUnmount(){
+    if(this.state.isFullScreen){
+      actions.setFullScreen(false);
+      dom.removeClass(document.body, "page-fullscreen");
+    }
+  }
+
   render() {
       const {date, nextDisabled, diffDisabled, onPrev, onNext, hideDiff, timelines} = this.props;
       let { width, height, options, isFullScreen } = this.state;
@@ -139,6 +148,36 @@ class DateNavigator extends React.Component {
       </div>);
   }
 }
+
+DateNavigator.propTypes = {
+  defaultFilterType: PropTypes.string,
+  date: PropTypes.instanceOf(Date),
+  nextDisabled: PropTypes.bool,
+  diffDisabled: PropTypes.bool,
+  hideDiff: PropTypes.bool,
+  toggleDiff: PropTypes.func,
+  onPrev: PropTypes.func,
+  onNext: PropTypes.func,
+  timelines: PropTypes.arrayOf(PropTypes.string),
+  storeName: PropTypes.string,
+  onItemClick: PropTypes.func,
+  showStoreList: PropTypes.func
+};
+
+DateNavigator.defaultProps = {
+  defaultFilterType: 'hour',
+  date: new Date(),
+  nextDisabled: true,
+  diffDisabled: false,
+  hideDiff: false,
+  toggleDiff: Context.noop,
+  onPrev: Context.noop,
+  onNext: Context.noop,
+  timelines: [],
+  storeName: '',
+  onItemClick: Context.noop,
+  showStoreList: Context.noop
+};
 
 reactMixin.onClass(DateNavigator, Reflux.connect(store));
 
