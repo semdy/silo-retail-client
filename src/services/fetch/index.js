@@ -34,7 +34,13 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
       success: (recv) => {
         let code = recv.protocError;
         if (code === 0) {
-          resolve(recv);
+          if (recv.result == 0 || recv.result === undefined) {
+            resolve(recv);
+          } else {
+            requestError = true;
+            reject(recv);
+            Toast.error(`error code: ${recv.result}`);
+          }
         } else if (code === 403) {
           session.clear();
           reject(code);
@@ -66,12 +72,7 @@ let fetch = (args) => {
   return new Promise((resolve, reject) => {
     signIn.ready(() => {
       request(args).then((res) => {
-        if (res.result == 0 || res.result === undefined) {
-          resolve(res);
-        } else {
-          reject(res);
-          alert("error code:" + res.result);
-        }
+        resolve(res);
       }, (err) => {
         reject(err);
       });
