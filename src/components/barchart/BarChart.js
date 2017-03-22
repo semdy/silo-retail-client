@@ -127,7 +127,8 @@ class BarChart extends React.Component {
 BarChart.defaultProps = {
   chartName: '',
   responsive: false,
-  radius: ['45%', '65%']
+  radius: ['45%', '65%'],
+  visible: true
 };
 
 BarChart.propTypes = {
@@ -135,7 +136,8 @@ BarChart.propTypes = {
   responsive: PropTypes.bool,
   radius: PropTypes.arrayOf(
     PropTypes.string.isRequired
-  )
+  ),
+  visible: PropTypes.bool
 };
 
 module.exports = BarChart;

@@ -23,7 +23,7 @@ class Header extends React.Component {
   }
 
   componentDidMount(){
-    this.refs.el.addEventListener(Context.TOUCH_START, (e) => {
+    this.refs.el.addEventListener(Context.TOUCH_MOVE, (e) => {
       e.preventDefault();
     });
   }

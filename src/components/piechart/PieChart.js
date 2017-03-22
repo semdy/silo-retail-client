@@ -46,7 +46,7 @@ class PieChart extends React.Component {
   setPieSize(cb) {
     this.setState({
       pieWidth: window.innerWidth,
-      pieHeight: Math.max(300, window.innerHeight - dom.offset(this.refs.chart).top - 10)
+      pieHeight: Math.max(280, window.innerHeight - dom.offset(this.refs.chart).top - 10)
     }, cb);
   }
 
@@ -112,7 +112,8 @@ class PieChart extends React.Component {
 PieChart.defaultProps = {
   chartName: '',
   responsive: false,
-  radius: ['45%', '65%']
+  radius: ['45%', '65%'],
+  visible: true
 };
 
 PieChart.propTypes = {
@@ -120,7 +121,8 @@ PieChart.propTypes = {
   responsive: PropTypes.bool,
   radius: PropTypes.arrayOf(
     PropTypes.string.isRequired
-  )
+  ),
+  visible: PropTypes.bool
 };
 
 module.exports = PieChart;

@@ -77,12 +77,18 @@ export const genTableRows = (series) => {
 //生成统计的标准的数据格式
 export const genStatsData = (statsData) => {
   let res = [];
+  let subAmount;
   (statsData.length > 0 ? statsData : [{field: 'pay'}, {field: 'promo'}])
     .forEach((stats) => {
+      if (stats.field == 'money') {
+        subAmount = stats.value;
+        return false
+      }
       res.push({
         name: locale.stats.title[stats.field],
         value: stats.value || 0,
-        suffix: locale.stats.unit[stats.field]
+        suffix: locale.stats.unit[stats.field],
+        subAmount: subAmount
       });
     });
 

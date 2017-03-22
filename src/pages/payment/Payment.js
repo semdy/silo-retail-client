@@ -143,6 +143,7 @@ class Page extends React.Component {
                       chartName={locale.payments}
                       chartData={chartData}
                       radius={['37%', '52%']}
+                      visible={chartData.series.length > 0}
             >
             </PieChart>
             <Table fields={this.tableFields} rows={tableRows}/>

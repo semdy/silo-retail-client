@@ -33,21 +33,7 @@ class Page extends React.Component {
       storeName: this.currStore.name,
       date: getDateBefore(this.offset),
       tableRows: genTableRows(charts.series),
-      //statsData: genStatsData(statsData),
-      statsData: [
-        {
-          name: "门店订单量",
-          suffix: "单",
-          value: 100,
-          subAmount: 22984
-        },
-        {
-          name: "线上订单量",
-          suffix: "单",
-          value: 60,
-          subAmount: 29840
-        }
-      ]
+      statsData: genStatsData(statsData),
     });
   }
 
@@ -82,7 +68,7 @@ class Page extends React.Component {
     let storeId = this.currStore.storeId;
 
     Promise.all([
-      getStoreStats(storeId, this.offset, this.offset, ['pay', 'promo']),
+      getStoreStats(storeId, this.offset, this.offset, ['order', 'money']),
       getStoreChartReport(storeId, this.offset, 'retail.trade.shipment.type')
     ]).then((values) => {
       this.setData(values[0].data, values[1]);
@@ -131,6 +117,7 @@ class Page extends React.Component {
                       chartName={locale.deliveries}
                       chartData={chartData}
                       responsive={true}
+                      visible={chartData.series.length > 0}
             >
             </PieChart>
           </div>

@@ -27,11 +27,14 @@ export default {
   stats: {
     title: {
       pay: '支付总额',
-      promo: '优惠总额'
+      promo: '优惠总额',
+      order: '门店订单量',
+      money: ''
     },
     unit: {
       pay: '元',
-      promo: '元'
+      promo: '元',
+      order: '单'
     }
   },
   loginTimeout: '登录超时！',
