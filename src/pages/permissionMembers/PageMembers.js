@@ -6,8 +6,8 @@ import actions from '../../app/actions';
 import ButtonGroup from '../../components/ButtonGroup';
 import Empty from '../../components/empty';
 import ListItem from '../../components/listitem';
-import {authorityUserList, authorityRemove} from '../../services/store';
-import utils from '../../utils';
+import {authorityUserList, authorityRemove, getManager} from '../../services/store';
+import * as utils from '../../utils';
 import locale from '../../locale';
 
 class Members extends React.Component {
@@ -40,18 +40,14 @@ class Members extends React.Component {
 
   doRemove(userId, index) {
     authorityRemove(userId).then((res) => {
-      if (res.result == 0) {
-        this.state.data[index].removed = true;
-        this.setState({
-          data: this.state.data
-        }, () => {
-          Toast.success(locale.removeSuccess);
-        });
-      } else {
-        Toast.error(locale.removeError);
-      }
-    }, (err) => {
-      Toast.error(err);
+      this.state.data[index].removed = true;
+      this.setState({
+        data: this.state.data
+      }, () => {
+        Toast.success(locale.removeSuccess);
+      });
+    }, (code) => {
+      Toast.error(`${locale.removeError}, code: ${code}`);
     });
   }
 
@@ -70,15 +66,16 @@ class Members extends React.Component {
             data.length > 0 ? data.map((item, i) => {
                 return (
                   <ListItem key={i}>
-                    <span className="group-item-text t-FB1">{item.realName}</span>
+                    <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.realName}</span>
                     {
                       item.removed ?
                         <span className="apply-status refused">
-                      <Icon name="minus-circle" width={18} height={18}>
-                      </Icon>
+                          <Icon name="minus-circle" width={18} height={18}>
+                          </Icon>
                           {locale.removed}
-                      </span>
+                        </span>
                         :
+                        getManager().userId != item.userId &&
                         <ButtonGroup half={true}>
                           <Button type="minor"
                                   className="no-bg"

@@ -3,5 +3,5 @@
  */
 
 export default {
-  lang: 'zh-cn'
+  lang: 'zh_CN'
 }

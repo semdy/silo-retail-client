@@ -63,7 +63,7 @@ class Approval extends React.Component {
             data.length > 0 ? data.map((item, i) => {
                 return (
                   <ListItem key={i}>
-                    <span className="group-item-text t-FB1">{item.applicant}</span>
+                    <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.applicant}</span>
                     {
                       item.agreed === true ?
                         <span className="apply-status ok">

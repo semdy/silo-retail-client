@@ -1,9 +1,9 @@
 require('./Navgationmask.styl');
 
-const {Context} = SaltUI;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
+import dom from '../../utils/dom';
 
 class Navgationmask extends React.Component {
 
@@ -24,11 +24,11 @@ class Navgationmask extends React.Component {
   }
 
   componentDidMount() {
-    this.refs.mask.addEventListener(Context.TOUCH_START, this._touchstart, false);
+    dom.on(this.refs.mask, "touchstart", this._touchstart);
   }
 
   componentWillUnmount() {
-    this.refs.mask.removeEndEventListener(Context.TOUCH_START, this._touchstart, false);
+    dom.off(this.refs.mask, "touchstart", this._touchstart);
   }
 
   _touchstart(e) {
@@ -36,8 +36,8 @@ class Navgationmask extends React.Component {
     this.startX = touch.pageX;
     this.startY = touch.pageY;
 
-    document.addEventListener(Context.TOUCH_MOVE, this._touchmove, false);
-    document.addEventListener(Context.TOUCH_END, this._touchend, false);
+    dom.on(document, "touchmove", this._touchmove);
+    dom.on(document, "touchend", this._touchend);
   }
 
   _touchmove(e) {
@@ -56,8 +56,9 @@ class Navgationmask extends React.Component {
     if (diffX < -20 && Math.abs(diffX) > Math.abs(diffY)) {
       actions.hideNavigation();
     }
-    document.removeEventListener(Context.TOUCH_MOVE, this._touchmove, false);
-    document.removeEventListener(Context.TOUCH_END, this._touchend, false);
+
+    dom.off(document, "touchmove", this._touchmove);
+    dom.off(document, "touchend", this._touchend);
   }
 
   render() {

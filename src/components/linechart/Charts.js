@@ -1,6 +1,6 @@
 require('./Charts.styl');
 
-let {Context, Icon} = SaltUI;
+let {Icon} = SaltUI;
 import classnames from 'classnames';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
@@ -55,8 +55,9 @@ class Charts extends React.Component {
         self.chartInstance.resize();
       }, 100);
     };
+
     this.refresh();
-    window.addEventListener(Context.RESIZE, this.resizeHandler, false);
+    dom.on("resize", this.resizeHandler);
   }
 
   refresh() {
@@ -161,7 +162,7 @@ class Charts extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener(Context.RESIZE, this.resizeHandler, false);
+    dom.off(window, "resize", this.resizeHandle);
     this.chartInstance.dispose();
   }
 

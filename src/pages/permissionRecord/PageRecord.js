@@ -52,7 +52,7 @@ class Record extends React.Component {
               data.length > 0 ? data.map((item, i) => {
                   return (
                     <ListItem key={i}>
-                      <span className="group-item-text t-FB1">{item.authParamStr}</span>
+                      <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.authParamStr}</span>
                       <span className={classNames("apply-status", {
                         ok: item.status == 0,
                         refused: item.status == 1,

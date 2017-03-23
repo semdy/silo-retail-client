@@ -55,8 +55,9 @@ class Charts extends React.Component {
         self.chartInstance.resize();
       }, 100);
     };
+
     this.refresh();
-    window.addEventListener(Context.RESIZE, this.resizeHandler, false);
+    dom.on(window, 'resize', this.resizeHandler);
   }
 
   refresh() {

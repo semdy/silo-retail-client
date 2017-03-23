@@ -7,7 +7,7 @@ let {Toast} = SaltUI;
   Toast[type] = (msg, options) => {
     return Toast.show({
       type: type,
-      content: msg,
+      content: typeof msg == 'object' ? JSON.stringify(msg) : String(msg),
       autoHide: type !== 'loading',
       ...options
     });

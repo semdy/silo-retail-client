@@ -2,6 +2,7 @@ require('./Header.styl');
 
 let {Icon, Context} = SaltUI;
 let {hashHistory} = ReactRouter;
+import dom from '../../utils/dom';
 
 class Header extends React.Component {
 
@@ -23,7 +24,7 @@ class Header extends React.Component {
   }
 
   componentDidMount(){
-    this.refs.el.addEventListener(Context.TOUCH_MOVE, (e) => {
+    dom.on(this.refs.el, "touchmove", (e) => {
       e.preventDefault();
     });
   }

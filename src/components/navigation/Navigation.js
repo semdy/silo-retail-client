@@ -25,11 +25,11 @@ class Navigation extends React.Component {
   hide() {
     let self = this;
     dom.removeClass(this.docBody, "show-sidebar");
-    this.refs.navigation.addEventListener("transitionend", function handler() {
+    dom.on(this.refs.navigation, "transitionend", function handler() {
       dom.removeClass(self.docBody, "hide-sidebar");
       this.style.display = "";
-      this.removeEventListener("transitionend", handler, false);
-    }, false);
+      dom.off(this, "transitionend", handler);
+    });
   }
 
   setData(items) {

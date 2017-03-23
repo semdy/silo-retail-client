@@ -26,7 +26,10 @@ export const fetchReportPayment = (query, storeId, offset) => {
 let readyQueue = [];
 let isReady = false;
 let storeList = [];
-let managerId = null;
+let manager = {
+  storeId: null,
+  userId: null
+};
 
 function storeReady(fun) {
   if (typeof fun == 'function') {
@@ -55,7 +58,8 @@ export const getStoreList = () => {
   return new Promise((resolve, reject) => {
     fetch.post('7103.json').then((res) => {
       storeList = res.data;
-      managerId = res.idAsManager;
+      manager.storeId = res.idAsManager;
+      manager.userId = res.managerUserId;
 
       if (storeList.length == 0) {
         reject("empty storelist data");
@@ -95,8 +99,8 @@ export const getStoreModel = () => {
 /**
  * 获取店长所有店铺storeId
  * */
-export const getManagerId = () => {
-  return managerId;
+export const getManager = () => {
+  return manager;
 };
 
 /**
@@ -169,7 +173,7 @@ export const authorityApproval = (pageCode = 1, pageSize = 50) => {
         authType: AUTHTYPE,
         pageCode,
         pageSize,
-        authParamStr: getManagerId() //店长所在店铺storeId
+        authParamStr: getManager().storeId //店长所在店铺storeId
       };
 
       fetch.post('7017.json', params).then((res) => {
@@ -209,7 +213,7 @@ export const authorityUserList = (pageCode = 1, pageSize = 50) => {
         pageSize,
         pageCode,
         authType: AUTHTYPE,
-        authParamStr: getManagerId() //获取店长所在店铺storeId
+        authParamStr: getManager().storeId //获取店长所在店铺storeId
       };
 
       fetch.post('7019.json', params).then((res) => {
@@ -233,7 +237,7 @@ export const authorityRemove = (userId) => {
       let params = {
         userId,
         authType: AUTHTYPE,
-        authParamStr: getManagerId() //获取店长所在店铺storeId
+        authParamStr: getManager().storeId //获取店长所在店铺storeId
       };
 
       fetch.post('7021.json', params).then((res) => {

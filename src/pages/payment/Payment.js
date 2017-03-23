@@ -29,26 +29,20 @@ class Page extends React.Component {
 
     this.tableFields = [
       {
-        field: 'rowNumber',
-        width: 18
-      },
-      {
         field: 'name',
         name: locale.settleWay,
-        flex: 1
+        align: 'left',
+        formatter: function (value, index) {
+          return (index+1) + " " + value
+        }
       },
       {
         field: 'count',
-        name: locale.singularQuantity,
-        flex: 1
+        name: locale.singularQuantity
       },
       {
         field: 'money',
-        name: locale.amount,
-        flex: 1,
-        formatter: function (value) {
-          return value + locale.yuan;
-        }
+        name: `${locale.amount}(${locale.yuan})`
       }
     ];
   }
@@ -142,7 +136,8 @@ class Page extends React.Component {
             <PieChart ref="charts"
                       chartName={locale.payments}
                       chartData={chartData}
-                      radius={['37%', '52%']}
+                      center={['50%', '50%']}
+                      showLegend={false}
                       visible={chartData.series.length > 0}
             >
             </PieChart>

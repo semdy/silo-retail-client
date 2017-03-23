@@ -4,6 +4,8 @@ import actions from '../../app/actions';
 import {getStoreList} from '../../services/store';
 import {getStoreChartReport} from '../../services/store';
 import Item from './Item';
+import Empty from '../../components/empty';
+import locale from '../../locale';
 let {Toast} = SaltUI;
 
 class Index extends React.Component {
@@ -26,7 +28,6 @@ class Index extends React.Component {
     });
 
     store.emitter.on("setSelectedStore", this._selectHandler, this);
-
   }
 
   doRequest(storeId) {
@@ -97,15 +98,21 @@ class Index extends React.Component {
             </div>
         }
         {
-          loaded && series.length > 0 && series.map((item, i) => {
-            return (
-              <Item legend={legend.data[1]}
-                    data={item}
-                    key={i}
-              >
-              </Item>
-            )
-          })
+          loaded && (
+            series.length > 0 ? series.map((item, i) => {
+              return (
+                <Item legend={legend.data[1]}
+                      data={item}
+                      key={i}
+                >
+                </Item>
+              )
+            })
+            :
+            <Empty>
+              {locale.emptyData}
+            </Empty>
+          )
         }
       </div>
     );

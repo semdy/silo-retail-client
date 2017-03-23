@@ -1,6 +1,5 @@
 require('./BarChart.styl');
 
-let {Context} = SaltUI;
 let {PropTypes} = React;
 import dom from '../../utils/dom';
 
@@ -39,7 +38,7 @@ class BarChart extends React.Component {
       }, 50);
     };
 
-    window.addEventListener(Context.RESIZE, this.resizeHandler, false);
+    dom.on(window, "resize", this.resizeHandler);
 
   }
 
@@ -51,7 +50,7 @@ class BarChart extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener(Context.RESIZE, this.resizeHandler, false);
+    dom.off(window, "resize", this.resizeHandler);
     this.chartInstance.dispose();
   }
 
@@ -60,12 +59,9 @@ class BarChart extends React.Component {
     this.chartInstance.clear();
 
     let chartOptions =  {
-      //color: ['#3398DB'],
+      color: ['#4db7cd'],
       tooltip : {
-        trigger: 'axis',
-        axisPointer : { // 坐标轴指示器，坐标轴触发有效
-          type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-        }
+        trigger: 'axis'
       },
       grid: {
         left: '3%',
@@ -73,15 +69,7 @@ class BarChart extends React.Component {
         bottom: '3%',
         containLabel: true
       },
-      xAxis : [
-        {
-          type : 'category',
-          data : chartData.xAxis[0].data,
-          axisTick: {
-            alignWithLabel: true
-          }
-        }
-      ],
+      xAxis : [],
       yAxis : [
         {
           type : 'value'
@@ -89,6 +77,18 @@ class BarChart extends React.Component {
       ],
       series : []
     };
+
+    chartData.xAxis.forEach((item) => {
+      chartOptions.xAxis.push(
+        {
+          type : 'category',
+          data : item.data,
+          axisTick: {
+            alignWithLabel: true
+          }
+        }
+      );
+    });
 
     chartData.series.forEach((item) => {
       chartOptions.series.push(

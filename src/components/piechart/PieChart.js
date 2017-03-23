@@ -1,7 +1,7 @@
 require('./PieChart.styl');
 
-let {Context} = SaltUI;
 let {PropTypes} = React;
+import classnames from 'classnames';
 import dom from '../../utils/dom';
 
 class PieChart extends React.Component {
@@ -39,7 +39,7 @@ class PieChart extends React.Component {
       }, 50);
     };
 
-    window.addEventListener(Context.RESIZE, this.resizeHandler, false);
+    dom.on(window, 'resize', this.resizeHandler);
 
   }
 
@@ -51,7 +51,7 @@ class PieChart extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener(Context.RESIZE, this.resizeHandler, false);
+    dom.off(window, 'resize', this.resizeHandler);
     this.chartInstance.dispose();
   }
 
@@ -65,6 +65,7 @@ class PieChart extends React.Component {
         formatter: "{a} <br/>{b}: {c} ({d}%)"
       },
       legend: {
+        show: this.props.showLegend,
         x: 'center',
         data: chartData.legend.data
       },
@@ -72,9 +73,10 @@ class PieChart extends React.Component {
         {
           name: this.props.chartName,
           type: 'pie',
-          center: ['50%', '62%'],
+          center: this.props.center,
           radius: this.props.radius,
           data: chartData.series,
+          color: ["#f39726", '#008cee', '#3876c1', '#29ab91', '#f05a4b', '#f4b81c', '#30a3b6', '#2a81c4', '#f39a00'],
           label: {
             emphasis: {
               formatter: function (params) {
@@ -101,7 +103,7 @@ class PieChart extends React.Component {
              }}
         >
         </div>
-        <div className="piechart-title">
+        <div className={classnames("piechart-title", {center: !this.props.showLegend})}>
           {this.props.chartName}
         </div>
       </div>
@@ -113,7 +115,9 @@ PieChart.defaultProps = {
   chartName: '',
   responsive: false,
   radius: ['45%', '65%'],
-  visible: true
+  center: ['50%', '62%'],
+  visible: true,
+  showLegend: true
 };
 
 PieChart.propTypes = {
@@ -122,7 +126,8 @@ PieChart.propTypes = {
   radius: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ),
-  visible: PropTypes.bool
+  visible: PropTypes.bool,
+  showLegend: PropTypes.bool
 };
 
 module.exports = PieChart;

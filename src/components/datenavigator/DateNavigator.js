@@ -1,7 +1,7 @@
 require('./DateNavigator.styl');
 
 let {Icon, Button, Context} = SaltUI;
-let { PropTypes } = React;
+let {PropTypes} = React;
 import ButtonGroup from '../../components/ButtonGroup';
 import classnames from 'classnames';
 import reactMixin from 'react-mixin';
@@ -10,13 +10,13 @@ import store from  '../../app/store';
 import dom from '../../utils/dom';
 
 const formatDate = (dateUTC, timelines, filterType) => {
-  if( /^(?:hour|day)$/.test(filterType) ) {
+  if (/^(?:hour|day)$/.test(filterType)) {
     var year = dateUTC.getFullYear() + "年";
     var month = (dateUTC.getMonth() + 1) + "月";
     var date = filterType === 'hour' ? dateUTC.getDate() + "日" : "";
     return `${year}${month}${date}`;
   } else {
-    if( filterType == 'year' ){
+    if (filterType == 'year') {
       return [timelines[0].substr(5), timelines[timelines.length - 1].substr(5)].join("~");
     } else {
       return [timelines[0], timelines[timelines.length - 1]].join("~");
@@ -42,8 +42,8 @@ class DateNavigator extends React.Component {
     };
   }
 
-  componentWillUnmount(){
-    if(this.state.isFullScreen){
+  componentWillUnmount() {
+    if (this.state.isFullScreen) {
       actions.setFullScreen(false);
       dom.removeClass(document.body, "page-fullscreen");
     }
@@ -66,12 +66,17 @@ class DateNavigator extends React.Component {
       <div className="t-clear">
         <div className="store-name t-FL" style={{display: isFullScreen ? "none" : ""}}>{storeName}店</div>
         <div className="t-FR t-FBH t-FBAC t-FBJC store-indict">
-          <Icon name="angle-left" className="date-arrow left" onClick={onPrev}/>
+          <div className="date-arrow left t-FBH t-FBJC t-FBAC"
+               onClick={onPrev}>
+            <Icon name="angle-left-l" width={18} height={18}/>
+          </div>
           <Icon name="calendar" className="date-cld" width={15} height={15}/>
           <span className="date">{formatDate(date, timelines, this.filterType)}</span>
           <span className="day">{this.filterType !== 'hour' ? "" : `星期${getDay(date)}`}</span>
-          <Icon name="angle-right" className={classnames("date-arrow right", {disabled: nextDisabled})}
-                onClick={onNext}/>
+          <div className={classnames("date-arrow right t-FBH t-FBJC t-FBAC", {disabled: nextDisabled})}
+               onClick={onNext}>
+            <Icon name="angle-right-l" width={18} height={18}/>
+          </div>
         </div>
       </div>
     );

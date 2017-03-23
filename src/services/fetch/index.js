@@ -38,8 +38,8 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
             resolve(recv);
           } else {
             requestError = true;
-            reject(recv);
-            Toast.error(`error code: ${recv.result}`);
+            reject(recv.result);
+            Toast.error(`error result code: ${recv.result}`);
           }
         } else if (code === 403) {
           session.clear();
@@ -53,7 +53,7 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
         }
       },
       error: (xhr, status, err) => {
-        reject(xhr, status, err);
+        reject(status, err);
         requestError = true;
         Toast.error(`${locale.disconnect}, code: ${status}`);
       },

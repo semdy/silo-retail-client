@@ -1,3 +1,6 @@
+
+let {Dialog} = SaltUI;
+import config from '../config';
 import locale from '../locale';
 
 export const queryUrlParams = () => {
@@ -28,7 +31,7 @@ export const queryUrlParams = () => {
 export const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
 
 export const ask = (prompMsg) => {
-  return new Promise((resolve, reject) => {
+  /*return new Promise((resolve, reject) => {
     if (isDD) {
       dd.device.notification.confirm({
         message: prompMsg,
@@ -50,6 +53,33 @@ export const ask = (prompMsg) => {
         resolve();
       }
     }
+  });*/
+
+  return new Promise((resolve, reject) => {
+    Dialog.confirm({
+      title: locale.prompt,
+      content: prompMsg,
+      locale: config.lang,
+      onConfirm() {
+        resolve(true);
+      },
+      onCancel() {
+        reject(false);
+      }
+    });
+  });
+};
+
+export const alert = (msg) => {
+  return new Promise((resolve, reject) => {
+    Dialog.alert({
+      title: locale.prompt,
+      content: msg,
+      locale: config.lang,
+      onConfirm() {
+        resolve();
+      }
+    });
   });
 };
 

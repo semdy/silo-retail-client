@@ -50,19 +50,16 @@ class Page extends React.Component {
 
     this.tableFields = [
       {
-        field: 'rowNumber',
-        width: 18
-      },
-      {
         field: 'name',
-        name: locale.productName
+        name: locale.productName,
+        align: 'left',
+        formatter: function (value, index) {
+          return (index+1) + " " + value
+        }
       },
       {
         field: 'avgPrice',
-        name: locale.avgPrice,
-        formatter: function (value) {
-          return "￥" + value;
-        }
+        name: `${locale.avgPrice}(${locale.yuan})`
       },
       {
         field: 'saleVolume',
@@ -70,10 +67,7 @@ class Page extends React.Component {
       },
       {
         field: 'saleAmount',
-        name: locale.saleAmount,
-        formatter: function (value) {
-          return "￥" + value;
-        }
+        name: `${locale.saleAmount}(${locale.yuan})`
       }
     ];
   }
@@ -226,7 +220,9 @@ class Page extends React.Component {
             <PieChart ref="ratioCharts"
                       chartName={locale.categoryRatio}
                       chartData={categoryData}
-                      radius={['37%', '52%']}
+                      radius={['45%', '65%']}
+                      center={['50%', '50%']}
+                      showLegend={false}
                       visible={categoryData.series.length > 0}
             >
             </PieChart>

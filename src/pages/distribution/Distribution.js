@@ -116,7 +116,9 @@ class Page extends React.Component {
             <PieChart ref="charts"
                       chartName={locale.deliveries}
                       chartData={chartData}
+                      center={['50%', '50%']}
                       responsive={true}
+                      showLegend={false}
                       visible={chartData.series.length > 0}
             >
             </PieChart>

@@ -79,7 +79,7 @@ class Apply extends React.Component {
                   return (
                     item.progress == 'normal' &&
                     <ListItem key={i}>
-                      <span className="group-item-text t-FB1">{item.name}</span>
+                      <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.name}</span>
                       <ButtonGroup half={true}>
                         <Button type="minor"
                                 className={classNames("no-bg", {disabled: item.disabled})}
