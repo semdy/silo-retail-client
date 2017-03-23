@@ -80,7 +80,7 @@ export const getStoreList = () => {
       triggerReady();
     }, (err) => {
       triggerReady();
-      reject("get storeList error:" + err);
+      reject("get storeList error => " + err);
     });
   });
 };
@@ -273,7 +273,7 @@ export const getStoreChartReport = (storeId, offset = 0, query = 'retail.dashboa
     fetch.post('7303.json', params).then((res) => {
       resolve(res.chart);
     }, (err) => {
-      reject("error: " + err);
+      reject(err);
     });
   });
 };

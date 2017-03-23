@@ -19,6 +19,8 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
       Toast.loading(locale.loading);
     }
 
+    let rejectMsg = '';
+
     $.ajax({
       type: method,
       url: /^https?:\/\//.test(url) ? url : env.urlAppRoot + url,
@@ -38,8 +40,9 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
             resolve(recv);
           } else {
             requestError = true;
-            reject(recv.result);
-            Toast.error(`error result code: ${recv.result}`);
+            rejectMsg = `error result code: ${recv.result}`;
+            reject(rejectMsg);
+            Toast.error(rejectMsg);
           }
         } else if (code === 403) {
           session.clear();
@@ -47,15 +50,17 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
           alert(locale.loginTimeout);
           location.reload();
         } else {
-          reject(code);
           requestError = true;
-          Toast.error(`${locale.serverError}, code: ${code}`);
+          rejectMsg = `${locale.serverError}, code: ${code}`;
+          reject(rejectMsg);
+          Toast.error(rejectMsg);
         }
       },
       error: (xhr, status, err) => {
-        reject(status, err);
         requestError = true;
-        Toast.error(`${locale.disconnect}, code: ${status}`);
+        rejectMsg = `${locale.disconnect}, code: ${status}`;
+        reject(rejectMsg);
+        Toast.error(rejectMsg);
       },
       complete: () => {
         if (--requestCount == 0) {
