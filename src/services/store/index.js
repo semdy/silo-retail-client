@@ -61,6 +61,13 @@ export const getStoreList = () => {
       manager.storeId = res.idAsManager;
       manager.userId = res.managerUserId;
 
+      //区分普通会员与店长身份
+      if( !res.idAsManager ){
+        actions.setAdmin(false);
+      } else {
+        actions.setAdmin(true);
+      }
+
       if (storeList.length == 0) {
         reject("empty storelist data");
         //隐藏顶部导航

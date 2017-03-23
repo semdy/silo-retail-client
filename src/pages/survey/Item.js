@@ -33,7 +33,7 @@ class Item extends React.Component {
           data.map((item, i) => {
             let trend = getTrender(item.value[0], item.value[1]);
             return (
-              <div className={classnames("panel-item survey-item-cell t-FB1", {
+              <div className={classnames("panel-item survey-item-cell t-FB1 t-FBAC", {
                 "trend-up": trend > 0,
                 "trend-down": trend < 0
               })}
@@ -44,11 +44,11 @@ class Item extends React.Component {
                   <span>{item.name}</span>
                   {
                     trend != 0 &&
-                    <Icon name="arrow" width={18} height={18}>
+                    <Icon name="arrow-up" width={18} height={18}>
                     </Icon>
                   }
                 </h4>
-                <div className="item-value">
+                <div className={classnames("item-value", {extra: trend == 0})}>
                   <span className="item-prefix"><ins>{item.params.prefix}</ins></span>
                   {item.value[0]}
                   <span className="item-suffix">{item.params.unit}</span>

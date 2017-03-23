@@ -28,6 +28,7 @@ import ScrollNav from '../components/ScrollNav';
 import Navigation from '../components/navigation';
 import Navgationmask from '../components/navgationmask';
 import StoreSelector from '../components/StoreSelector';
+import Pull2refresh from '../components/pull2refresh';
 import {scrollNavItems, navItems} from '../models/navs';
 import Header from '../components/header';
 
@@ -66,6 +67,12 @@ class App extends React.Component {
     });
   }
 
+  onRelease(){
+    setTimeout(() => {
+      this.hide();
+    }, 2000)
+  }
+
   render() {
     let {isAppReady, storeListVisible, showHeader, headerTitle} = this.state;
     if (!isAppReady)
@@ -84,8 +91,10 @@ class App extends React.Component {
               {headerTitle}
             </Header>
           }
-          <div className="page-content">
-            {this.props.children}
+          <div ref="content" className="page-content">
+            <Pull2refresh scroller={this.refs.content} onRelease={this.onRelease}>
+              {this.props.children}
+            </Pull2refresh>
           </div>
           {
             storeListVisible && <StoreSelector/>

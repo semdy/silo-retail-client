@@ -37,6 +37,11 @@ export default {
       order: '单'
     }
   },
+  p2rText: {
+    normal: '下拉刷新',
+    reverse: '松开刷新',
+    release: '刷新中...'
+  },
   loginTimeout: '登录超时！',
   deliveries: "配送类型",
   payments: '支付方式',

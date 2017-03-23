@@ -6,13 +6,15 @@ let {Icon} = SaltUI;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import dom from '../../utils/dom';
+import dom, {transitionEnd} from '../../utils/dom';
 
 class Navigation extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      items: this.props.items
+    };
     this.docBody = document.body;
   }
 
@@ -25,10 +27,9 @@ class Navigation extends React.Component {
   hide() {
     let self = this;
     dom.removeClass(this.docBody, "show-sidebar");
-    dom.on(this.refs.navigation, "transitionend", function handler() {
+    transitionEnd(this.refs.navigation, function () {
       dom.removeClass(self.docBody, "hide-sidebar");
       this.style.display = "";
-      dom.off(this, "transitionend", handler);
     });
   }
 
@@ -46,6 +47,17 @@ class Navigation extends React.Component {
     }
   }
 
+  setMenus(isAdmin) {
+    this.state.items.forEach((item) => {
+      if (item.admin) {
+        item.visible = isAdmin;
+      }
+    });
+    this.setState({
+      items: this.state.items
+    });
+  }
+
   componentDidMount() {
     store.emitter.on("showNavigation", this._showNavHanlder, this);
   }
@@ -54,8 +66,14 @@ class Navigation extends React.Component {
     store.emitter.off("showNavigation", this._showNavHanlder);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.isAdmin !== this.state.isAdmin) {
+      this.setMenus(this.state.isAdmin);
+    }
+  }
+
   render() {
-    let {items} = this.props;
+    let {items} = this.state;
     return (
       <div ref="navigation" className="sidenavigation">
         <div className="navigation-list">

@@ -17,7 +17,7 @@ const EVENTS = {
   resize: Context.RESIZE
 };
 
-['addClass', 'removeClass', 'hasClass', 'on', 'off', 'trigger'].forEach((method) => {
+['css', 'addClass', 'removeClass', 'hasClass', 'on', 'off', 'trigger'].forEach((method) => {
   methods[method] = function(dom){
     let $dom = $(dom);
     let args = [].slice.call(arguments, 1);
@@ -28,6 +28,16 @@ const EVENTS = {
 
 methods.offset = function (dom) {
   return $(dom).offset();
+};
+
+methods.transitionEnd = function (el, callback) {
+  function listener() {
+    callback.call(this);
+    el.removeEventListener("webkitTransitionEnd", listener, false);
+    el.removeEventListener("transitionend", listener, false);
+  }
+  el.addEventListener("webkitTransitionEnd", listener, false);
+  el.addEventListener("transitionend", listener, false);
 };
 
 module.exports = methods;

@@ -1,0 +1,24 @@
+@import "../../stylus-lib/var.styl"
+
+.p2r-container
+  position relative
+  transition(transform .2s ease)
+
+  .p2r-indicator
+    position absolute
+    left 0
+    right 0
+    top 0
+    padding 8px 0
+    transform(translateY(-100%))
+
+  .p2r-icon
+    width 25px
+    color #444
+
+  .p2r-arrow
+    transition(transform .2s ease)
+
+    &.reverse
+      transform(rotate(180deg))
+

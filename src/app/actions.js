@@ -13,5 +13,6 @@ module.exports = Reflux.createActions([
   'showStoreList',
   'hideStoreList',
   'showHeader',
-  'hideHeader'
+  'hideHeader',
+  'setAdmin'
 ]);

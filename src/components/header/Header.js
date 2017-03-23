@@ -1,6 +1,6 @@
 require('./Header.styl');
 
-let {Icon, Context} = SaltUI;
+let {Icon} = SaltUI;
 let {hashHistory} = ReactRouter;
 import dom from '../../utils/dom';
 

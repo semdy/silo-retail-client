@@ -10,24 +10,28 @@ export default {
       text: permission.apply,
       icon: 'permission',
       visible: true,
+      admin: false,
       path: '/permission.apply'
     },
     {
       text: permission.record,
       icon: 'record',
       visible: true,
+      admin: false,
       path: '/permission.record'
     },
     {
       text: permission.approval,
       icon: 'approval',
-      visible: true,
+      visible: false,
+      admin: true,
       path: '/permission.approval'
     },
     {
       text: permission.members,
       icon: 'users',
-      visible: true,
+      visible: false,
+      admin: true,
       path: '/permission.members'
     }],
 

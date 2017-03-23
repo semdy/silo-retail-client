@@ -23,7 +23,9 @@ module.exports = Reflux.createStore({
     //是否显示顶部header
     showHeader: false,
     //header标题
-    headerTitle: ''
+    headerTitle: '',
+    //是否是店长
+    isAdmin: false
   },
 
   //隐藏侧边栏导航
@@ -111,6 +113,12 @@ module.exports = Reflux.createStore({
   onHideHeader(){
     this.state.headerTitle = '';
     this.state.showHeader = false;
+    this.updateComponent();
+  },
+
+  //设置店长身份
+  onSetAdmin(bool){
+    this.state.isAdmin = bool;
     this.updateComponent();
   },
 

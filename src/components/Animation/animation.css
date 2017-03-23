@@ -18,6 +18,11 @@
   animation: popdown .6s both ease;
 }
 
+.spin{
+  -webkit-animation: spin 1.2s linear infinite;
+  animation: spin 1.2s both linear infinite;
+}
+
 @-webkit-keyframes fadeIn {
   0% {
     opacity: 0;
@@ -92,5 +97,27 @@
   100% {
     -webkit-transform: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
