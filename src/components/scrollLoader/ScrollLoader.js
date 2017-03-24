@@ -16,7 +16,7 @@ class ScrollLoader extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() =>{
+    setTimeout(() => {
       this.createDetector();
     }, 100);
 
