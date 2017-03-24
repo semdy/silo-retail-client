@@ -82,7 +82,7 @@ class Page extends React.Component {
     if (storeList.length == 0) return;
 
     this.currStore = storeList[0];
-    this.offset = 0;
+    //this.offset = 0;
     this.doQuery();
   }
 

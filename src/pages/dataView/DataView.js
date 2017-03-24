@@ -345,7 +345,7 @@ class Page extends React.Component {
 
   handleFilterItemClick(filterType) {
     //切换筛选类型时将offset置为0
-    this.offset = 0;
+    //this.offset = 0;
     this.filterType = filterType;
     this.doQuery();
   }

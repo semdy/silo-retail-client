@@ -16,7 +16,7 @@ class Index extends React.Component {
     super(props);
     this.state = {
       data: {},
-      date: getDateBefore(),
+      date: new Date(),
       storeName: '',
       loaded: false
     };
