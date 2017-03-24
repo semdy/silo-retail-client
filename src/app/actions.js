@@ -14,5 +14,9 @@ module.exports = Reflux.createActions([
   'hideStoreList',
   'showHeader',
   'hideHeader',
-  'setAdmin'
+  'setAdmin',
+  'hideP2R',
+  'showP2R',
+  'setP2rEnabled',
+  'hideLoadMore'
 ]);

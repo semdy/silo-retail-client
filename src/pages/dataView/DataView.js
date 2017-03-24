@@ -1,7 +1,7 @@
 import './DataView.styl';
 
 let {Toast} = SaltUI;
-import { getWeekNumber } from '../../utils/date';
+import {getWeekNumber} from '../../utils/date';
 import Stats from '../../components/stats';
 import Charts from '../../components/linechart';
 import DateNavigator from '../../components/datenavigator';
@@ -290,11 +290,13 @@ class Page extends React.Component {
     });
 
     store.emitter.on("setSelectedStore", this._selectHandler, this);
+    store.emitter.on("refresh", this.doQuery, this);
 
   }
 
   componentWillUnmount() {
     store.emitter.off("setSelectedStore", this._selectHandler);
+    store.emitter.off("refresh", this.doQuery);
   }
 
   _selectHandler(storeList) {
@@ -304,7 +306,7 @@ class Page extends React.Component {
 
     actions.hideStoreSelector();
 
-    if( storeList.length == 0 ) return;
+    if (storeList.length == 0) return;
 
     this.currStore = storeList[0];
     let storeId = storeList[0].storeId;
@@ -331,6 +333,8 @@ class Page extends React.Component {
     return self.fetchGroupData(self.fetchParams).then((values) => {
       self.setData(values, self.legendNames);
       self.refs.charts.refresh();
+    }).finally(() => {
+      actions.hideP2R();
     });
   }
 
@@ -363,33 +367,29 @@ class Page extends React.Component {
   }
 
   render() {
-    let {statsData, chartData, date, timelines, isNextDisabled, currStore} = this.state;
+    let {isDataLoaded, statsData, chartData, date, timelines, isNextDisabled, currStore} = this.state;
     return (
+      isDataLoaded &&
       <div>
-        {
-          !this.state.isDataLoaded ? "" :
-            <div>
-              <Stats data={statsData}>
-              </Stats>
-              <DateNavigator
-                showStoreList={this.showStoreList.bind(this)}
-                date={date}
-                timelines={timelines}
-                nextDisabled={isNextDisabled}
-                defaultFilterType={this.filterType}
-                storeName={currStore.name}
-                onPrev={this.queryPrev.bind(this)}
-                onNext={this.queryNext.bind(this)}
-                onItemClick={this.handleFilterItemClick.bind(this)}
-              >
-              </DateNavigator>
-              <Charts ref="charts"
-                      statsData={statsData}
-                      chartData={chartData}
-              >
-              </Charts>
-            </div>
-        }
+        <Stats data={statsData}>
+        </Stats>
+        <DateNavigator
+          showStoreList={this.showStoreList.bind(this)}
+          date={date}
+          timelines={timelines}
+          nextDisabled={isNextDisabled}
+          defaultFilterType={this.filterType}
+          storeName={currStore.name}
+          onPrev={this.queryPrev.bind(this)}
+          onNext={this.queryNext.bind(this)}
+          onItemClick={this.handleFilterItemClick.bind(this)}
+        >
+        </DateNavigator>
+        <Charts ref="charts"
+                statsData={statsData}
+                chartData={chartData}
+        >
+        </Charts>
       </div>
     )
 

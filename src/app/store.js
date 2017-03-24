@@ -25,7 +25,13 @@ module.exports = Reflux.createStore({
     //header标题
     headerTitle: '',
     //是否是店长
-    isAdmin: false
+    isAdmin: false,
+    //是否隐藏下拉刷新
+    shownP2r: false,
+    //是否禁用下拉刷新
+    isP2rEnabled: true,
+    //是否隐藏加载更多
+    isHideLoadMore: true
   },
 
   //隐藏侧边栏导航
@@ -119,6 +125,29 @@ module.exports = Reflux.createStore({
   //设置店长身份
   onSetAdmin(bool){
     this.state.isAdmin = bool;
+    this.updateComponent();
+  },
+
+  //显示下拉刷新
+  onShowP2R(){
+    this.state.shownP2r = true;
+    this.updateComponent();
+  },
+
+  //隐藏下拉刷新
+  onHideP2R(){
+    this.state.shownP2r = false;
+    this.updateComponent();
+  },
+
+  //隐藏加载更多
+  onHideLoadMore(){
+    this.state.isHideLoadMore = false;
+    this.updateComponent();
+  },
+
+  onSetP2rEnabled(bool){
+    this.state.isP2rEnabled = bool;
     this.updateComponent();
   },
 

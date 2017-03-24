@@ -54,7 +54,7 @@ class Page extends React.Component {
         name: locale.productName,
         align: 'left',
         formatter: function (value, index) {
-          return (index+1) + " " + value
+          return (index + 1) + " " + value
         }
       },
       {
@@ -92,13 +92,13 @@ class Page extends React.Component {
     });
 
     store.emitter.on("setSelectedStore", this._selectHandler, this);
-    store.emitter.on("getTop10Data", this.getTop10Data, this);
+    store.emitter.on("refresh", this.doQuery, this);
 
   }
 
   componentWillUnmount() {
     store.emitter.off("setSelectedStore", this._selectHandler);
-    store.emitter.off("getTop10Data", this.getTop10Data);
+    store.emitter.off("refresh", this.doQuery);
   }
 
   _selectHandler(storeList) {
@@ -123,14 +123,16 @@ class Page extends React.Component {
       this.setData(values[0].data, values[1], values[2], values[3]);
       this.refs.ratioCharts.refresh();
       this.refs.distributeCharts.refresh();
+    }).finally(() => {
+      actions.hideP2R();
     });
 
     this.getTop10Data(this.state.tabActiveIndex);
 
   }
 
-  getTop10Data(activeIndex){
-    if( activeIndex == 0 ){
+  getTop10Data(activeIndex) {
+    if (activeIndex == 0) {
       this.fetchTop10Dest();
     } else {
       this.fetchTop10Asc();
@@ -138,7 +140,7 @@ class Page extends React.Component {
   }
 
   //畅销TOP10
-  fetchTop10Dest(){
+  fetchTop10Dest() {
     let storeId = this.currStore.storeId;
     getStoreChartReport(storeId, this.offset, 'retail.sku.rank.desc').then((res) => {
       this.setState({
@@ -149,13 +151,13 @@ class Page extends React.Component {
   }
 
   //滞销TOP10
-  fetchTop10Asc(){
+  fetchTop10Asc() {
     let storeId = this.currStore.storeId;
     getStoreChartReport(storeId, this.offset, 'retail.sku.rank.asc').then((res) => {
-        this.setState({
-          top10AscData: genTableRows(res.series),
-          tabActiveIndex: 1
-        });
+      this.setState({
+        top10AscData: genTableRows(res.series),
+        tabActiveIndex: 1
+      });
     });
   }
 
@@ -180,9 +182,9 @@ class Page extends React.Component {
     this.doQuery();
   }
 
-  handleTabChange(obj){
-    if( this.queryChanged ) {
-      store.emitter.emit("getTop10Data", obj.active);
+  handleTabChange(obj) {
+    if (this.queryChanged) {
+      this.getTop10Data(obj.active);
     }
 
     this.queryChanged = false;
@@ -193,47 +195,46 @@ class Page extends React.Component {
   }
 
   render() {
-    let {isDataLoaded, statsData, date, tabActiveIndex, categoryData, distributeData,
-      top10DestData, top10AscData, storeName, isNextDisabled} = this.state;
+    let {
+      isDataLoaded, statsData, date, tabActiveIndex, categoryData, distributeData,
+      top10DestData, top10AscData, storeName, isNextDisabled
+    } = this.state;
+
     return (
+      isDataLoaded &&
       <div>
-        {
-          isDataLoaded &&
-          <div>
-            <Stats data={statsData}/>
-            <DateNavigator
-              date={date}
-              nextDisabled={isNextDisabled}
-              storeName={storeName}
-              onPrev={this.queryPrev.bind(this)}
-              onNext={this.queryNext.bind(this)}
-            >
-            </DateNavigator>
-            <Tab active={tabActiveIndex} onChange={this.handleTabChange.bind(this)}>
-              <Tab.Item title={locale.rankDesc10}>
-                <Table fields={this.tableFields} rows={top10DestData}/>
-              </Tab.Item>
-              <Tab.Item title={locale.rankAsc10}>
-                <Table fields={this.tableFields} rows={top10AscData}/>
-              </Tab.Item>
-            </Tab>
-            <PieChart ref="ratioCharts"
-                      chartName={locale.categoryRatio}
-                      chartData={categoryData}
-                      radius={['45%', '65%']}
-                      center={['50%', '50%']}
-                      showLegend={false}
-                      visible={categoryData.series.length > 0}
-            >
-            </PieChart>
-            <BarChart ref="distributeCharts"
-                      chartName={locale.distribute}
-                      chartData={distributeData}
-                      visible={distributeData.series.length > 0}
-            >
-            </BarChart>
-          </div>
-        }
+        <Stats data={statsData}/>
+        <DateNavigator
+          date={date}
+          nextDisabled={isNextDisabled}
+          storeName={storeName}
+          onPrev={this.queryPrev.bind(this)}
+          onNext={this.queryNext.bind(this)}
+        >
+        </DateNavigator>
+        <Tab active={tabActiveIndex} onChange={this.handleTabChange.bind(this)}>
+          <Tab.Item title={locale.rankDesc10}>
+            <Table fields={this.tableFields} rows={top10DestData}/>
+          </Tab.Item>
+          <Tab.Item title={locale.rankAsc10}>
+            <Table fields={this.tableFields} rows={top10AscData}/>
+          </Tab.Item>
+        </Tab>
+        <PieChart ref="ratioCharts"
+                  chartName={locale.categoryRatio}
+                  chartData={categoryData}
+                  radius={['45%', '65%']}
+                  center={['50%', '50%']}
+                  showLegend={false}
+                  visible={categoryData.series.length > 0}
+        >
+        </PieChart>
+        <BarChart ref="distributeCharts"
+                  chartName={locale.distribute}
+                  chartData={distributeData}
+                  visible={distributeData.series.length > 0}
+        >
+        </BarChart>
       </div>
     )
 

@@ -8,8 +8,8 @@ import classnames from 'classnames';
 import locale from '../../locale';
 
 function setTransform(el, value) {
-  el.style.webkitTransform = 'translate3d(0px, '+ value +'px, 0px)';
-  el.style.transform = 'translate3d(0px, '+ value +'px, 0px)';
+  el.style.webkitTransform = 'translate3d(0px, ' + value + 'px, 0px)';
+  el.style.transform = 'translate3d(0px, ' + value + 'px, 0px)';
 }
 
 function setTransition(el, value) {
@@ -18,13 +18,18 @@ function setTransition(el, value) {
 }
 
 function getMoveRatio(diffY) {
-  return 1 - diffY/window.innerHeight;
+  return Math.max(0, 1 - diffY / window.innerHeight)*0.8;
 }
 
 function getTransform(el) {
   let value = el.style.transform || el.style.webkitTransform || 0;
-  if( value ){
-    value = /translate3d\(\d+px\, (\d+)px\, \d+px\)/.exec(value)[1];
+  if (value) {
+    let regx = /translate3d\(\d+px\, (\d+)px\, \d+px\)/.exec(value);
+    if( regx ){
+      value = regx[1];
+    } else {
+      value = 0;
+    }
   }
   return parseFloat(value);
 }
@@ -56,24 +61,37 @@ class Pull2refresh extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     let status = this.state.status;
-    if( status != prevState.status && status == 'release' ){
+    if (status != prevState.status && status == 'release') {
       this.props.onRelease.call(this);
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    let {show} = nextProps;
+    let {status} = this.state;
+    if( show === true && status === 'normal' ){
+      this.show();
+    }
+    else if( show === false && status !== 'normal' ){
+      this.hide();
+    }
+  }
+
   _touchstart(e) {
-    if( !this.props.enabled || this.props.scroller.scrollTop > 0 ) return;
+
+    if (!this.props.enabled || this.props.scroller.scrollTop > 0) return;
+
+    e.stopPropagation();
 
     let touch = e.targetTouches ? e.targetTouches[0] : e;
     this.startX = touch.pageX;
     this.startY = touch.pageY;
     this.startPos = getTransform(this.el);
 
-    setTransition(this.el, 'none');
-    this.setState({
+    /*this.setState({
       status: 'normal'
     });
-    this.indict.style.display = '';
+    this.indict.style.display = '';*/
 
     dom.on(document, "touchmove", this._touchmove);
     dom.on(document, "touchend", this._touchend);
@@ -88,8 +106,9 @@ class Pull2refresh extends React.Component {
       e.preventDefault();
       moveY = diffY * getMoveRatio(diffY);
       this.indict.style.display = '';
+      setTransition(this.el, 'none');
       setTransform(this.el, this.startPos + moveY);
-      if( moveY > this.props.pullDistance ){
+      if (moveY > this.props.pullDistance) {
         this.setState({
           status: 'reverse'
         });
@@ -102,7 +121,6 @@ class Pull2refresh extends React.Component {
     let diffX = touch.pageX - this.startX;
     let diffY = touch.pageY - this.startY;
     if (diffY > 0 && Math.abs(diffY) > Math.abs(diffX)) {
-      window.scrollTo(0, 0);
       setTransition(this.el, '');
       setTransform(this.el, this.indict.offsetHeight);
       transitionEnd(this.el, () => {
@@ -116,14 +134,14 @@ class Pull2refresh extends React.Component {
     dom.off(document, "touchend", this._touchend);
   }
 
-  show(){
+  show() {
     setTransform(this.el, this.indict.offsetHeight);
     this.setState({
       status: 'release'
     });
   }
 
-  hide(){
+  hide() {
     setTransform(this.el, 0);
     transitionEnd(this.el, () => {
       this.setState({
@@ -137,7 +155,9 @@ class Pull2refresh extends React.Component {
     return (
       <div ref="el" className="p2r-container">
         <div ref="indict" className="t-FBH t-FBJC t-FBAC p2r-indicator"
-          style={{display: status != 'normal' ? '' : 'none'}}
+             style={{
+               display: status == 'normal' ? 'none' : ''
+             }}
         >
           <div className="p2r-icon">
             <Icon name="arrow-down"
@@ -174,7 +194,8 @@ Pull2refresh.propTypes = {
   scroller: PropTypes.object.isRequired,
   pullDistance: PropTypes.number,
   onRelease: PropTypes.func,
-  enabled: PropTypes.bool
+  enabled: PropTypes.bool,
+  show: PropTypes.bool
 };
 
 Pull2refresh.defaultProps = {
@@ -184,7 +205,8 @@ Pull2refresh.defaultProps = {
   scroller: window,
   pullDistance: 60,
   onRelease: Context.noop,
-  enabled: true
+  enabled: true,
+  show: false
 };
 
 module.exports = Pull2refresh;

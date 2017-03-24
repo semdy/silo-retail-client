@@ -44,7 +44,11 @@
       color #333
 
   .store-name
-    margin-left 20px
+    margin-left 5px
+    width 120px
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
 
 .date-indicator
   .date-arrow
@@ -93,10 +97,13 @@
   .date-navigator
     .date-arrow
       &.left
-        margin-left -115px
+        margin-left -113px
 
       &.right
-        margin-left 85px
+        margin-left 83px
 
     .diff-toggle
       right 8px
+
+    .store-name
+      width 85px

@@ -14,7 +14,6 @@ class Index extends React.Component {
     super(props);
     this.state = {
       data: {},
-      currStore: {},
       loaded: false
     };
     this._currStore = {};
@@ -23,29 +22,32 @@ class Index extends React.Component {
   componentDidMount() {
     getStoreList().then((storeList) => {
       this._currStore = storeList[0];
-      let storeId = storeList[0].storeId;
-      this.doRequest(storeId);
+      this.doRequest();
     });
 
     store.emitter.on("setSelectedStore", this._selectHandler, this);
+    store.emitter.on("refresh", this.doRequest, this);
   }
 
-  doRequest(storeId) {
+  doRequest() {
+    let storeId = this._currStore.storeId;
     getStoreChartReport(storeId).then((data) => {
       data.series = this._setDataGroup(data.series);
       this.setState({
         data: data,
-        currStore: this._currStore,
         loaded: true
       });
     }, (err) => {
       Toast.error(err);
+    }).finally(() => {
+      actions.hideP2R();
     });
   }
 
 
   componentWillUnmount() {
     store.emitter.off("setSelectedStore", this._selectHandler);
+    store.emitter.off("refresh", this.doRequest);
   }
 
   _selectHandler(storeList) {
@@ -58,7 +60,7 @@ class Index extends React.Component {
     if (storeList.length == 0) return;
 
     this._currStore = storeList[0];
-    this.doRequest(storeList[0].storeId);
+    this.doRequest();
   }
 
   /**
@@ -85,7 +87,7 @@ class Index extends React.Component {
   }
 
   render() {
-    let {loaded, currStore} = this.state;
+    let {loaded} = this.state;
     let {series, legend} = this.state.data;
     return (
       <div className="survey-container">
@@ -93,7 +95,7 @@ class Index extends React.Component {
           loaded &&
             <div className="panel survey-header t-FBH t-FBAC t-FBJC">
               {
-                currStore.name + " - 今日数据"
+                this._currStore.name + " - 今日数据"
               }
             </div>
         }

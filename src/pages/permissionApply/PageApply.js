@@ -6,6 +6,7 @@ import actions from '../../app/actions';
 import SearchBar from '../../components/searchbar';
 import ListItem from '../../components/listitem';
 import ButtonGroup from '../../components/ButtonGroup';
+import ScrollLoader from '../../components/scrollLoader';
 import Empty from '../../components/empty';
 import {storeSearch, authorityApply} from '../../services/store';
 import classNames from 'classnames';
@@ -19,20 +20,26 @@ class Apply extends React.Component {
       data: [],
       loaded: false
     };
+    this.keyword;
   }
 
   componentDidMount() {
     //显示header并设置标题
     actions.showHeader(locale.permission.apply);
-    this.doSearch();
+    //禁用下拉刷新
+    actions.setP2rEnabled(false);
+    this.doSearch(this.keyword);
   }
 
   componentWillUnmount() {
     //隐藏header
     actions.hideHeader();
+    //启用用下拉刷新
+    actions.setP2rEnabled(true);
   }
 
   doSearch(keyword) {
+    this.keyword = keyword;
     storeSearch(keyword).then((res) => {
       this.setState({
         data: res.data,
@@ -40,6 +47,8 @@ class Apply extends React.Component {
       });
     }, (err) => {
       Toast.error(err);
+    }).finally(() => {
+      actions.hideLoadMore();
     });
   }
 
@@ -64,6 +73,10 @@ class Apply extends React.Component {
     this.doSearch(value);
   }
 
+  handleLoader() {
+    this.doSearch(this.keyword);
+  }
+
   render() {
     let {loaded, data} = this.state;
     return (
@@ -72,31 +85,33 @@ class Apply extends React.Component {
                    onSearch={this.handleSearch.bind(this)}
         >
         </SearchBar>
-        <div className="group-wrapper">
-          {
-            loaded && (
-              data.length > 0 ? data.map((item, i) => {
-                  return (
-                    item.progress == 'normal' &&
-                    <ListItem key={i}>
-                      <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.name}</span>
-                      <ButtonGroup half={true}>
-                        <Button type="minor"
-                                className={classNames("no-bg", {disabled: item.disabled})}
-                                onClick={this.handleApply.bind(this, item.storeId, i)}
-                        >
-                          {item.disabled ? locale.applyWait : locale.apply}
-                        </Button>
-                      </ButtonGroup>
-                    </ListItem>
-                  )
-                })
-                :
-                <Empty>
-                  {locale.noDataFound}
-                </Empty>
-            )
-          }
+        <div ref="container" className="group-wrapper">
+          <ScrollLoader container={this.refs.container} onReach={this.handleLoader.bind(this)}>
+            {
+              loaded && (
+                data.length > 0 ? data.map((item, i) => {
+                    return (
+                      item.progress == 'normal' &&
+                      <ListItem key={i}>
+                        <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.name}</span>
+                        <ButtonGroup half={true}>
+                          <Button type="minor"
+                                  className={classNames("no-bg", {disabled: item.disabled})}
+                                  onClick={this.handleApply.bind(this, item.storeId, i)}
+                          >
+                            {item.disabled ? locale.applyWait : locale.apply}
+                          </Button>
+                        </ButtonGroup>
+                      </ListItem>
+                    )
+                  })
+                  :
+                  <Empty>
+                    {locale.noDataFound}
+                  </Empty>
+              )
+            }
+          </ScrollLoader>
         </div>
       </div>
     );

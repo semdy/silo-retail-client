@@ -3,6 +3,7 @@ require('./PageMembers.styl');
 let {Toast, Button, Icon} = SaltUI;
 
 import actions from '../../app/actions';
+import store from '../../app/store';
 import ButtonGroup from '../../components/ButtonGroup';
 import Empty from '../../components/empty';
 import ListItem from '../../components/listitem';
@@ -23,21 +24,30 @@ class Members extends React.Component {
   componentDidMount() {
     //显示header并设置标题
     actions.showHeader(locale.permission.members);
+    store.emitter.on("refresh", this.doRequest, this);
+
+    this.doRequest();
+  }
+
+  componentWillUnmount() {
+    //隐藏header
+    actions.hideHeader();
+    store.emitter.off("refresh", this.doRequest);
+  }
+
+  doRequest(){
     authorityUserList().then((data) => {
       this.setState({
         data: data,
         loaded: true
       });
     }, (err) => {
-      Toast.error("authorityUserList error: " + err);
+      Toast.error(`authorityUserList error: ${err}`);
+    }).finally(() => {
+      actions.hideP2R();
     });
-  }
 
-  componentWillUnmount() {
-    //隐藏header
-    actions.hideHeader();
   }
-
   doRemove(userId, index) {
     authorityRemove(userId).then((res) => {
       this.state.data[index].removed = true;
@@ -46,8 +56,8 @@ class Members extends React.Component {
       }, () => {
         Toast.success(locale.removeSuccess);
       });
-    }, (code) => {
-      Toast.error(`${locale.removeError}, code: ${code}`);
+    }, (err) => {
+      Toast.error(`${locale.removeError}, ${err}`);
     });
   }
 

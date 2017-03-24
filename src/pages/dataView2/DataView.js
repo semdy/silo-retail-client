@@ -1,7 +1,7 @@
 import './DataView.styl';
 
 let {Toast} = SaltUI;
-import { getWeekNumber } from '../../utils/date';
+import {getWeekNumber} from '../../utils/date';
 import Stats from './Stats';
 import Charts from './Charts';
 import DateNavigator from './DateNavigator';
@@ -306,7 +306,7 @@ class Page extends React.Component {
   }
 
   _storeHandler(storeList) {
-    if( storeList.length == 0 ){
+    if (storeList.length == 0) {
       return Toast.error("请至少选择一个门店");
     }
 
@@ -393,34 +393,32 @@ class Page extends React.Component {
 
   render() {
     return (
+      this.state.isDataLoaded &&
       <div>
-        {
-          !this.state.isDataLoaded ? "" :
-            <div>
-              <Stats statsData={this.state.statsData}>
-              </Stats>
-              <DateNavigator
-                showStoreList={this.showStoreList.bind(this)}
-                date={this.state.date}
-                timelines={this.state.timelines}
-                nextDisabled={this.state.isNextDisabled}
-                diffDisabled={this.state.diffDisabled}
-                hideDiff={this.state.hideDiff}
-                defaultFilterType={this.filterType}
-                onPrev={this.queryPrev.bind(this)}
-                onNext={this.queryNext.bind(this)}
-                onItemClick={this.handleFilterItemClick.bind(this)}
-                toggleDiff={this.toggleDiff.bind(this)}
-              >
-              </DateNavigator>
-              <Charts ref="charts"
-                      statsData={this.state.statsData}
-                      chartData={this.state.chartData}
-              >
-              </Charts>
-            </div>
-        }
+        <Stats statsData={this.state.statsData}>
+        </Stats>
+        <DateNavigator
+          showStoreList={this.showStoreList.bind(this)}
+          date={this.state.date}
+          timelines={this.state.timelines}
+          nextDisabled={this.state.isNextDisabled}
+          diffDisabled={this.state.diffDisabled}
+          hideDiff={this.state.hideDiff}
+          defaultFilterType={this.filterType}
+          onPrev={this.queryPrev.bind(this)}
+          onNext={this.queryNext.bind(this)}
+          onItemClick={this.handleFilterItemClick.bind(this)}
+          toggleDiff={this.toggleDiff.bind(this)}
+        >
+        </DateNavigator>
+        <Charts ref="charts"
+                statsData={this.state.statsData}
+                chartData={this.state.chartData}
+        >
+        </Charts>
       </div>
+
+
     )
 
   }

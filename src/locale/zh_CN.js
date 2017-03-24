@@ -84,5 +84,6 @@ export default {
   saleAmount: '销售额',
   emptyTableData: '暂无数据',
   emptyData: '暂无数据',
-  distribute: '连带率分布'
+  distribute: '连带率分布',
+  loadMore: '加载更多...'
 }

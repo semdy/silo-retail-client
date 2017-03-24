@@ -46,11 +46,13 @@ class Page extends React.Component {
     });
 
     store.emitter.on("setSelectedStore", this._selectHandler, this);
+    store.emitter.on("refresh", this.doQuery, this);
 
   }
 
   componentWillUnmount() {
     store.emitter.off("setSelectedStore", this._selectHandler);
+    store.emitter.off("refresh", this.doQuery);
   }
 
   _selectHandler(storeList) {
@@ -73,6 +75,8 @@ class Page extends React.Component {
     ]).then((values) => {
       this.setData(values[0].data, values[1]);
       this.refs.charts.refresh();
+    }).finally(() => {
+      actions.hideP2R();
     });
   }
 
@@ -100,30 +104,26 @@ class Page extends React.Component {
   render() {
     let {isDataLoaded, statsData, chartData, date, storeName, isNextDisabled} = this.state;
     return (
+      isDataLoaded &&
       <div>
-        {
-          isDataLoaded &&
-          <div>
-            <Stats data={statsData}/>
-            <DateNavigator
-              date={date}
-              nextDisabled={isNextDisabled}
-              storeName={storeName}
-              onPrev={this.queryPrev.bind(this)}
-              onNext={this.queryNext.bind(this)}
-            >
-            </DateNavigator>
-            <PieChart ref="charts"
-                      chartName={locale.deliveries}
-                      chartData={chartData}
-                      center={['50%', '50%']}
-                      responsive={true}
-                      showLegend={false}
-                      visible={chartData.series.length > 0}
-            >
-            </PieChart>
-          </div>
-        }
+        <Stats data={statsData}/>
+        <DateNavigator
+          date={date}
+          nextDisabled={isNextDisabled}
+          storeName={storeName}
+          onPrev={this.queryPrev.bind(this)}
+          onNext={this.queryNext.bind(this)}
+        >
+        </DateNavigator>
+        <PieChart ref="charts"
+                  chartName={locale.deliveries}
+                  chartData={chartData}
+                  center={['50%', '50%']}
+                  responsive={true}
+                  showLegend={false}
+                  visible={chartData.series.length > 0}
+        >
+        </PieChart>
       </div>
     )
 

@@ -74,12 +74,8 @@ class Page extends React.Component {
 
   render() {
     let {showStore, storeList, isFullScreen, storeSelectorTitle} = this.state;
-    if (!storeList.length)
-      return (
-        <noscript>
-        </noscript>
-      );
     return (
+      storeList.length &&
       <div className="store-container">
         <Animate
           className="store-backdrop"

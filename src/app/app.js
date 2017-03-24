@@ -32,14 +32,7 @@ import Pull2refresh from '../components/pull2refresh';
 import {scrollNavItems, navItems} from '../models/navs';
 import Header from '../components/header';
 
-/*const PageHome = require('../pages/home');*/
-/*const PageButton = require('../pages/button');
- const PageList = require('../pages/list');
- const PageForm = require('../pages/form');
- const PageIcon = require('../pages/icon');
- const PageDialog = require('../pages/dialog');
- const PageGallery = require('../pages/gallery');
- const PageScene = require('../pages/scene');*/
+
 import Index from '../pages/index';
 import Survey from '../pages/survey';
 import DataView from '../pages/dataView';
@@ -67,20 +60,15 @@ class App extends React.Component {
     });
   }
 
-  onRelease(){
-    setTimeout(() => {
-      this.hide();
-    }, 2000)
+  onRelease() {
+    store.emitter.emit("refresh");
   }
 
   render() {
-    let {isAppReady, storeListVisible, showHeader, headerTitle} = this.state;
-    if (!isAppReady)
-      return (
-        <noscript>
-        </noscript>
-      );
+    let {isAppReady, storeListVisible, showHeader, headerTitle, shownP2r, isP2rEnabled} = this.state;
+
     return (
+      isAppReady &&
       <div className="app-body">
         <Navigation items={navItems}/>
         <div className="page-container page-scrollNav">
@@ -91,11 +79,15 @@ class App extends React.Component {
               {headerTitle}
             </Header>
           }
-          <div ref="content" className="page-content">
-            <Pull2refresh scroller={this.refs.content} onRelease={this.onRelease}>
+          <Pull2refresh enabled={isP2rEnabled}
+                        show={shownP2r}
+                        scroller={this.refs.content}
+                        onRelease={this.onRelease}
+          >
+            <div ref="content" className="page-content">
               {this.props.children}
-            </Pull2refresh>
-          </div>
+            </div>
+          </Pull2refresh>
           {
             storeListVisible && <StoreSelector/>
           }

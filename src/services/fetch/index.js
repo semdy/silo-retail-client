@@ -40,7 +40,7 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
             resolve(recv);
           } else {
             requestError = true;
-            rejectMsg = `error result code: ${recv.result}`;
+            rejectMsg = `result code ${recv.result}`;
             reject(rejectMsg);
             Toast.error(rejectMsg);
           }
@@ -51,14 +51,14 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
           location.reload();
         } else {
           requestError = true;
-          rejectMsg = `${locale.serverError}, code: ${code}`;
+          rejectMsg = `protocError ${code}`; //${locale.serverError}
           reject(rejectMsg);
           Toast.error(rejectMsg);
         }
       },
       error: (xhr, status, err) => {
         requestError = true;
-        rejectMsg = `${locale.disconnect}, code: ${status}`;
+        rejectMsg = `${err}, status ${status}`; //${locale.disconnect}
         reject(rejectMsg);
         Toast.error(rejectMsg);
       },

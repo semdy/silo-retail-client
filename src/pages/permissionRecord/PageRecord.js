@@ -3,6 +3,7 @@ require('./PageRecord.styl');
 let {Toast, Button} = SaltUI;
 
 import actions from '../../app/actions';
+import store from '../../app/store';
 import ListItem from '../../components/listitem';
 import Empty from '../../components/empty';
 import {authorityApplyRecord} from '../../services/store';
@@ -22,6 +23,8 @@ class Record extends React.Component {
   componentDidMount() {
     //显示header并设置标题
     actions.showHeader(locale.permission.record);
+    store.emitter.on("refresh", this.doRequest, this);
+
     this.doRequest();
   }
 
@@ -34,12 +37,15 @@ class Record extends React.Component {
 
     }, (err) => {
       Toast.error("error: " + err);
+    }).finally(() => {
+      actions.hideP2R();
     });
   }
 
   componentWillUnmount() {
     //隐藏header
     actions.hideHeader();
+    store.emitter.off("refresh", this.doRequest);
   }
 
   render() {
@@ -72,11 +78,11 @@ class Record extends React.Component {
             )
           }
         </div>
-        <div className="permission-record-actions t-PT16 t-PB16 t-PL16 t-PR16">
+        {/*<div className="permission-record-actions t-PT16 t-PB16 t-PL16 t-PR16">
           <Button type="primary" onClick={this.doRequest.bind(this)}>
             {locale.refresh}
           </Button>
-        </div>
+        </div>*/}
       </div>
     );
   }
