@@ -5,7 +5,7 @@ import PieChart from '../../components/piechart';
 import DateNavigator from '../../components/datenavigator';
 import actions from '../../app/actions';
 import store from '../../app/store';
-import {getStoreList, getStoreChartReport, getStoreStats} from '../../services/store';
+import {getStoreList, getStoreChartReport, getStoreStats, getStoreOffset} from '../../services/store';
 import {getDateBefore, genTableRows, genStatsData} from '../../utils';
 import locale from '../../locale';
 
@@ -15,7 +15,6 @@ class Page extends React.Component {
     super(props);
     this.state = {
       isDataLoaded: false,
-      isNextDisabled: true,
       date: new Date(),
       storeName: '',
       statsData: [],
@@ -23,7 +22,7 @@ class Page extends React.Component {
     };
 
     this.currStore = {};
-    this.offset = 0;
+    this.offset = getStoreOffset();
   }
 
   setData(statsData, charts) {
@@ -82,9 +81,6 @@ class Page extends React.Component {
 
   queryPrev() {
     this.offset += 1;
-    this.setState({
-      isNextDisabled: false
-    });
     this.doQuery();
   }
 
@@ -93,23 +89,18 @@ class Page extends React.Component {
       return;
     }
     this.offset = Math.max(0, --this.offset);
-    if (this.offset == 0) {
-      this.setState({
-        isNextDisabled: true
-      });
-    }
     this.doQuery();
   }
 
   render() {
-    let {isDataLoaded, statsData, chartData, date, storeName, isNextDisabled} = this.state;
+    let {isDataLoaded, statsData, chartData, date, storeName} = this.state;
     return (
       isDataLoaded &&
       <div>
         <Stats data={statsData}/>
         <DateNavigator
           date={date}
-          nextDisabled={isNextDisabled}
+          nextDisabled={this.offset == 0}
           storeName={storeName}
           onPrev={this.queryPrev.bind(this)}
           onNext={this.queryNext.bind(this)}

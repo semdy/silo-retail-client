@@ -1,16 +1,12 @@
 import './DataView.styl';
 
-let {Toast} = SaltUI;
 import {getWeekNumber} from '../../utils/date';
 import Stats from '../../components/stats';
 import Charts from '../../components/linechart';
 import DateNavigator from '../../components/datenavigator';
 import actions from '../../app/actions';
 import store from '../../app/store';
-import {fetchReportPayment, getStoreList} from '../../services/store';
-
-//默认时间间隔(单位：小时|天|月|年)
-const defaultOffset = 0;
+import {fetchReportPayment, getStoreList, getStoreOffset} from '../../services/store';
 
 //格式化时间, 带上年份方便后续排序
 const formatTime = (time, bytype) => {
@@ -200,7 +196,6 @@ class Page extends React.Component {
     this.state = {
       isDataLoaded: false,
       activeIndex: 1,
-      isNextDisabled: true,
       timelines: [],
       currStore: {},
       statsData: [],
@@ -211,7 +206,7 @@ class Page extends React.Component {
     this.legendNames = [];
     this.filterType = 'hour'; //默认过滤方式
     this.fetchParams = [];
-    this.offset = defaultOffset;
+    this.offset = getStoreOffset();
   }
 
   fetchData(storeId, offset) {
@@ -337,9 +332,6 @@ class Page extends React.Component {
 
   queryPrev() {
     this.offset += 1;
-    this.setState({
-      isNextDisabled: false
-    });
     this.doQuery();
   }
 
@@ -348,11 +340,6 @@ class Page extends React.Component {
       return;
     }
     this.offset = Math.max(0, --this.offset);
-    if (this.offset == 0) {
-      this.setState({
-        isNextDisabled: true
-      });
-    }
     this.doQuery();
   }
 
@@ -364,7 +351,7 @@ class Page extends React.Component {
   }
 
   render() {
-    let {isDataLoaded, statsData, chartData, date, timelines, isNextDisabled, currStore} = this.state;
+    let {isDataLoaded, statsData, chartData, date, timelines, currStore} = this.state;
     return (
       isDataLoaded &&
       <div>
@@ -374,7 +361,7 @@ class Page extends React.Component {
           showStoreList={this.showStoreList.bind(this)}
           date={date}
           timelines={timelines}
-          nextDisabled={isNextDisabled}
+          nextDisabled={this.offset == 0}
           defaultFilterType={this.filterType}
           storeName={currStore.name}
           onPrev={this.queryPrev.bind(this)}

@@ -8,7 +8,7 @@ import DateNavigator from '../../components/datenavigator';
 import Table from '../../components/table';
 import actions from '../../app/actions';
 import store from '../../app/store';
-import {getStoreList, getStoreChartReport, getStoreStats} from '../../services/store';
+import {getStoreList, getStoreChartReport, getStoreStats, getStoreOffset} from '../../services/store';
 import {getDateBefore, genStatsData} from '../../utils';
 import locale from '../../locale';
 
@@ -33,7 +33,6 @@ class Page extends React.Component {
     super(props);
     this.state = {
       isDataLoaded: false,
-      isNextDisabled: true,
       date: new Date(),
       storeName: '',
       statsData: [],
@@ -45,7 +44,7 @@ class Page extends React.Component {
     };
 
     this.currStore = {};
-    this.offset = 0;
+    this.offset = getStoreOffset();
     this.queryChanged = false;
 
     this.tableFields = [
@@ -163,9 +162,6 @@ class Page extends React.Component {
 
   queryPrev() {
     this.offset += 1;
-    this.setState({
-      isNextDisabled: false
-    });
     this.doQuery();
   }
 
@@ -174,11 +170,6 @@ class Page extends React.Component {
       return;
     }
     this.offset = Math.max(0, --this.offset);
-    if (this.offset == 0) {
-      this.setState({
-        isNextDisabled: true
-      });
-    }
     this.doQuery();
   }
 
@@ -197,7 +188,7 @@ class Page extends React.Component {
   render() {
     let {
       isDataLoaded, statsData, date, tabActiveIndex, categoryData, distributeData,
-      top10DestData, top10AscData, storeName, isNextDisabled
+      top10DestData, top10AscData, storeName
     } = this.state;
 
     return (
@@ -206,7 +197,7 @@ class Page extends React.Component {
         <Stats data={statsData}/>
         <DateNavigator
           date={date}
-          nextDisabled={isNextDisabled}
+          nextDisabled={this.offset == 0}
           storeName={storeName}
           onPrev={this.queryPrev.bind(this)}
           onNext={this.queryNext.bind(this)}

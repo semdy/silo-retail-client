@@ -27,6 +27,7 @@ let readyQueue = [];
 let isReady = false;
 let storeList = [];
 let selectedStoreList = [];
+let storeOffset = 0;
 let manager = {
   storeId: null,
   userId: null
@@ -110,8 +111,30 @@ export const getStoreModel = () => {
   return storeList;
 };
 
+/**
+ * 保存店铺选择状态
+ * @param {Array} stores
+ * @return {*}
+ */
 export const setStoreModel = (stores) => {
   return selectedStoreList = stores;
+};
+
+/**
+ * 保存选择时间间隔
+ * @param {number} offset
+ * @return {*}
+ */
+export const setStoreOffset = (offset) => {
+  return storeOffset = offset;
+};
+
+/**
+ * 获取选择时间间隔
+ * @return {number}
+ */
+export const getStoreOffset = () => {
+  return storeOffset;
 };
 
 /**

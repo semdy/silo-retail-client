@@ -8,6 +8,7 @@ import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import dom from '../../utils/dom';
+import {setStoreOffset} from '../../services/store';
 
 const formatDate = (dateUTC, timelines, filterType) => {
   if (/^(?:hour|day)$/.test(filterType)) {
@@ -27,6 +28,10 @@ const formatDate = (dateUTC, timelines, filterType) => {
 const getDay = (dateUTC) => {
   var n = ["日", "一", "二", "三", "四", "五", "六"];
   return n[dateUTC.getDay()];
+};
+
+const getOffset = (dateUTC) => {
+  return new Date().getDate() - dateUTC.getDate();
 };
 
 class DateNavigator extends React.Component {
@@ -61,6 +66,12 @@ class DateNavigator extends React.Component {
 
   handleStore() {
     actions.showStoreSelector();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if( nextProps.date !== this.props.date ){
+      setStoreOffset(getOffset(nextProps.date));
+    }
   }
 
   render() {

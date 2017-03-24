@@ -2,7 +2,8 @@ import './Survey.styl';
 import store from '../../app/store';
 import actions from '../../app/actions';
 import {getStoreList} from '../../services/store';
-import {getStoreChartReport, getStoreStats} from '../../services/store';
+import {getStoreChartReport, getStoreStats, getStoreOffset} from '../../services/store';
+import {getDateBefore} from '../../utils';
 import Item from './Item';
 import Empty from '../../components/empty';
 import DateNavigator from '../../components/datenavigator';
@@ -15,12 +16,13 @@ class Index extends React.Component {
     super(props);
     this.state = {
       data: {},
+      date: getDateBefore(),
       storeName: '',
       loaded: false
     };
 
     this.currStore = {};
-    this.offset = 0;
+    this.offset = getStoreOffset();
   }
 
   componentDidMount() {
@@ -40,6 +42,7 @@ class Index extends React.Component {
       data.series = this._setDataGroup(data.series);
       this.setState({
         data: data,
+        date: getDateBefore(this.offset),
         storeName: this._currStore.name,
         loaded: true
       });
@@ -98,9 +101,6 @@ class Index extends React.Component {
 
   queryPrev() {
     this.offset += 1;
-    this.setState({
-      isNextDisabled: false
-    });
     this.doQuery();
   }
 
@@ -109,16 +109,11 @@ class Index extends React.Component {
       return;
     }
     this.offset = Math.max(0, --this.offset);
-    if (this.offset == 0) {
-      this.setState({
-        isNextDisabled: true
-      });
-    }
     this.doQuery();
   }
 
   render() {
-    let {loaded, date, storeName, isNextDisabled} = this.state;
+    let {loaded, date, storeName} = this.state;
     let {series, legend} = this.state.data;
     return (
       <div className="survey-container">
@@ -126,7 +121,7 @@ class Index extends React.Component {
           loaded &&
           <DateNavigator
             date={date}
-            nextDisabled={isNextDisabled}
+            nextDisabled={this.offset == 0}
             storeName={storeName}
             onPrev={this.queryPrev.bind(this)}
             onNext={this.queryNext.bind(this)}
