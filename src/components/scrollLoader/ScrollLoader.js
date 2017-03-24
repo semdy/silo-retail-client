@@ -42,7 +42,6 @@ class ScrollLoader extends React.Component {
       container: container,
       scroller: scroller || this.refs.loader,
       onScroll: function(client){
-        console.log(1)
         onScroll(client)
       },
       onReach: function(){
