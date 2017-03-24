@@ -25,12 +25,13 @@ let ScrollDetector = function () {
 ScrollDetector.prototype = {
 
   init: function (opts) {
+    this.handleEvent = this.handleEvent.bind(this);
     this.options = Object.assign({}, ScrollDetector.defaults, opts || {});
     this.win = this.options.container;
     this.scroller = this.options.scroller || BOD;
     this.scrollerTop = getOffset(this.scroller).top;
     this._client = {};
-    this._addEvent();
+    this.rebuild();
   },
 
   destroy: function () {
@@ -59,23 +60,7 @@ ScrollDetector.prototype = {
       };
   },
 
-  _addEvent: function () {
-    let self = this;
-    let timer = null;
-    this.handleEvent = function () {
-      if (timer) {
-        clearTimeout(timer);
-      }
-
-      timer = setTimeout(function () {
-        self._handler();
-      }, self.options.timeout);
-    };
-
-    return this.rebuild();
-  },
-
-  _handler: function () {
+  handleEvent: function () {
     let opts = this.options;
 
     this._client = this._getClientSize();
@@ -105,9 +90,8 @@ ScrollDetector.prototype = {
 ScrollDetector.defaults = {
   container: window,
   scroller: BOD,
-  bufferPx: 50,
-  time: 500,
-  timeout: 20,
+  bufferPx: 0,
+  time: 1000,
   onReach: Context.noop,
   onScroll: Context.noop
 };

@@ -9,6 +9,7 @@ import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import classnames from 'classnames';
+import { setStoreModel } from '../../services/store';
 import locale, {storeLocale} from '../../locale';
 
 
@@ -27,6 +28,7 @@ class Page extends React.Component {
 
   handleConfirm() {
     let stores = this.getData();
+    setStoreModel(stores);
     store.emitter.emit("setSelectedStore", stores);
   }
 

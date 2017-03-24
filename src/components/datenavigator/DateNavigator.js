@@ -59,12 +59,24 @@ class DateNavigator extends React.Component {
     this.props.onItemClick(filterType);
   }
 
+  handleStore() {
+    actions.showStoreSelector();
+  }
+
   render() {
     const {date, nextDisabled, onPrev, onNext, timelines, storeName} = this.props;
-    let {width, height, isFullScreen} = this.state;
+    let {width, height, isFullScreen, storeListVisible} = this.state;
     let dateIndicator = (
       <div className="t-clear">
-        <div className="store-name t-FL" style={{display: isFullScreen ? "none" : ""}}>{storeName}店</div>
+        <div className="store-name t-FL"
+             onClick={this.handleStore.bind(this)}
+             style={{display: isFullScreen ? "none" : ""}}>
+          {
+            storeListVisible &&
+            <Icon name="store" className="store-icon" width={20} height={20}/>
+          }
+          <span>{storeName}</span>
+        </div>
         <div className="t-FR t-FBH t-FBAC t-FBJC store-indict">
           <div className="date-arrow left t-FBH t-FBJC t-FBAC"
                onClick={onPrev}>

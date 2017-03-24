@@ -36,12 +36,13 @@ class ScrollLoader extends React.Component {
 
   createDetector(){
     let self = this;
-    let {container, scroller, onScroll, onReach, bufferPx, time, timeout} = this.props;
+    let {container, scroller, onScroll, onReach, bufferPx, time} = this.props;
 
     this.scrollDetector = new ScrollDetector({
       container: container,
       scroller: scroller || this.refs.loader,
       onScroll: function(client){
+        console.log(1)
         onScroll(client)
       },
       onReach: function(){
@@ -51,8 +52,7 @@ class ScrollLoader extends React.Component {
         });
       },
       bufferPx,
-      time,
-      timeout
+      time
     });
   }
 
@@ -95,7 +95,6 @@ ScrollLoader.propTypes = {
   onReach: PropTypes.func,
   bufferPx: PropTypes.number,
   time: PropTypes.number,
-  timeout: PropTypes.number,
   hidden: PropTypes.bool
 };
 
@@ -104,9 +103,8 @@ ScrollLoader.defaultProps = {
   scroller: null,
   onScroll: Context.noop,
   onReach: Context.noop,
-  bufferPx: 50,
-  time: 500,
-  timeout: 20,
+  bufferPx: 0,
+  time: 1000,
   hidden: true
 };
 

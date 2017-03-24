@@ -26,6 +26,7 @@ export const fetchReportPayment = (query, storeId, offset) => {
 let readyQueue = [];
 let isReady = false;
 let storeList = [];
+let selectedStoreList = [];
 let manager = {
   storeId: null,
   userId: null
@@ -56,6 +57,12 @@ function triggerReady() {
 export const getStoreList = () => {
   isReady = false;
   return new Promise((resolve, reject) => {
+    if( selectedStoreList.length > 0 ){
+      resolve(selectedStoreList);
+      triggerReady();
+      return;
+    }
+
     fetch.post('7103.json').then((res) => {
       storeList = res.data;
       manager.storeId = res.idAsManager;
@@ -101,6 +108,10 @@ signIn.ready(() => {
  * */
 export const getStoreModel = () => {
   return storeList;
+};
+
+export const setStoreModel = (stores) => {
+  return selectedStoreList = stores;
 };
 
 /**

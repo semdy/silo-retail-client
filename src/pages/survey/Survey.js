@@ -2,9 +2,10 @@ import './Survey.styl';
 import store from '../../app/store';
 import actions from '../../app/actions';
 import {getStoreList} from '../../services/store';
-import {getStoreChartReport} from '../../services/store';
+import {getStoreChartReport, getStoreStats} from '../../services/store';
 import Item from './Item';
 import Empty from '../../components/empty';
+import DateNavigator from '../../components/datenavigator';
 import locale from '../../locale';
 let {Toast} = SaltUI;
 
@@ -14,27 +15,32 @@ class Index extends React.Component {
     super(props);
     this.state = {
       data: {},
+      storeName: '',
       loaded: false
     };
-    this._currStore = {};
+
+    this.currStore = {};
+    this.offset = 0;
   }
 
   componentDidMount() {
     getStoreList().then((storeList) => {
       this._currStore = storeList[0];
-      this.doRequest();
+      this.doQuery();
+      this.queryStats();
     });
 
     store.emitter.on("setSelectedStore", this._selectHandler, this);
-    store.emitter.on("refresh", this.doRequest, this);
+    store.emitter.on("refresh", this.doQuery, this);
   }
 
-  doRequest() {
+  doQuery() {
     let storeId = this._currStore.storeId;
-    getStoreChartReport(storeId).then((data) => {
+    getStoreChartReport(storeId, this.offset).then((data) => {
       data.series = this._setDataGroup(data.series);
       this.setState({
         data: data,
+        storeName: this._currStore.name,
         loaded: true
       });
     }, (err) => {
@@ -44,23 +50,27 @@ class Index extends React.Component {
     });
   }
 
+  queryStats(){
+    let storeId = this._currStore.storeId;
+   /* getStoreStats(storeId, this.offset + 6, this.offset, ['money', 'order']).then((res) => {
+      this.setData(values[0].data, values[1]);
+      this.refs.charts.refresh();
+    })*/
+  }
 
   componentWillUnmount() {
     store.emitter.off("setSelectedStore", this._selectHandler);
-    store.emitter.off("refresh", this.doRequest);
+    store.emitter.off("refresh", this.doQuery);
   }
 
   _selectHandler(storeList) {
-    if (storeList.length > 3) {
-      return Toast.error("门店最多只能选3个");
-    }
 
     actions.hideStoreSelector();
 
     if (storeList.length == 0) return;
 
     this._currStore = storeList[0];
-    this.doRequest();
+    this.doQuery();
   }
 
   /**
@@ -86,18 +96,42 @@ class Index extends React.Component {
     return ret;
   }
 
+  queryPrev() {
+    this.offset += 1;
+    this.setState({
+      isNextDisabled: false
+    });
+    this.doQuery();
+  }
+
+  queryNext() {
+    if (this.offset == 0) {
+      return;
+    }
+    this.offset = Math.max(0, --this.offset);
+    if (this.offset == 0) {
+      this.setState({
+        isNextDisabled: true
+      });
+    }
+    this.doQuery();
+  }
+
   render() {
-    let {loaded} = this.state;
+    let {loaded, date, storeName, isNextDisabled} = this.state;
     let {series, legend} = this.state.data;
     return (
       <div className="survey-container">
         {
           loaded &&
-            <div className="panel survey-header t-FBH t-FBAC t-FBJC">
-              {
-                this._currStore.name + " - 今日数据"
-              }
-            </div>
+          <DateNavigator
+            date={date}
+            nextDisabled={isNextDisabled}
+            storeName={storeName}
+            onPrev={this.queryPrev.bind(this)}
+            onNext={this.queryNext.bind(this)}
+          >
+          </DateNavigator>
         }
         {
           loaded && (

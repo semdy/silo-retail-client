@@ -6,7 +6,6 @@ let {Link} = ReactRouter;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import classnames from 'classnames';
 
 class Page extends React.Component {
   constructor(props) {
@@ -47,11 +46,11 @@ class Page extends React.Component {
   }
 
   render() {
-    let {scrollNavVisible, storeListVisible} = this.state;
+    let {scrollNavVisible} = this.state;
     let {items} = this.props;
 
     return (
-      <div className={classnames("scroll-nav padL", {padR: storeListVisible})} style={{display: scrollNavVisible ? "block" : "none"}}>
+      <div className="scroll-nav padL" style={{display: scrollNavVisible ? "block" : "none"}}>
         <div className="scroll-nav-toolbar left" onClick={this.handleMenuFun.bind(this)}>
           <Icon name="menu" width={20} height={20}/>
         </div>
@@ -74,12 +73,12 @@ class Page extends React.Component {
             </div>
           </div>
         </div>
-        {
+        {/*{
           storeListVisible &&
           <div className="scroll-nav-toolbar right" onClick={this.rightFun.bind(this)}>
             <Icon name="store" width={20} height={20}/>
           </div>
-        }
+        }*/}
       </div>
     );
   }

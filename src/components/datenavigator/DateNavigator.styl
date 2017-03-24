@@ -2,7 +2,7 @@
 
 .date-navigator
   position relative
-  margin-bottom 5px
+  margin-bottom 10px
   padding: 15px 0
   text-align center
   background-color #fff
@@ -22,10 +22,10 @@
     transform translateY(-50%)
 
     &.left
-      margin-left -122px
+      margin-left -117px
 
     &.right
-      margin-left 90px
+      margin-left 85px
 
     &.disabled
       color #e0e0e0
@@ -44,11 +44,21 @@
       color #333
 
   .store-name
-    margin-left 5px
-    width 120px
+    position relative
+    margin-left 3px
+    margin-top -15px
+    margin-bottom -15px
+    padding 15px 0
+    width 132px
     overflow hidden
+    z-index 10
     white-space nowrap
     text-overflow ellipsis
+
+  .store-icon
+    position relative
+    margin-right 3px
+    top -1px
 
 .date-indicator
   .date-arrow
@@ -78,7 +88,7 @@
   &.normal
     .store-indict
       position relative
-      margin-right 40px
+      margin-right 35px
       min-width 166px
     .date-cld
       margin-right 5px

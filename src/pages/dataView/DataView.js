@@ -300,9 +300,6 @@ class Page extends React.Component {
   }
 
   _selectHandler(storeList) {
-    if (storeList.length > 3) {
-      return Toast.error("门店最多只能选3个");
-    }
 
     actions.hideStoreSelector();
 
