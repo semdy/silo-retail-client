@@ -2,11 +2,12 @@ require('./PageRecord.styl');
 
 let {Toast, Button} = SaltUI;
 
+import reactMixin from 'react-mixin';
+import store from  '../../app/store';
 import actions from '../../app/actions';
-import store from '../../app/store';
 import ListItem from '../../components/listitem';
 import Empty from '../../components/empty';
-import {authorityApplyRecord} from '../../services/store';
+import {authorityApplyRecord, fetchStoreList} from '../../services/store';
 import classNames from 'classnames';
 import locale from '../../locale';
 
@@ -23,8 +24,6 @@ class Record extends React.Component {
   componentDidMount() {
     //显示header并设置标题
     actions.showHeader(locale.permission.record);
-    store.emitter.on("refresh", this.doRequest, this);
-
     this.doRequest();
   }
 
@@ -37,15 +36,23 @@ class Record extends React.Component {
 
     }, (err) => {
       Toast.error("error: " + err);
-    }).finally(() => {
-      actions.hideP2R();
     });
+
+    //顺带刷新店铺列表
+    fetchStoreList();
   }
 
   componentWillUnmount() {
     //隐藏header
     actions.hideHeader();
-    store.emitter.off("refresh", this.doRequest);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let {refreshFlag} = this.state;
+    if (prevState.refreshFlag !== refreshFlag )
+    {
+      this.doRequest();
+    }
   }
 
   render() {
@@ -60,12 +67,12 @@ class Record extends React.Component {
                     <ListItem key={i}>
                       <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.authParamStr}</span>
                       <span className={classNames("apply-status", {
-                        ok: item.status == 0,
-                        refused: item.status == 1,
-                        wait: item.status == 2
+                        ok: item.status === 0,
+                        refused: item.status === 1,
+                        wait: item.status === 2
                       })}>
                   {
-                    item.status == 0 ? locale.agreed : ( item.status == 1 ? locale.refused : locale.waiting )
+                    item.status === 0 ? locale.agreed : ( item.status === 1 ? locale.refused : locale.waiting )
                   }
                 </span>
                     </ListItem>
@@ -87,5 +94,7 @@ class Record extends React.Component {
     );
   }
 }
+
+reactMixin.onClass(Record, Reflux.connect(store));
 
 module.exports = Record;

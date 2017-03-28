@@ -20,7 +20,7 @@ class Apply extends React.Component {
       data: [],
       loaded: false
     };
-    this.keyword;
+    this.keyword = '';
   }
 
   componentDidMount() {
@@ -54,7 +54,7 @@ class Apply extends React.Component {
 
   handleApply(storeId, index) {
     authorityApply(storeId).then((res) => {
-      if (res.result == 0) {
+      if (res.result === 0) {
         this.state.data[index].disabled = true;
         this.setState({
           data: this.state.data
@@ -81,7 +81,7 @@ class Apply extends React.Component {
     let {loaded, data} = this.state;
     return (
       <div className="permission-apply">
-        <SearchBar placeholder="请输入要查询的门店"
+        <SearchBar placeholder={locale.searchStorePlaceholder}
                    onSearch={this.handleSearch.bind(this)}
         >
         </SearchBar>
@@ -91,7 +91,7 @@ class Apply extends React.Component {
               loaded && (
                 data.length > 0 ? data.map((item, i) => {
                     return (
-                      item.progress == 'normal' &&
+                      item.progress === 'normal' &&
                       <ListItem key={i}>
                         <span className="group-item-text t-FBH t-FB1 t-FBAC">{item.name}</span>
                         <ButtonGroup half={true}>

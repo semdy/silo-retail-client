@@ -18,5 +18,11 @@ module.exports = Reflux.createActions([
   'hideP2R',
   'showP2R',
   'setP2rEnabled',
-  'hideLoadMore'
+  'hideLoadMore',
+  'queryPrev',
+  'queryNext',
+  'setStore',
+  'doRefresh',
+  'setFilterType',
+  'setTimelines'
 ]);

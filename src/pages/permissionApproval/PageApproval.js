@@ -2,8 +2,9 @@ require('./PageApproval.styl');
 
 let {Toast, Button, Icon} = SaltUI;
 
+import reactMixin from 'react-mixin';
+import store from  '../../app/store';
 import actions from '../../app/actions';
-import store from '../../app/store';
 import ButtonGroup from '../../components/ButtonGroup';
 import ListItem from '../../components/listitem';
 import Empty from '../../components/empty';
@@ -23,15 +24,12 @@ class Approval extends React.Component {
   componentDidMount() {
     //显示header并设置标题
     actions.showHeader(locale.permission.approval);
-    store.emitter.on("refresh", this.doRequest, this);
-
     this.doRequest();
   }
 
   componentWillUnmount() {
     //隐藏header
     actions.hideHeader();
-    store.emitter.off("refresh", this.doRequest);
   }
 
   doRequest(){
@@ -42,14 +40,20 @@ class Approval extends React.Component {
       });
     }, (err) => {
       Toast.error("error: " + err);
-    }).finally(() => {
-      actions.hideP2R();
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let {refreshFlag} = this.state;
+    if (prevState.refreshFlag !== refreshFlag )
+    {
+      this.doRequest();
+    }
   }
 
   handleApproval(applyId, agreed, index) {
     authorityApprove(applyId, agreed).then((res) => {
-      if (res.result == 0) {
+      if (res.result === 0) {
         this.state.data[index].agreed = agreed;
         this.setState({
           data: this.state.data
@@ -82,7 +86,7 @@ class Approval extends React.Component {
                           {locale.agreed}
                     </span>
                         :
-                        ( item.agreed == false ?
+                        ( item.agreed === false ?
                             <span className="apply-status refused">
                         <Icon name="minus-circle" width={18} height={18}>
                         </Icon>
@@ -118,5 +122,7 @@ class Approval extends React.Component {
     );
   }
 }
+
+reactMixin.onClass(Approval, Reflux.connect(store));
 
 module.exports = Approval;

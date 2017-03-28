@@ -1,6 +1,7 @@
 require('./BarChart.styl');
 
 let {PropTypes} = React;
+import classnames from 'classnames';
 import dom from '../../utils/dom';
 
 class BarChart extends React.Component {
@@ -8,8 +9,8 @@ class BarChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pieWidth: '',
-      pieHeight: ''
+      width: this.props.width,
+      height: this.props.height
     };
   }
 
@@ -28,13 +29,9 @@ class BarChart extends React.Component {
     this.resizeHandler = () => {
       if (timeout) clearTimeout(timeout);
       timeout = setTimeout(() => {
-        if (responsive) {
-          this.setPieSize(() => {
-            this.chartInstance.resize();
-          });
-        } else {
+        this.setPieSize(() => {
           this.chartInstance.resize();
-        }
+        });
       }, 50);
     };
 
@@ -43,10 +40,17 @@ class BarChart extends React.Component {
   }
 
   setPieSize(cb) {
-    this.setState({
-      pieWidth: window.innerWidth,
-      pieHeight: window.innerHeight - dom.offset(this.refs.chart).top - 10
-    }, cb);
+    let responsive = this.props.responsive;
+    if (responsive) {
+      this.setState({
+        width: window.innerWidth,
+        height: window.innerHeight - dom.offset(this.refs.chart).top - 10
+      }, cb);
+    } else {
+      this.setState({
+        width: this.refs.chart.parentNode.offsetWidth
+      }, cb);
+    }
   }
 
   componentWillUnmount() {
@@ -72,7 +76,8 @@ class BarChart extends React.Component {
       xAxis : [],
       yAxis : [
         {
-          type : 'value'
+          type : 'value',
+          show: this.props.showAxis
         }
       ],
       series : []
@@ -82,6 +87,7 @@ class BarChart extends React.Component {
       chartOptions.xAxis.push(
         {
           type : 'category',
+          show: this.props.showAxis,
           data : item.data,
           axisTick: {
             alignWithLabel: true
@@ -105,17 +111,17 @@ class BarChart extends React.Component {
   }
 
   render() {
-    let {pieWidth, pieHeight} = this.state;
+    let {width, height} = this.state;
     return (
       <div className="card">
         <div className="barchart-title">
           {this.props.chartName}
         </div>
         <div ref="chart"
-             className="barchart"
+             className={classnames("barchart", {"chart-plain": !this.props.showAxis})}
              style={{
-               width: pieWidth + "px",
-               height: pieHeight + "px"
+               width: width + "px",
+               height: height + "px"
              }}
         >
         </div>
@@ -128,7 +134,9 @@ BarChart.defaultProps = {
   chartName: '',
   responsive: false,
   radius: ['45%', '65%'],
-  visible: true
+  visible: true,
+  showAxis: true,
+  width: window.innerWidth
 };
 
 BarChart.propTypes = {
@@ -137,7 +145,10 @@ BarChart.propTypes = {
   radius: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ),
-  visible: PropTypes.bool
+  visible: PropTypes.bool,
+  showAxis: PropTypes.bool,
+  width: PropTypes.number,
+  height: PropTypes.number
 };
 
 module.exports = BarChart;

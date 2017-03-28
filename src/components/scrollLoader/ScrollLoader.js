@@ -18,7 +18,7 @@ class ScrollLoader extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.createDetector();
-    }, 100);
+    }, 200);
 
   }
 
@@ -42,7 +42,7 @@ class ScrollLoader extends React.Component {
       container: container,
       scroller: scroller || this.refs.loader,
       onScroll: function(client){
-        onScroll(client)
+        onScroll(client);
       },
       onReach: function(){
         onReach();

@@ -9,7 +9,7 @@ class PieChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pieWidth: '',
+      pieWidth: window.innerWidth,
       pieHeight: ''
     };
   }
@@ -17,7 +17,6 @@ class PieChart extends React.Component {
   componentDidMount() {
     let timeout;
     let responsive = this.props.responsive;
-
     if (responsive) {
       this.setPieSize(() => {
         this.chartInstance = echarts.init(this.refs.chart);

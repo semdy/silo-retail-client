@@ -4,7 +4,7 @@ import {signIn} from '../auth';
 import actions from '../../app/actions';
 
 //常量
-const AUTHTYPE = 17001;
+const AUTH_TYPE = 17001;
 
 /**
  *获取店铺相关销售数据
@@ -25,16 +25,16 @@ export const fetchReportPayment = (query, storeId, offset) => {
 
 let readyQueue = [];
 let isReady = false;
+let storeErrMsg = null;
 let storeList = [];
 let selectedStoreList = [];
-let storeOffset = 0;
 let manager = {
   storeId: null,
   userId: null
 };
 
 function storeReady(fun) {
-  if (typeof fun == 'function') {
+  if (typeof fun === 'function') {
     if (!isReady) {
       readyQueue.push(fun);
     } else {
@@ -55,53 +55,66 @@ function triggerReady() {
  * 远程获取店铺列表数据
  * @return {Promise}
  */
-export const getStoreList = () => {
+
+export const fetchStoreList = () => {
   isReady = false;
-  return new Promise((resolve, reject) => {
-    if( selectedStoreList.length > 0 ){
-      resolve(selectedStoreList);
-      triggerReady();
-      return;
+  storeErrMsg = null;
+  fetch.post('7103.json').then((res) => {
+    storeList = res.data;
+    manager.storeId = res.idAsManager;
+    manager.userId = res.managerUserId;
+
+    //区分普通会员与店长身份
+    if (!res.idAsManager) {
+      actions.setAdmin(false);
+    } else {
+      actions.setAdmin(true);
     }
 
-    fetch.post('7103.json').then((res) => {
-      storeList = res.data;
-      manager.storeId = res.idAsManager;
-      manager.userId = res.managerUserId;
-
-      //区分普通会员与店长身份
-      if( !res.idAsManager ){
-        actions.setAdmin(false);
-      } else {
-        actions.setAdmin(true);
+    if (storeList.length === 0) {
+      storeErrMsg = "empty storelist data";
+      //隐藏顶部导航
+      actions.showScrollNav(false);
+      hashHistory.replace('/report.index');
+    } else {
+      if (storeList.length > 1) {
+        //填充店铺列表数据
+        actions.setStoreList(storeList);
+        //显示店铺
+        actions.showStoreList();
+        //显示顶部导航
+        actions.showScrollNav(true);
       }
+    }
+    triggerReady();
+  }, (err) => {
+    storeErrMsg = "get storeList error => " + err;
+    triggerReady();
+  });
+};
 
-      if (storeList.length == 0) {
-        reject("empty storelist data");
-        //隐藏顶部导航
-        actions.showScrollNav(false);
-        hashHistory.replace('/report.index');
-      } else {
-        if (storeList.length > 1) {
-          //填充店铺列表数据
-          actions.setStoreList(storeList);
-          //显示店铺
-          actions.showStoreList();
-          //显示顶部导航
-          actions.showScrollNav(true);
-        }
-        resolve(storeList);
+/**
+ * 获取店铺列表缓存数据
+ * @return {Promise}
+ */
+export const getStoreList = () => {
+  return new Promise((resolve, reject) => {
+    if (selectedStoreList.length > 0) {
+      actions.setStore(selectedStoreList[0]);
+      return resolve(selectedStoreList);
+    }
+    storeReady(() => {
+      if( storeErrMsg ) {
+        return reject(storeErrMsg);
       }
-      triggerReady();
-    }, (err) => {
-      triggerReady();
-      reject("get storeList error => " + err);
+      actions.setStore(storeList[0]);
+      resolve(storeList);
     });
   });
 };
 
 signIn.ready(() => {
-  getStoreList();
+  fetchStoreList();
 });
 
 /**
@@ -118,23 +131,6 @@ export const getStoreModel = () => {
  */
 export const setStoreModel = (stores) => {
   return selectedStoreList = stores;
-};
-
-/**
- * 保存选择时间间隔
- * @param {number} offset
- * @return {*}
- */
-export const setStoreOffset = (offset) => {
-  return storeOffset = offset;
-};
-
-/**
- * 获取选择时间间隔
- * @return {number}
- */
-export const getStoreOffset = () => {
-  return storeOffset;
 };
 
 /**
@@ -171,13 +167,13 @@ export const authorityApply = (storeIds = []) => {
   if (Array.isArray(storeIds)) {
     storeIds.forEach((storeId) => {
       params.push({
-        authType: AUTHTYPE,
+        authType: AUTH_TYPE,
         authParams: [storeId]
       });
     });
   } else {
     params.push({
-      authType: AUTHTYPE,
+      authType: AUTH_TYPE,
       authParams: [storeIds]
     });
   }
@@ -194,7 +190,7 @@ export const authorityApply = (storeIds = []) => {
  * */
 export const authorityApplyRecord = (pageCode = 1, pageSize = 50) => {
   let params = {
-    authType: AUTHTYPE,
+    authType: AUTH_TYPE,
     pageCode,
     pageSize
   };
@@ -211,7 +207,7 @@ export const authorityApproval = (pageCode = 1, pageSize = 50) => {
   return new Promise((resolve, reject) => {
     storeReady(() => {
       let params = {
-        authType: AUTHTYPE,
+        authType: AUTH_TYPE,
         pageCode,
         pageSize,
         authParamStr: getManager().storeId //店长所在店铺storeId
@@ -253,7 +249,7 @@ export const authorityUserList = (pageCode = 1, pageSize = 50) => {
       let params = {
         pageSize,
         pageCode,
-        authType: AUTHTYPE,
+        authType: AUTH_TYPE,
         authParamStr: getManager().storeId //获取店长所在店铺storeId
       };
 
@@ -277,7 +273,7 @@ export const authorityRemove = (userId) => {
     storeReady(() => {
       let params = {
         userId,
-        authType: AUTHTYPE,
+        authType: AUTH_TYPE,
         authParamStr: getManager().storeId //获取店长所在店铺storeId
       };
 

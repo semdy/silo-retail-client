@@ -1,23 +1,23 @@
 require('./DateNavigator.styl');
 
-let {Icon, Button, Context} = SaltUI;
-let {PropTypes} = React;
+let {Icon, Button} = SaltUI;
 import ButtonGroup from '../../components/ButtonGroup';
 import classnames from 'classnames';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import dom from '../../utils/dom';
-import {setStoreOffset} from '../../services/store';
+import {getDateBefore} from '../../utils';
+import locale from '../../locale';
 
 const formatDate = (dateUTC, timelines, filterType) => {
   if (/^(?:hour|day)$/.test(filterType)) {
-    var year = dateUTC.getFullYear() + "年";
-    var month = (dateUTC.getMonth() + 1) + "月";
-    var date = filterType === 'hour' ? dateUTC.getDate() + "日" : "";
+    let year = dateUTC.getFullYear() + locale.year;
+    let month = (dateUTC.getMonth() + 1) + locale.month;
+    let date = filterType === 'hour' ? dateUTC.getDate() + locale.day : "";
     return `${year}${month}${date}`;
   } else {
-    if (filterType == 'year') {
+    if (filterType === 'year') {
       return [timelines[0].substr(5), timelines[timelines.length - 1].substr(5)].join("~");
     } else {
       return [timelines[0], timelines[timelines.length - 1]].join("~");
@@ -26,19 +26,13 @@ const formatDate = (dateUTC, timelines, filterType) => {
 };
 
 const getDay = (dateUTC) => {
-  var n = ["日", "一", "二", "三", "四", "五", "六"];
-  return n[dateUTC.getDay()];
-};
-
-const getOffset = (dateUTC) => {
-  return new Date().getDate() - dateUTC.getDate();
+  return locale.dayNames[dateUTC.getDay()];
 };
 
 class DateNavigator extends React.Component {
 
   constructor(props) {
     super(props);
-    this.filterType = this.props.defaultFilterType;
 
     this.state = {
       activeIndex: 0,
@@ -57,47 +51,43 @@ class DateNavigator extends React.Component {
   itemClick(itemIndex, filterType) {
     if (itemIndex === this.state.activeIndex) return;
     this.setState({
-      activeIndex: itemIndex
-    }, () => {
-      this.filterType = filterType;
+      activeIndex: itemIndex,
+      filterType: filterType
     });
-    this.props.onItemClick(filterType);
+    actions.setFilterType(filterType);
   }
 
-  handleStore() {
+  showStore() {
     actions.showStoreSelector();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.date !== this.props.date ){
-      setStoreOffset(getOffset(nextProps.date));
-    }
-  }
-
   render() {
-    const {date, nextDisabled, onPrev, onNext, timelines, storeName} = this.props;
-    let {width, height, isFullScreen, storeListVisible} = this.state;
+    let {width, height, isFullScreen, offset, store, activeIndex, timelines, filterType} = this.state;
+    let date = getDateBefore(offset);
     let dateIndicator = (
       <div className="t-clear">
         <div className="store-name t-FL"
-             onClick={this.handleStore.bind(this)}
+             onClick={this.showStore}
              style={{display: isFullScreen ? "none" : ""}}>
-          {
-            storeListVisible &&
-            <Icon name="store" className="store-icon" width={20} height={20}/>
-          }
-          <span>{storeName}</span>
+          <Icon name="store" className="store-icon" width={20} height={20}/>
+          <span className="store-text">
+            {store.name}
+          </span>
         </div>
         <div className="t-FR t-FBH t-FBAC t-FBJC store-indict">
           <div className="date-arrow left t-FBH t-FBJC t-FBAC"
-               onClick={onPrev}>
+               onClick={actions.queryPrev}>
             <Icon name="angle-left-l" width={18} height={18}/>
           </div>
           <Icon name="calendar" className="date-cld" width={15} height={15}/>
-          <span className="date">{formatDate(date, timelines, this.filterType)}</span>
-          <span className="day">{this.filterType !== 'hour' ? "" : `星期${getDay(date)}`}</span>
-          <div className={classnames("date-arrow right t-FBH t-FBJC t-FBAC", {disabled: nextDisabled})}
-               onClick={onNext}>
+          <span className="date">
+            {formatDate(date, timelines, filterType)}
+          </span>
+          <span className="day">
+            {filterType !== 'hour' ? "" : `${locale.week}${getDay(date)}`}
+          </span>
+          <div className={classnames("date-arrow right t-FBH t-FBJC t-FBAC", {disabled: offset === 0})}
+               onClick={actions.queryNext}>
             <Icon name="angle-right-l" width={18} height={18}/>
           </div>
         </div>
@@ -120,21 +110,23 @@ class DateNavigator extends React.Component {
                 <ButtonGroup half={true} className="date-indicator">
                   <Button type="minor">{dateIndicator}</Button>
                 </ButtonGroup>
-                <ButtonGroup half={true} activeIndex={this.state.activeIndex} className="t-PL16 t-PR16">
+                <ButtonGroup half={true} activeIndex={activeIndex} className="t-PL16 t-PR16">
                   <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 0, 'hour')}>时</Button>
+                          onClick={this.itemClick.bind(this, 0, 'hour')}>{locale.hour}</Button>
                   <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 1, 'day')}>天</Button>
+                          onClick={this.itemClick.bind(this, 1, 'day')}>{locale.day}</Button>
                   <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 2, 'week')}>周</Button>
+                          onClick={this.itemClick.bind(this, 2, 'week')}>{locale.weekly}</Button>
                   <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 3, 'month')}>月</Button>
+                          onClick={this.itemClick.bind(this, 3, 'month')}>{locale.month}</Button>
                   <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 4, 'year')}>年</Button>
+                          onClick={this.itemClick.bind(this, 4, 'year')}>{locale.year}</Button>
                 </ButtonGroup>
                 <ButtonGroup half={true}>
-                  <Button type="minor" className="t-button-plain" onClick={this.props.showStoreList.bind(this)}>
-                    选择对比门店<span className="caret"></span>
+                  <Button type="minor" className="t-button-plain" onClick={this.showStore}>
+                    {locale.chooseStore}
+                    <span className="caret">
+                    </span>
                   </Button>
                 </ButtonGroup>
               </div>
@@ -143,30 +135,6 @@ class DateNavigator extends React.Component {
       </div>);
   }
 }
-
-DateNavigator.propTypes = {
-  defaultFilterType: PropTypes.string,
-  date: PropTypes.instanceOf(Date),
-  nextDisabled: PropTypes.bool,
-  onPrev: PropTypes.func,
-  onNext: PropTypes.func,
-  timelines: PropTypes.arrayOf(PropTypes.string),
-  storeName: PropTypes.string,
-  onItemClick: PropTypes.func,
-  showStoreList: PropTypes.func
-};
-
-DateNavigator.defaultProps = {
-  defaultFilterType: 'hour',
-  date: new Date(),
-  nextDisabled: true,
-  onPrev: Context.noop,
-  onNext: Context.noop,
-  timelines: [],
-  storeName: '',
-  onItemClick: Context.noop,
-  showStoreList: Context.noop
-};
 
 reactMixin.onClass(DateNavigator, Reflux.connect(store));
 

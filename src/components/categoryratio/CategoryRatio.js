@@ -27,7 +27,7 @@ class Categoryratio extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if( nextProps.offset != this.props.offset || nextProps.storeId != this.props.storeId ){
+    if( nextProps.offset !== this.props.offset || nextProps.storeId !== this.props.storeId ){
       this.doQuery();
     }
   }

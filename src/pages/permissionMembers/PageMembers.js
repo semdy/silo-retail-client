@@ -2,8 +2,9 @@ require('./PageMembers.styl');
 
 let {Toast, Button, Icon} = SaltUI;
 
+import reactMixin from 'react-mixin';
+import store from  '../../app/store';
 import actions from '../../app/actions';
-import store from '../../app/store';
 import ButtonGroup from '../../components/ButtonGroup';
 import Empty from '../../components/empty';
 import ListItem from '../../components/listitem';
@@ -24,15 +25,20 @@ class Members extends React.Component {
   componentDidMount() {
     //显示header并设置标题
     actions.showHeader(locale.permission.members);
-    store.emitter.on("refresh", this.doRequest, this);
-
     this.doRequest();
   }
 
   componentWillUnmount() {
     //隐藏header
     actions.hideHeader();
-    store.emitter.off("refresh", this.doRequest);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let {refreshFlag} = this.state;
+    if (prevState.refreshFlag !== refreshFlag )
+    {
+      this.doRequest();
+    }
   }
 
   doRequest(){
@@ -43,11 +49,10 @@ class Members extends React.Component {
       });
     }, (err) => {
       Toast.error(`authorityUserList error: ${err}`);
-    }).finally(() => {
-      actions.hideP2R();
     });
 
   }
+
   doRemove(userId, index) {
     authorityRemove(userId).then((res) => {
       this.state.data[index].removed = true;
@@ -85,7 +90,7 @@ class Members extends React.Component {
                           {locale.removed}
                         </span>
                         :
-                        getManager().userId != item.userId &&
+                        getManager().userId !== item.userId &&
                         <ButtonGroup half={true}>
                           <Button type="minor"
                                   className="no-bg"
@@ -108,5 +113,7 @@ class Members extends React.Component {
     );
   }
 }
+
+reactMixin.onClass(Members, Reflux.connect(store));
 
 module.exports = Members;

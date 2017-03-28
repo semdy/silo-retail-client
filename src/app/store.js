@@ -31,7 +31,17 @@ module.exports = Reflux.createStore({
     //是否禁用下拉刷新
     isP2rEnabled: true,
     //是否隐藏加载更多
-    isHideLoadMore: true
+    isHideLoadMore: true,
+    //门店数据时间间隔
+    offset: 0,
+    //选中的门店object
+    store: {},
+    //下拉刷新标记
+    refreshFlag: false,
+    //数据筛选类型
+    filterType: 'hour',
+    //销售数据timelines
+    timelines: []
   },
 
   //隐藏侧边栏导航
@@ -146,8 +156,50 @@ module.exports = Reflux.createStore({
     this.updateComponent();
   },
 
+  //下拉刷新是否禁用
   onSetP2rEnabled(bool){
     this.state.isP2rEnabled = bool;
+    this.updateComponent();
+  },
+
+  //查询上一时间段数据
+  onQueryPrev() {
+    this.state.offset++;
+    this.updateComponent();
+  },
+
+  //查询下一时间段数据
+  onQueryNext() {
+    if (this.state.offset === 0) {
+      return;
+    }
+    this.state.offset = Math.max(0, --this.state.offset);
+    this.updateComponent()
+  },
+
+  //保存选中的店铺
+  onSetStore(store){
+    if( !store ) return;
+    this.state.store = store;
+    this.updateComponent();
+  },
+
+  //调用下拉刷新
+  onDoRefresh(){
+    this.state.shownP2r = true;
+    this.state.refreshFlag = !this.state.refreshFlag;
+    this.updateComponent();
+  },
+
+  //设置筛选类型
+  onSetFilterType(type){
+    this.state.filterType = type;
+    this.updateComponent();
+  },
+
+  //设置timelines
+  onSetTimelines(timelines){
+    this.state.timelines = timelines;
     this.updateComponent();
   },
 

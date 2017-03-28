@@ -1,5 +1,6 @@
 import {isRPC, env} from '../config'
 import {signIn, session} from '../auth';
+import actions from '../../app/actions';
 import locale from '../../locale';
 import config from '../../config';
 let {Toast} = SaltUI;
@@ -15,7 +16,7 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
     requestCount++;
     requestError = false;
 
-    if (requestCount == 1) {
+    if (requestCount === 1) {
       Toast.loading(locale.loading);
     }
 
@@ -36,7 +37,7 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
       success: (recv) => {
         let code = recv.protocError;
         if (code === 0) {
-          if (recv.result == 0 || recv.result === undefined) {
+          if (recv.result === 0 || recv.result === undefined) {
             resolve(recv);
           } else {
             requestError = true;
@@ -63,9 +64,10 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
         Toast.error(rejectMsg);
       },
       complete: () => {
-        if (--requestCount == 0) {
+        if (--requestCount === 0) {
           if (!requestError) {
             Toast.hide();
+            actions.hideP2R();
           }
         }
       }

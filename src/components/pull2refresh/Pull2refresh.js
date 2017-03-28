@@ -61,8 +61,13 @@ class Pull2refresh extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     let status = this.state.status;
-    if (status != prevState.status && status == 'release') {
-      this.props.onRelease.call(this);
+    if (status !== prevState.status ) {
+      if(status === 'release') {
+        this.props.onRelease.call(this);
+      }
+      else if( status === 'normal' ){
+        this.props.onHide.call(this);
+      }
     }
   }
 
@@ -135,6 +140,7 @@ class Pull2refresh extends React.Component {
   }
 
   show() {
+    this.indict.style.display = '';
     setTransform(this.el, this.indict.offsetHeight);
     this.setState({
       status: 'release'
@@ -156,22 +162,22 @@ class Pull2refresh extends React.Component {
       <div ref="el" className="p2r-container">
         <div ref="indict" className="t-FBH t-FBJC t-FBAC p2r-indicator"
              style={{
-               display: status == 'normal' ? 'none' : ''
+               display: status === 'normal' ? 'none' : ''
              }}
         >
           <div className="p2r-icon">
             <Icon name="arrow-down"
                   className={classnames("p2r-arrow", {reverse: status === 'reverse'})}
-                  width={25}
-                  height={25}
+                  width={23}
+                  height={23}
                   style={{
                     display: status !== 'release' ? "" : 'none'
                   }}
             />
             <Icon name="p2r-loading"
                   className="spin p2r-spinner"
-                  width={18}
-                  height={18}
+                  width={16}
+                  height={16}
                   style={{
                     display: status === 'release' ? "" : 'none'
                   }}
@@ -194,6 +200,7 @@ Pull2refresh.propTypes = {
   scroller: PropTypes.object.isRequired,
   pullDistance: PropTypes.number,
   onRelease: PropTypes.func,
+  onHide: PropTypes.func,
   enabled: PropTypes.bool,
   show: PropTypes.bool
 };
@@ -205,6 +212,7 @@ Pull2refresh.defaultProps = {
   scroller: window,
   pullDistance: 60,
   onRelease: Context.noop,
+  onHide: Context.noop,
   enabled: true,
   show: false
 };

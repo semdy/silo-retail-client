@@ -1,4 +1,3 @@
-
 let {Dialog} = SaltUI;
 import config from '../config';
 import locale from '../locale';
@@ -6,7 +5,7 @@ import locale from '../locale';
 export const queryUrlParams = () => {
   let params = {};
   let querystr = window.location.search.substring(1);
-  if (!querystr || querystr.length == 0) {
+  if (!querystr || querystr.length === 0) {
     return params
   }
   let pairs = querystr.split('&');
@@ -32,28 +31,28 @@ export const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
 
 export const ask = (prompMsg) => {
   /*return new Promise((resolve, reject) => {
-    if (isDD) {
-      dd.device.notification.confirm({
-        message: prompMsg,
-        title: locale.prompt,
-        buttonLabels: [locale.ok, locale.cancel],
-        onSuccess: function (result) {
-          if (result.buttonIndex == 0) {
-            resolve();
-          } else {
-            reject();
-          }
-        },
-        onFail: function (err) {
-          reject(err);
-        }
-      });
-    } else {
-      if (confirm(prompMsg)) {
-        resolve();
-      }
-    }
-  });*/
+   if (isDD) {
+   dd.device.notification.confirm({
+   message: prompMsg,
+   title: locale.prompt,
+   buttonLabels: [locale.ok, locale.cancel],
+   onSuccess: function (result) {
+   if (result.buttonIndex == 0) {
+   resolve();
+   } else {
+   reject();
+   }
+   },
+   onFail: function (err) {
+   reject(err);
+   }
+   });
+   } else {
+   if (confirm(prompMsg)) {
+   resolve();
+   }
+   }
+   });*/
 
   return new Promise((resolve, reject) => {
     Dialog.confirm({
@@ -107,18 +106,28 @@ export const genTableRows = (series) => {
 //生成统计的标准的数据格式
 export const genStatsData = (statsData) => {
   let res = [];
-  let subAmount;
+  let uid = 0;
+  let FIELD_MONEY = "trade.money";
+  let FIELD_MONEY_OL = "trade.money.ol";
+
+  let itemMoney = statsData.filter((item) => {
+     if( item.field === FIELD_MONEY || item.field === FIELD_MONEY_OL ){
+       return true;
+     } else {
+       return false;
+     }
+  });
+
   (statsData.length > 0 ? statsData : [{field: 'pay'}, {field: 'promo'}])
     .forEach((stats) => {
-      if (stats.field == 'money') {
-        subAmount = stats.value;
+      if (stats.field === FIELD_MONEY || stats.field === FIELD_MONEY_OL) {
         return false
       }
       res.push({
         name: locale.stats.title[stats.field],
         value: stats.value || 0,
         suffix: locale.stats.unit[stats.field],
-        subAmount: subAmount
+        subAmount: (itemMoney[uid++]||{}).value
       });
     });
 

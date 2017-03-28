@@ -50,7 +50,7 @@ ScrollDetector.prototype = {
         height: window.innerHeight || DOC.clientHeight,
         top: 0,
         scrollTop: window.pageYOffset || BOD.scrollTop || DOC.scrollTop,
-        scrollerHeight: this.scroller.tagName == 'BODY' ? (document.documentElement.scrollHeight || document.body.scrollHeight) : this.scroller.offsetHeight
+        scrollerHeight: this.scroller.offsetHeight
       } : {
         width: this.win.offsetWidth,
         height: this.win.offsetHeight,
@@ -65,7 +65,7 @@ ScrollDetector.prototype = {
 
     this._client = this._getClientSize();
 
-    typeof opts.onScroll == 'function' && opts.onScroll.call(this, this._client);
+    typeof opts.onScroll === 'function' && opts.onScroll.call(this, this._client);
 
     if (this._isReachBottom()) {
       let diff = Date.now() - TIME;

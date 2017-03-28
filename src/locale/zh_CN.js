@@ -28,13 +28,15 @@ export default {
     title: {
       pay: '支付总额',
       promo: '优惠总额',
-      order: '门店订单量',
+      'trade.count': '门店订单量',
+      'trade.count.ol': '线上订单量',
       money: ''
     },
     unit: {
       pay: '元',
       promo: '元',
-      order: '单'
+      'trade.count': '单',
+      'trade.count.ol': '单'
     }
   },
   p2rText: {
@@ -42,6 +44,7 @@ export default {
     reverse: '松开刷新',
     release: '刷新中...'
   },
+  dayNames: ["日", "一", "二", "三", "四", "五", "六"],
   loginTimeout: '登录超时！',
   deliveries: "配送类型",
   payments: '支付方式',
@@ -85,5 +88,19 @@ export default {
   emptyTableData: '暂无数据',
   emptyData: '暂无数据',
   distribute: '连带率分布',
-  loadMore: '加载更多...'
+  loadMore: '加载更多...',
+  year: '年',
+  month: '月',
+  day: '日',
+  week: '星期',
+  weekly: '周',
+  hour: '时',
+  chooseStore: '选择对比门店',
+  searchStorePlaceholder: '请输入要查询的门店',
+  dataviewLegendNames: ["当前订单量   ", "当前营业额", "前一日订单量", "前一日营业额"],
+  totalOrder: '总订单量',
+  totalAmount: '总营业额',
+  orderNum: '订单量',
+  mountNum: '营业额',
+  orderSuffix: '单'
 }

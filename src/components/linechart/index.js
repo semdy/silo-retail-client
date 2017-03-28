@@ -1,1 +1,1 @@
-module.exports = require('./Charts');
+module.exports = require('./LineChart');

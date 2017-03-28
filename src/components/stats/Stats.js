@@ -18,7 +18,7 @@ class StatItem extends React.Component {
       );
     }
     return (
-      <div className="t-FB1 stats-item">
+      <div className="t-FB1 t-FBAC stats-item">
         <h4 className="stats-name">{name}</h4>
         <div className="stats-value">{value}{suffixStr}</div>
         {
@@ -44,7 +44,7 @@ class Stats extends React.Component {
     let {data} = this.props;
     return (
       <div className={classnames("stats-container", {double: data.length > 1})}>
-        <div className="t-FBH stats-bd">
+        <div className="t-FBH t-FBAC stats-bd">
           {
             data.map((item, index) => {
               return (

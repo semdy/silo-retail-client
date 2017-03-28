@@ -29,6 +29,8 @@ class Page extends React.Component {
   handleConfirm() {
     let stores = this.getData();
     setStoreModel(stores);
+    actions.setStore(stores[0]);
+    actions.hideStoreSelector();
     store.emitter.emit("setSelectedStore", stores);
   }
 
@@ -48,7 +50,7 @@ class Page extends React.Component {
       }
     } else {
       this.state.storeList.forEach((store, i) => {
-        if (itemIndex == i) {
+        if (itemIndex === i) {
           store.selected = true;
           curItem = store;
         } else {
