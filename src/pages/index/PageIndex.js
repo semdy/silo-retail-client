@@ -2,6 +2,7 @@ require('./PageIndex.styl');
 
 let {Button} = SaltUI;
 let {hashHistory} = ReactRouter;
+import actions from '../../app/actions';
 import Empty from '../../components/empty';
 import {getStoreList} from '../../services/store';
 import locale from '../../locale';
@@ -11,11 +12,13 @@ class Index extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false
+      show: true
     };
   }
 
   componentDidMount() {
+    //禁用下拉刷新
+    actions.setP2rEnabled(false);
     getStoreList().then(() => {
       hashHistory.replace('/report.survey');
     }, () => {
@@ -23,6 +26,11 @@ class Index extends React.Component {
         show: true
       });
     });
+  }
+
+  componentWillUnmount() {
+    //启用用下拉刷新
+    actions.setP2rEnabled(true);
   }
 
   render() {
