@@ -121,7 +121,7 @@ class BarChart extends React.Component {
 
   render() {
     let {width, height} = this.state;
-    let {chartName, helpText, showAxis} = this.props;
+    let {chartName, helpText, showAxis, xAxisName} = this.props;
     return (
       <div className="card">
         <div className="linechart-title">
@@ -139,6 +139,10 @@ class BarChart extends React.Component {
              }}
         >
         </div>
+        {
+          xAxisName &&
+          <div className="linechart-xAxisName">{xAxisName}</div>
+        }
       </div>
     );
   }

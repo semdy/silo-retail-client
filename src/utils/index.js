@@ -124,13 +124,19 @@ export const genStatsData = (statsData, fieldList) => {
     }
   });
 
+  let getItem = function (data, field) {
+    return data.find((item) => {
+      return item.field === field;
+    }) || {value: 0};
+  };
+
   fields.forEach((item, i) => {
       if (item.field === FIELD_MONEY || item.field === FIELD_MONEY_OL) {
         return false
       }
       res.push({
         name: locale.stats.title[item.field],
-        value: statsData[i] ? (statsData[i].value || 0) : 0,
+        value: getItem(statsData, item.field).value,
         suffix: locale.stats.unit[item.field],
         subAmount: (itemMoney[uid++]||{}).value
       });

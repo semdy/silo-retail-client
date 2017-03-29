@@ -41,6 +41,7 @@ class SurveyLineChart extends BaseLineChart {
       showAreaStyle: true
     };
   }
+
   /**
    * @override
    */

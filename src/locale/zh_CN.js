@@ -109,5 +109,5 @@ export default {
   orderSuffix: '单',
   num: '个',
   distributeHelpText: '连带率分布的解释...',
-  saleCount: '销售个数'
+  saleCount: '销售数量/单'
 }
