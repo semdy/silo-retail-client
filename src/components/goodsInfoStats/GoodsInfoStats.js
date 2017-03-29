@@ -6,7 +6,7 @@ class GoodsInfoStats extends BaseStatus {
 
   constructor(props) {
     super(props);
-    this.fieldList = ['pay', 'promo'];
+    this.fieldList = ['sku.sale.count', 'sku.refund.money'];
   }
 }
 

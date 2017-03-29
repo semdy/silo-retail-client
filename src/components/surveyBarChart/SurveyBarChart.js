@@ -40,12 +40,13 @@ class SurveyBarChart extends BaseBarChart {
       height: 150
     };
   }
+
   /**
    * @override
    */
   fetch() {
     let {store, offset} = this.state;
-    getStoreStats(store.storeId, offset + 7, offset, ['order']).then((res) => {
+    getStoreStats(store.storeId, offset + 7, offset + 1, ['order']).then((res) => {
       this.setState({
         loaded: true,
         data: makeChartData(res.data)

@@ -47,15 +47,18 @@ class Top10Tab extends Base {
       },
       {
         field: 'avgPrice',
-        name: `${locale.avgPrice}(${locale.yuan})`
+        name: `${locale.avgPrice}(${locale.yuan})`,
+        width: 80
       },
       {
         field: 'saleVolume',
-        name: locale.saleVolume
+        name: locale.saleVolume,
+        width: 60
       },
       {
         field: 'saleAmount',
-        name: `${locale.saleAmount}(${locale.yuan})`
+        name: `${locale.saleAmount}(${locale.yuan})`,
+        width: 100
       }
     ];
   }

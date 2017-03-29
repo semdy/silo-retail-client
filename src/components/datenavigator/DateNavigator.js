@@ -65,16 +65,16 @@ class DateNavigator extends React.Component {
     let {width, height, isFullScreen, offset, store, activeIndex, timelines, filterType} = this.state;
     let date = getDateBefore(offset);
     let dateIndicator = (
-      <div className="t-clear">
-        <div className="store-name t-FL"
+      <div className="t-FBH t-FBAC t-FBJ">
+        <div className="store-name"
              onClick={this.showStore}
-             style={{display: isFullScreen ? "none" : ""}}>
+             style={{display: isFullScreen ? "none" : undefined}}>
           <Icon name="store" className="store-icon" width={20} height={20}/>
           <span className="store-text">
             {store.name}
           </span>
         </div>
-        <div className="t-FR t-FBH t-FBAC t-FBJC store-indict">
+        <div className="t-FBH t-FBAC t-FBJC store-indict">
           <div className="date-arrow left t-FBH t-FBJC t-FBAC"
                onClick={actions.queryPrev}>
             <Icon name="angle-left-l" width={18} height={18}/>

@@ -9,14 +9,15 @@ class PieChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pieWidth: window.innerWidth,
-      pieHeight: ''
+      width: this.props.width,
+      height: this.props.height
     };
   }
 
   componentDidMount() {
     let timeout;
     let responsive = this.props.responsive;
+
     if (responsive) {
       this.setPieSize(() => {
         this.chartInstance = echarts.init(this.refs.chart);
@@ -28,25 +29,28 @@ class PieChart extends React.Component {
     this.resizeHandler = () => {
       if (timeout) clearTimeout(timeout);
       timeout = setTimeout(() => {
-        if (responsive) {
-          this.setPieSize(() => {
-            this.chartInstance.resize();
-          });
-        } else {
+        this.setPieSize(() => {
           this.chartInstance.resize();
-        }
+        });
       }, 50);
     };
 
-    dom.on(window, 'resize', this.resizeHandler);
+    dom.on(window, "resize", this.resizeHandler);
 
   }
 
   setPieSize(cb) {
-    this.setState({
-      pieWidth: window.innerWidth,
-      pieHeight: Math.max(280, window.innerHeight - dom.offset(this.refs.chart).top - 10)
-    }, cb);
+    let responsive = this.props.responsive;
+    if (responsive) {
+      this.setState({
+        width: window.innerWidth,
+        height: Math.max(280, window.innerHeight - dom.offset(this.refs.chart).top - 10)
+      }, cb);
+    } else {
+      this.setState({
+        width: this.refs.chart.parentNode.offsetWidth
+      }, cb);
+    }
   }
 
   componentWillUnmount() {
@@ -79,7 +83,7 @@ class PieChart extends React.Component {
           label: {
             emphasis: {
               formatter: function (params) {
-                var data = params.data;
+                let data = params.data;
                 return [data.name, data.value[0], data.params.money].join('\n');
               }
             }
@@ -91,14 +95,14 @@ class PieChart extends React.Component {
   }
 
   render() {
-    let {pieWidth, pieHeight} = this.state;
+    let {width, height} = this.state;
     return (
       <div className="card" style={{display: this.props.visible ? '' : 'none'}}>
         <div ref="chart"
              className="piechart"
              style={{
-               width: pieWidth + "px",
-               height: pieHeight + "px"
+               width: width + "px",
+               height: height + "px"
              }}
         >
         </div>
@@ -116,7 +120,8 @@ PieChart.defaultProps = {
   radius: ['45%', '65%'],
   center: ['50%', '62%'],
   visible: true,
-  showLegend: true
+  showLegend: true,
+  width: window.innerWidth
 };
 
 PieChart.propTypes = {
@@ -126,7 +131,9 @@ PieChart.propTypes = {
     PropTypes.string.isRequired
   ),
   visible: PropTypes.bool,
-  showLegend: PropTypes.bool
+  showLegend: PropTypes.bool,
+  width: PropTypes.number,
+  height: PropTypes.number
 };
 
 module.exports = PieChart;

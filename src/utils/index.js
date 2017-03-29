@@ -60,7 +60,7 @@ export const ask = (prompMsg) => {
       content: prompMsg,
       locale: config.lang,
       onConfirm() {
-        resolve(true);
+        resolve(prompMsg);
       },
       onCancel() {
         reject(false);
@@ -76,7 +76,7 @@ export const alert = (msg) => {
       content: msg,
       locale: config.lang,
       onConfirm() {
-        resolve();
+        resolve(msg);
       }
     });
   });
@@ -104,7 +104,7 @@ export const genTableRows = (series) => {
 };
 
 //生成统计的标准的数据格式
-export const genStatsData = (statsData) => {
+export const genStatsData = (statsData, fieldList) => {
   let res = [];
   let uid = 0;
   let FIELD_MONEY = "trade.money";
@@ -118,15 +118,20 @@ export const genStatsData = (statsData) => {
      }
   });
 
-  (statsData.length > 0 ? statsData : [{field: 'pay'}, {field: 'promo'}])
-    .forEach((stats) => {
-      if (stats.field === FIELD_MONEY || stats.field === FIELD_MONEY_OL) {
+  let fields = fieldList.map((field) => {
+    return {
+      field: field
+    }
+  });
+
+  fields.forEach((item, i) => {
+      if (item.field === FIELD_MONEY || item.field === FIELD_MONEY_OL) {
         return false
       }
       res.push({
-        name: locale.stats.title[stats.field],
-        value: stats.value || 0,
-        suffix: locale.stats.unit[stats.field],
+        name: locale.stats.title[item.field],
+        value: statsData[i] ? (statsData[i].value || 0) : 0,
+        suffix: locale.stats.unit[item.field],
         subAmount: (itemMoney[uid++]||{}).value
       });
     });

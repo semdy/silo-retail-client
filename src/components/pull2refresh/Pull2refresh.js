@@ -18,14 +18,14 @@ function setTransition(el, value) {
 }
 
 function getMoveRatio(diffY) {
-  return Math.max(0, 1 - diffY / window.innerHeight)*0.8;
+  return Math.max(0, 1 - diffY / window.innerHeight) * 0.8;
 }
 
 function getTransform(el) {
   let value = el.style.transform || el.style.webkitTransform || 0;
   if (value) {
     let regx = /translate3d\(\d+px\, (\d+)px\, \d+px\)/.exec(value);
-    if( regx ){
+    if (regx) {
       value = regx[1];
     } else {
       value = 0;
@@ -44,6 +44,7 @@ class Pull2refresh extends React.Component {
 
     this.startX = 0;
     this.startY = 0;
+    this._canRefresh = false;
     this._touchstart = this._touchstart.bind(this);
     this._touchmove = this._touchmove.bind(this);
     this._touchend = this._touchend.bind(this);
@@ -61,11 +62,11 @@ class Pull2refresh extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     let status = this.state.status;
-    if (status !== prevState.status ) {
-      if(status === 'release') {
+    if (status !== prevState.status) {
+      if (status === 'release') {
         this.props.onRelease.call(this);
       }
-      else if( status === 'normal' ){
+      else if (status === 'normal') {
         this.props.onHide.call(this);
       }
     }
@@ -74,10 +75,10 @@ class Pull2refresh extends React.Component {
   componentWillReceiveProps(nextProps) {
     let {show} = nextProps;
     let {status} = this.state;
-    if( show === true && status === 'normal' ){
+    if (show === true && status === 'normal') {
       this.show();
     }
-    else if( show === false && status !== 'normal' ){
+    else if (show === false && status !== 'normal') {
       this.hide();
     }
   }
@@ -94,9 +95,9 @@ class Pull2refresh extends React.Component {
     this.startPos = getTransform(this.el);
 
     /*this.setState({
-      status: 'normal'
-    });
-    this.indict.style.display = '';*/
+     status: 'normal'
+     });
+     this.indict.style.display = '';*/
 
     dom.on(document, "touchmove", this._touchmove);
     dom.on(document, "touchend", this._touchend);
@@ -114,8 +115,14 @@ class Pull2refresh extends React.Component {
       setTransition(this.el, 'none');
       setTransform(this.el, this.startPos + moveY);
       if (moveY > this.props.pullDistance) {
+        this._canRefresh = true;
         this.setState({
           status: 'reverse'
+        });
+      } else {
+        this._canRefresh = false;
+        this.setState({
+          status: 'normal'
         });
       }
     }
@@ -127,12 +134,16 @@ class Pull2refresh extends React.Component {
     let diffY = touch.pageY - this.startY;
     if (diffY > 0 && Math.abs(diffY) > Math.abs(diffX)) {
       setTransition(this.el, '');
-      setTransform(this.el, this.indict.offsetHeight);
-      transitionEnd(this.el, () => {
-        this.setState({
-          status: 'release'
+      if (this._canRefresh) {
+        setTransform(this.el, this.indict.offsetHeight);
+        transitionEnd(this.el, () => {
+          this.setState({
+            status: 'release'
+          });
         });
-      });
+      } else {
+        this.hide();
+      }
     }
 
     dom.off(document, "touchmove", this._touchmove);
@@ -148,11 +159,13 @@ class Pull2refresh extends React.Component {
   }
 
   hide() {
+    this._canRefresh = false;
     setTransform(this.el, 0);
     transitionEnd(this.el, () => {
       this.setState({
         status: 'normal'
       });
+      this.indict.style.display = 'none';
     });
   }
 
@@ -162,7 +175,7 @@ class Pull2refresh extends React.Component {
       <div ref="el" className="p2r-container">
         <div ref="indict" className="t-FBH t-FBJC t-FBAC p2r-indicator"
              style={{
-               display: status === 'normal' ? 'none' : ''
+               display: 'none'
              }}
         >
           <div className="p2r-icon">

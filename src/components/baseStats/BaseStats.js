@@ -23,7 +23,7 @@ class BaseStatus extends Base {
     getStoreStats(store.storeId, offset, offset, this.fieldList).then((res) => {
       this.setState({
         loaded: true,
-        data: genStatsData(res.data)
+        data: genStatsData(res.data, this.fieldList)
       });
     });
   }

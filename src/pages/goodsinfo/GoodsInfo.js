@@ -4,7 +4,7 @@ import GoodsInfoStats from '../../components/goodsInfoStats';
 import DateNavigator from '../../components/datenavigator';
 import Top10Tab from '../../components/top10Tab';
 import GoodsInfoPieChart from '../../components/goodsInfoPieChart';
-import GoodsBarChart from '../../components/goodsInfoBarChart';
+import GoodsInfoBarChart from '../../components/goodsInfoBarChart';
 
 class GoodsInfo extends React.Component {
 
@@ -19,7 +19,7 @@ class GoodsInfo extends React.Component {
         <DateNavigator/>
         <Top10Tab/>
         <GoodsInfoPieChart/>
-        <GoodsBarChart/>
+        <GoodsInfoBarChart/>
       </div>
     )
 

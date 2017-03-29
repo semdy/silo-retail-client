@@ -30,13 +30,17 @@ export default {
       promo: '优惠总额',
       'trade.count': '门店订单量',
       'trade.count.ol': '线上订单量',
+      'sku.sale.count': '销售数量',
+      'sku.refund.money': '被退回数量',
       money: ''
     },
     unit: {
       pay: '元',
       promo: '元',
       'trade.count': '单',
-      'trade.count.ol': '单'
+      'trade.count.ol': '单',
+      'sku.sale.count': '单',
+      'sku.refund.money': '单'
     }
   },
   p2rText: {
@@ -102,5 +106,8 @@ export default {
   totalAmount: '总营业额',
   orderNum: '订单量',
   mountNum: '营业额',
-  orderSuffix: '单'
+  orderSuffix: '单',
+  num: '个',
+  distributeHelpText: '连带率分布的解释...',
+  saleCount: '销售个数'
 }

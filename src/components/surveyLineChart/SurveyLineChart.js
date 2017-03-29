@@ -37,7 +37,8 @@ class SurveyLineChart extends BaseLineChart {
       //隐藏坐标轴
       showAxis: false,
       width: window.innerWidth/2,
-      height: 150
+      height: 150,
+      showAreaStyle: true
     };
   }
   /**
@@ -45,7 +46,7 @@ class SurveyLineChart extends BaseLineChart {
    */
   fetch() {
     let {store, offset} = this.state;
-    getStoreStats(store.storeId, offset + 7, offset, ['money']).then((res) => {
+    getStoreStats(store.storeId, offset + 7, offset + 1, ['trade.money']).then((res) => {
       this.setState({
         loaded: true,
         data: makeChartData(res.data)

@@ -3,6 +3,7 @@ require('./BarChart.styl');
 let {PropTypes} = React;
 import classnames from 'classnames';
 import dom from '../../utils/dom';
+import Helper from '../helper';
 
 class BarChart extends React.Component {
 
@@ -77,7 +78,9 @@ class BarChart extends React.Component {
       yAxis : [
         {
           type : 'value',
-          show: this.props.showAxis
+          show: this.props.showAxis,
+          max: this.props.yAxisMax,
+          name: this.props.yAxisName
         }
       ],
       series : []
@@ -87,6 +90,7 @@ class BarChart extends React.Component {
       chartOptions.xAxis.push(
         {
           type : 'category',
+          name: this.props.xAxisName,
           show: this.props.showAxis,
           data : item.data,
           axisTick: {
@@ -112,13 +116,18 @@ class BarChart extends React.Component {
 
   render() {
     let {width, height} = this.state;
+    let {chartName, helpText, showAxis} = this.props;
     return (
       <div className="card">
         <div className="barchart-title">
-          {this.props.chartName}
+          <span>{chartName}</span>
+          {
+            helpText &&
+            <Helper text={helpText} />
+          }
         </div>
         <div ref="chart"
-             className={classnames("barchart", {"chart-plain": !this.props.showAxis})}
+             className={classnames("barchart", {"chart-plain": !showAxis})}
              style={{
                width: width + "px",
                height: height + "px"
@@ -136,7 +145,10 @@ BarChart.defaultProps = {
   radius: ['45%', '65%'],
   visible: true,
   showAxis: true,
-  width: window.innerWidth
+  width: window.innerWidth,
+  yAxisName: '',
+  xAxisName: '',
+  helpText: ''
 };
 
 BarChart.propTypes = {
@@ -148,7 +160,11 @@ BarChart.propTypes = {
   visible: PropTypes.bool,
   showAxis: PropTypes.bool,
   width: PropTypes.number,
-  height: PropTypes.number
+  height: PropTypes.number,
+  yAxisMax: PropTypes.number,
+  yAxisName: PropTypes.string,
+  xAxisName: PropTypes.string,
+  helpText: PropTypes.string
 };
 
 module.exports = BarChart;

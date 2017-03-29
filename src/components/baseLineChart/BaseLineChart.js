@@ -6,6 +6,17 @@ import LineChart from '../../components/linechart';
 import Base from '../../components/base';
 import {getStoreChartReport} from '../../services/store';
 
+function addSuffix(res, name) {
+  if( !Array.isArray(res.xAxis) ) return '';
+  res.xAxis.forEach((item) => {
+    item.data = item.data.map((xAxis) => {
+      return xAxis + name;
+    });
+  });
+
+  return res;
+}
+
 class BaseLineChart extends Base {
 
   constructor(props) {
@@ -22,10 +33,11 @@ class BaseLineChart extends Base {
 
   fetch() {
     let {store, offset} = this.state;
+    let {suffix} = this.chartProps;
     getStoreChartReport(store.storeId, offset, this.queryKey).then((res) => {
       this.setState({
         loaded: true,
-        data: res
+        data: suffix ? addSuffix(res, suffix) : res
       });
       this.refs.charts.refresh();
     });

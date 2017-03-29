@@ -77,7 +77,9 @@ class BarChart extends React.Component {
       yAxis: [
         {
           type: 'value',
-          show: this.props.showAxis
+          show: this.props.showAxis,
+          max: this.props.yAxisMax,
+          name: this.props.yAxisName
         }
       ],
       series: []
@@ -87,6 +89,7 @@ class BarChart extends React.Component {
       chartOptions.xAxis.push(
         {
           type: 'category',
+          name: this.props.xAxisName,
           show: this.props.showAxis,
           data: item.data,
           axisTick: {
@@ -101,6 +104,13 @@ class BarChart extends React.Component {
         {
           name: this.props.chartName,
           type: 'line',
+          areaStyle: this.props.showAreaStyle && {normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0, color: 'rgba(243,151,38,.8)' // 0% 处的颜色
+            }, {
+              offset: 1, color: 'rgba(243,151,38,.02)' // 100% 处的颜色
+            }], false)
+          }},
           data: item.data
         }
       );
@@ -111,13 +121,18 @@ class BarChart extends React.Component {
 
   render() {
     let {width, height} = this.state;
+    let {chartName, helpText, showAxis} = this.props;
     return (
       <div className="card">
         <div className="linechart-title">
-          {this.props.chartName}
+          <span>{chartName}</span>
+          {
+            helpText &&
+            <Helper text={helpText} />
+          }
         </div>
         <div ref="chart"
-             className={classnames("linechart", {"chart-plain": !this.props.showAxis})}
+             className={classnames("linechart", {"chart-plain": !showAxis})}
              style={{
                width: width + "px",
                height: height + "px"
@@ -135,7 +150,10 @@ BarChart.defaultProps = {
   radius: ['45%', '65%'],
   visible: true,
   showAxis: true,
-  width: window.innerWidth
+  width: window.innerWidth,
+  yAxisName: '',
+  xAxisName: '',
+  helpText: ''
 };
 
 BarChart.propTypes = {
@@ -147,7 +165,12 @@ BarChart.propTypes = {
   visible: PropTypes.bool,
   showAxis: PropTypes.bool,
   width: PropTypes.number,
-  height: PropTypes.number
+  height: PropTypes.number,
+  yAxisMax: PropTypes.number,
+  showAreaStyle: PropTypes.bool,
+  yAxisName: PropTypes.string,
+  xAxisName: PropTypes.string,
+  helpText: PropTypes.string
 };
 
 module.exports = BarChart;
