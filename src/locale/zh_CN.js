@@ -31,7 +31,8 @@ export default {
       'trade.count': '门店订单量',
       'trade.count.ol': '线上订单量',
       'sku.sale.count': '销售数量',
-      'sku.refund.money': '被退回数量',
+      'sku.refund.count': '被退回数量',
+      'trade.money': '门店营业额',
       money: ''
     },
     unit: {
@@ -39,8 +40,10 @@ export default {
       promo: '元',
       'trade.count': '单',
       'trade.count.ol': '单',
-      'sku.sale.count': '单',
-      'sku.refund.money': '单'
+      'sku.sale.count': '个',
+      'sku.refund.money': '单',
+      'sku.refund.count': '个',
+      'trade.money': '元'
     }
   },
   p2rText: {

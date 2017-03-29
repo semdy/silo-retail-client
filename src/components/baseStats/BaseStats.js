@@ -5,7 +5,7 @@ import Stats from '../../components/stats';
 import reactMixin from 'react-mixin';
 import store from  '../../app/store';
 import {getStoreStats} from '../../services/store';
-import {genStatsData} from '../../utils';
+import {genStatsDataByMoney, genStatsData} from '../../utils';
 
 class BaseStatus extends Base {
 
@@ -16,6 +16,7 @@ class BaseStatus extends Base {
       data: []
     };
     this.fieldList = [];
+    this.groupByMoney = false;
   }
 
   fetch() {
@@ -23,7 +24,7 @@ class BaseStatus extends Base {
     getStoreStats(store.storeId, offset, offset, this.fieldList).then((res) => {
       this.setState({
         loaded: true,
-        data: genStatsData(res.data, this.fieldList)
+        data: this.groupByMoney ? genStatsDataByMoney(res.data, this.fieldList) : genStatsData(res.data, this.fieldList)
       });
     });
   }

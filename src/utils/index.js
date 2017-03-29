@@ -144,3 +144,28 @@ export const genStatsData = (statsData, fieldList) => {
 
   return res;
 };
+
+export const genStatsDataByMoney = (statsData, fieldList) => {
+  let res = [];
+  let fields = fieldList.map((field) => {
+    return {
+      field: field
+    }
+  });
+
+  let getItem = function (data, field) {
+    return data.find((item) => {
+        return item.field === field;
+      }) || {value: 0};
+  };
+
+  fields.forEach((item, i) => {
+    res.push({
+      name: locale.stats.title[item.field],
+      value: getItem(statsData, item.field).value,
+      suffix: locale.stats.unit[item.field]
+    });
+  });
+
+  return res;
+};
