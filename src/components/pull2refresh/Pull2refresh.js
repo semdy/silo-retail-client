@@ -12,6 +12,11 @@ function setTransform(el, value) {
   el.style.transform = 'translate3d(0px, ' + value + 'px, 0px)';
 }
 
+function rmTransform(el) {
+  el.style.webkitTransform = '';
+  el.style.transform = '';
+}
+
 function setTransition(el, value) {
   el.style.webkitTransition = value;
   el.style.transition = value;
@@ -165,6 +170,7 @@ class Pull2refresh extends React.Component {
       this.setState({
         status: 'normal'
       });
+      rmTransform(this.el);
       this.indict.style.display = 'none';
     });
   }
