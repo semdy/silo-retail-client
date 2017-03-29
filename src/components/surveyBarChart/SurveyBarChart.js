@@ -46,7 +46,7 @@ class SurveyBarChart extends BaseBarChart {
    */
   fetch() {
     let {store, offset} = this.state;
-    getStoreStats(store.storeId, offset + 7, offset + 1, ['trade.count']).then((res) => {
+    getStoreStats(store.storeId, offset + 15, offset + 1, ['trade.count']).then((res) => {
       this.setState({
         loaded: true,
         data: makeChartData(res.data)

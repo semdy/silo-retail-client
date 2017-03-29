@@ -47,7 +47,7 @@ class SurveyLineChart extends BaseLineChart {
    */
   fetch() {
     let {store, offset} = this.state;
-    getStoreStats(store.storeId, offset + 7, offset + 1, ['trade.money']).then((res) => {
+    getStoreStats(store.storeId, offset + 15, offset + 1, ['trade.money']).then((res) => {
       this.setState({
         loaded: true,
         data: makeChartData(res.data)
