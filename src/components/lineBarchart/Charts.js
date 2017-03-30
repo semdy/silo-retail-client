@@ -43,22 +43,21 @@ class Charts extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
     let timeout;
     this.chartInstance = echarts.init(this.refs.chart);
     this.resizeHandler = () => {
       if (timeout) clearTimeout(timeout);
       timeout = setTimeout(() => {
-        self.setState({
+        this.setState({
           width: window.innerWidth + "px",
           height: window.innerHeight + "px"
         });
-        self.chartInstance.resize();
+        this.chartInstance.resize();
       }, 100);
     };
 
     this.refresh();
-    dom.on("resize", this.resizeHandler);
+    dom.on(window, "resize", this.resizeHandler);
   }
 
   refresh() {
@@ -167,24 +166,30 @@ class Charts extends React.Component {
     this.chartInstance.dispose();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
+    let {isFullScreen} = this.state;
     //控制只在全屏和非全屏切换时去触发resize
-    if (this._lastScreenState !== this.state.isFullScreen) {
+    if (this._lastScreenState !== isFullScreen) {
       setTimeout(() => {
         this.chartInstance.resize();
         this.chartInstance.setOption({
           legend: {
-            padding: this._lastLegendPadding = (this.state.isFullScreen ? [10, 5, 5, 5] : 0)
+            padding: this._lastLegendPadding = (isFullScreen ? [10, 5, 5, 5] : 0)
           }
         });
       }, 20);
+
+      if (isFullScreen) {
+        dom.addClass(this.docBody, "page-fullscreen");
+        actions.setP2rEnabled(false);
+      } else {
+        dom.removeClass(this.docBody, "page-fullscreen");
+        actions.setP2rEnabled(true);
+      }
+
     }
-    this._lastScreenState = this.state.isFullScreen;
-    if (this.state.isFullScreen) {
-      dom.addClass(this.docBody, "page-fullscreen");
-    } else {
-      dom.removeClass(this.docBody, "page-fullscreen");
-    }
+
+    this._lastScreenState = isFullScreen;
   }
 
   changeViewMode() {

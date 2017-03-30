@@ -168,7 +168,7 @@ class Charts extends React.Component {
 
   componentDidUpdate() {
     //控制只在全屏和非全屏切换时去触发resize
-    if (this._lastScreenState != this.state.isFullScreen) {
+    if (this._lastScreenState !== this.state.isFullScreen) {
       setTimeout(() => {
         this.chartInstance.resize();
         this.chartInstance.setOption({
@@ -177,13 +177,16 @@ class Charts extends React.Component {
           }
         });
       }, 20);
+
+      if (this.state.isFullScreen) {
+        dom.addClass(this.docBody, "page-fullscreen");
+      } else {
+        dom.removeClass(this.docBody, "page-fullscreen");
+      }
+
     }
+
     this._lastScreenState = this.state.isFullScreen;
-    if (this.state.isFullScreen) {
-      dom.addClass(this.docBody, "page-fullscreen");
-    } else {
-      dom.removeClass(this.docBody, "page-fullscreen");
-    }
   }
 
   toggleDiff(disabled) {
