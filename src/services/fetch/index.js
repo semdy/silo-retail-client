@@ -41,7 +41,7 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
             resolve(recv);
           } else {
             requestError = true;
-            rejectMsg = `result code ${recv.result}`;
+            rejectMsg = `protoc:${url.split(".")[0]}, code:${recv.result}`;
             reject(rejectMsg);
             Toast.error(rejectMsg);
           }
@@ -67,8 +67,8 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
         if (--requestCount === 0) {
           if (!requestError) {
             Toast.hide();
-            actions.hideP2R();
           }
+          actions.hideP2R();
         }
       }
     });

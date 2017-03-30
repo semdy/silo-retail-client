@@ -21,6 +21,7 @@ module.exports = Reflux.createActions([
   'hideLoadMore',
   'queryPrev',
   'queryNext',
+  'setQueryOffset',
   'setStore',
   'doRefresh',
   'setFilterType',

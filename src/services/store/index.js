@@ -107,6 +107,8 @@ export const getStoreList = () => {
       if( storeErrMsg ) {
         return reject(storeErrMsg);
       }
+      //默认把第一家店铺选中
+      storeList[0].selected = true;
       actions.setStore(storeList[0]);
       resolve(storeList);
     });

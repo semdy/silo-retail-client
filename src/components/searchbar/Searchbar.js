@@ -3,6 +3,8 @@ require('./Searchbar.styl');
 let {Icon, Context} = SaltUI;
 let {PropTypes} = React;
 
+import Input from '../input';
+
 class Searchbar extends React.Component {
 
   constructor(props) {
@@ -15,16 +17,24 @@ class Searchbar extends React.Component {
     this.props.onSearch(this.refs.input.value);
   }
 
+  handleClear(){
+    this.props.onSearch();
+  }
+
   render() {
     let {placeholder} = this.props;
     return (
       <div className="searchbar">
         <form onSubmit={this.handleSearch.bind(this)}>
           <div className="searchbar-filed">
-            <input type="text" ref="input" className="searchbar-input" placeholder={placeholder}/>
-            <div className="searchbar-button" onClick={this.handleSearch.bind(this)}>
-              <Icon name="search" width={24} height={24}>
-              </Icon>
+            <Input ref="input" placeholder={placeholder}
+                   className="searchbar-input"
+                   onClear={this.handleClear.bind(this)}
+            />
+            <div className="searchbar-button"
+                 onClick={this.handleSearch.bind(this)}
+            >
+              <Icon name="search" width={24} height={24}/>
             </div>
           </div>
         </form>

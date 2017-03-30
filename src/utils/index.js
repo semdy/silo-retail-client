@@ -103,69 +103,105 @@ export const genTableRows = (series) => {
   return res;
 };
 
+const getItem = function (data, field) {
+  let item = data.find((item) => {
+    return item.field === field;
+  });
+  return item || {};
+};
+
 //生成统计的标准的数据格式
 export const genStatsData = (statsData, fieldList) => {
   let res = [];
-  let uid = 0;
   let FIELD_MONEY = "trade.money";
   let FIELD_MONEY_OL = "trade.money.ol";
 
-  let itemMoney = statsData.filter((item) => {
-     if( item.field === FIELD_MONEY || item.field === FIELD_MONEY_OL ){
-       return true;
-     } else {
-       return false;
-     }
-  });
-
-  let fields = fieldList.map((field) => {
-    return {
-      field: field
-    }
-  });
-
-  let getItem = function (data, field) {
-    return data.find((item) => {
-      return item.field === field;
-    }) || {value: 0};
+  let valueMap = {
+    'trade.count': FIELD_MONEY,
+    'trade.count.ol': FIELD_MONEY_OL
   };
 
-  fields.forEach((item, i) => {
-      if (item.field === FIELD_MONEY || item.field === FIELD_MONEY_OL) {
-        return false
-      }
+  fieldList.forEach((field) => {
+    if (field !== FIELD_MONEY && field !== FIELD_MONEY_OL) {
       res.push({
-        name: locale.stats.title[item.field],
-        value: getItem(statsData, item.field).value,
-        suffix: locale.stats.unit[item.field],
-        subAmount: (itemMoney[uid++]||{}).value
+        name: locale.stats.title[field],
+        value: getItem(statsData, field).value || 0,
+        suffix: locale.stats.unit[field],
+        subAmount: getItem(statsData, valueMap[field]).value
       });
-    });
+    }
+  });
 
   return res;
 };
 
 export const genStatsDataByMoney = (statsData, fieldList) => {
   let res = [];
-  let fields = fieldList.map((field) => {
-    return {
-      field: field
-    }
-  });
 
-  let getItem = function (data, field) {
-    return data.find((item) => {
-        return item.field === field;
-      }) || {value: 0};
-  };
-
-  fields.forEach((item, i) => {
+  fieldList.forEach((field) => {
     res.push({
-      name: locale.stats.title[item.field],
-      value: getItem(statsData, item.field).value,
-      suffix: locale.stats.unit[item.field]
+      name: locale.stats.title[field],
+      value: getItem(statsData, field).value || 0,
+      suffix: locale.stats.unit[field]
     });
   });
 
   return res;
+};
+
+function isWindow(obj) {
+  return typeof obj === 'object' && obj !== null && !!obj.setInterval;
+}
+
+function isWindowOrDoc(target){
+  return isWindow(target) || (target.nodeType && target.nodeType === 9);
+}
+
+/**
+ *scrollTop|scrollLeft动画
+ * @param {DOMObject} 滚动的dom对象
+ * @param {string} scrollLeft|scrollTop
+ * @param {number} 滚动值
+ * @param {number} 滚动速度
+ * @param {Function} 滚动完成后的回调
+ */
+export const scrollTo = (elem, scrollAttr = 'scrollTop', value = 0, duration = 600, callback) => {
+  let initScroll,
+    setScroll,
+    percent,
+    reqAniFrame,
+    startTime = Date.now();
+
+  if( isWindowOrDoc(elem) ){
+    let db = document.body,
+      de = document.documentElement;
+    initScroll = db[scrollAttr] || de[scrollAttr];
+    setScroll = function(value){
+      db[scrollAttr] = de[scrollAttr] = value;
+    };
+  } else {
+    initScroll = elem[scrollAttr];
+    setScroll = function(value){
+      elem[scrollAttr] = value;
+    };
+  }
+
+  let diffScroll = value - initScroll;
+
+  if( diffScroll === 0 ) return;
+
+  let executeScroll = function(){
+    percent = (Date.now() - startTime)/duration;
+    percent = percent >=1 ? 1 : percent;
+
+    setScroll(initScroll + diffScroll*percent);
+    reqAniFrame = requestAnimationFrame(executeScroll);
+
+    if( percent === 1 ){
+      cancelAnimationFrame(reqAniFrame);
+      typeof callback === 'function' && callback.call(elem);
+    }
+  };
+
+  executeScroll();
 };

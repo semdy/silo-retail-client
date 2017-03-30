@@ -5,6 +5,14 @@ export default {
   loading: '加载中, 请稍候...',
   serverError: '服务器异常或没有数据',
   disconnect: '与服务器连接失败',
+  singnFailed: '签名失败',
+  getUserInfoError: "用户信息获取失败",
+  ddLoginError: '钉钉登录出错',
+  ddInvokeError: '钉钉接口调用出错了',
+  ddError: '钉钉客户端出错了',
+  userPassError: '用户名或密码错误',
+  loginError: '登录出错',
+  noPermission: "没有权限访问",
   scrollNavItems: {
     survey: "概况",
     dataview: "销售数据",
@@ -112,5 +120,6 @@ export default {
   orderSuffix: '单',
   num: '个',
   distributeHelpText: '连带率分布的解释...',
-  saleCount: '销售数量/单'
+  saleCount: '销售数量/单',
+  appLoading: '应用启动中...'
 }

@@ -7,7 +7,7 @@ let {Toast} = SaltUI;
   Toast[type] = (msg, options) => {
     return Toast.show({
       type: type,
-      content: typeof msg == 'object' ? JSON.stringify(msg) : String(msg),
+      content: typeof msg === 'object' ? JSON.stringify(msg) : String(msg),
       autoHide: type !== 'loading',
       ...options
     });
@@ -16,6 +16,7 @@ let {Toast} = SaltUI;
 
 import {env, urlParams} from '../config';
 import {isDD} from '../../utils';
+import locale from '../../locale';
 let error = Toast.error;
 
 const jsApiList = ['runtime.info', 'biz.contact.choose',
@@ -29,7 +30,7 @@ let isReady = false;
 const session = {
 
   set(info) {
-    if (info == null) {
+    if (info === null) {
       return;
     }
     localStorage.setItem('session', JSON.stringify(info));
@@ -53,10 +54,9 @@ const session = {
 let requestCount = 0;
 
 const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
-  requestCount++;
 
-  if (requestCount == 1) {
-    Toast.loading('应用启动中...');
+  if (++requestCount === 1) {
+    //Toast.loading(locale.appLoading);
   }
 
   return new Promise((resolve, reject) => {
@@ -75,10 +75,10 @@ const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
       },
       error: (xhr, status, err) => {
         reject(xhr, status, err);
-        error(`与服务器失去连接, code: ${status}`);
+        error(`${locale.disconnect}, code: ${status}`);
       },
       complete: () => {
-        if (--requestCount == 0) {
+        if (--requestCount === 0) {
           //Toast.hide();
         }
       }
@@ -94,8 +94,8 @@ function httpRequestConfig() {
       resolve(data);
     }, (err) => {
       reject(err);
-      if (typeof err == 'number') {
-        error(`签名失败, code: ${err}`);
+      if (typeof err === 'number') {
+        error(`${locale.singnFailed}, code: ${err}`);
       }
     });
   });
@@ -109,12 +109,12 @@ function httpRequestSignIn(code, corpId) {
         session.set(json.session);
         resolve(json.session);
       } else {
-        error("用户信息获取失败");
+        error(locale.getUserInfoError);
       }
     }, (err) => {
       reject(err);
-      if (typeof err == 'number') {
-        error(`钉钉登录出错, code: ${err}`);
+      if (typeof err === 'number') {
+        error(`${locale.ddLoginError}, code: ${err}`);
       }
     });
   });
@@ -129,12 +129,12 @@ function httpRequestSignInByUserPass(username, password) {
         resolve(json.session);
         triggerReady();
       } else {
-        error('用户名或密码错误');
+        error(locale.userPassError);
       }
     }, (err) => {
       reject(err);
-      if (typeof err == 'number') {
-        error(`登录出错, code: ${err}`);
+      if (typeof err === 'number') {
+        error(`${locale.loginError}, code: ${err}`);
       }
     });
   });
@@ -185,22 +185,22 @@ function signIn() {
       if (username && password) {
         httpRequestSignInByUserPass(username, password);
       } else {
-        alert("没有权限访问");
+        alert(locale.noPermission);
       }
     }
   }
 }
 
 function onDingTalkErr(err) {
-  error('钉钉客户端出错了！\n' + JSON.stringify(err));
+  error(`${locale.ddError}\n` + JSON.stringify(err));
 }
 
 function onDingTalkApiFail(err, api) {
-  error('钉钉接口调用出错了！\n' + api + '\n' + JSON.stringify(err));
+  error(locale.ddInvokeError + '\n' + api + '\n' + JSON.stringify(err));
 }
 
 function ready(fun) {
-  if (typeof fun == 'function') {
+  if (typeof fun === 'function') {
     if (!isReady) {
       readyQueue.push(fun);
     } else {

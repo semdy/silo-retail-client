@@ -45,6 +45,7 @@ import PageMembers from '../pages/permissionMembers';
 import Distribution from '../pages/distribution';
 import Payment from '../pages/payment';
 import GoodsInfo from '../pages/goodsinfo';
+import Test from '../pages/test';
 
 class App extends React.Component {
   constructor(props) {
@@ -60,6 +61,8 @@ class App extends React.Component {
       this.setState({
         isAppReady: true
       });
+      //移除app启动动画
+      document.body.removeChild(document.querySelector("#launcher"));
     });
   }
 
@@ -117,6 +120,7 @@ ReactDOM.render(
       <Route path="permission.record" component={PageRcord}/>
       <Route path="permission.approval" component={PageApproval}/>
       <Route path="permission.members" component={PageMembers}/>
+      <Route path="test" component={Test}/>
       {/* <Route path="*" component={NoMatch}/>*/}
     </Route>
   </Router>, document.getElementById('App')

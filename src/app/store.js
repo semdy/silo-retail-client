@@ -70,11 +70,6 @@ module.exports = Reflux.createStore({
     this.updateComponent();
   },
 
-  //顶部导航跳转
-  onScrollTo (index) {
-    //this.updateComponent();
-  },
-
   //显示门店弹窗
   onShowStoreSelector () {
     this.state.showStore = true;
@@ -165,6 +160,12 @@ module.exports = Reflux.createStore({
   //查询上一时间段数据
   onQueryPrev() {
     this.state.offset++;
+    this.updateComponent();
+  },
+
+  //查询具到某一时间段的数据
+  onSetQueryOffset(){
+    this.state.offset = offset;
     this.updateComponent();
   },
 
