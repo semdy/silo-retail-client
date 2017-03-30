@@ -18,7 +18,6 @@ class Input extends React.Component {
     this.setState({
       value: value
     });
-    this.value = value;
     this.props.onChange(value);
   }
 
@@ -26,8 +25,11 @@ class Input extends React.Component {
     this.setState({
       value: ''
     });
-    this.value = '';
     this.props.onClear();
+  }
+
+  componentDidUpdate() {
+    this.value = this.state.value;
   }
 
   render() {
