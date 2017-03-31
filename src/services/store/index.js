@@ -1,3 +1,4 @@
+let {Toast} = SaltUI;
 let {hashHistory} = ReactRouter;
 import {fetch} from '../fetch';
 import {signIn} from '../auth';
@@ -77,18 +78,14 @@ export const fetchStoreList = () => {
       actions.showScrollNav(false);
       hashHistory.replace('/report.index');
     } else {
-      if (storeList.length > 1) {
-        //默认把第一家店铺选中
-        storeList[0].selected = true;
-        //设置显示店铺名称
-        actions.setStore(storeList[0]);
-        //填充店铺列表数据
-        actions.setStoreList(storeList);
-        //显示店铺
-        actions.showStoreList();
-        //显示顶部导航
-        actions.showScrollNav(true);
-      }
+      //默认把第一家店铺选中
+      storeList[0].selected = true;
+      //填充店铺列表数据
+      actions.setStoreList(storeList);
+      //显示店铺
+      actions.showStoreList();
+      //显示顶部导航
+      actions.showScrollNav(true);
     }
     triggerReady();
   }, (err) => {
@@ -109,8 +106,11 @@ export const getStoreList = () => {
     }
     storeReady(() => {
       if( storeErrMsg ) {
+        Toast.error(storeErrMsg);
         return reject(storeErrMsg);
       }
+      //设置显示店铺名称
+      actions.setStore(storeList[0]);
       resolve(storeList);
     });
   });
@@ -119,13 +119,6 @@ export const getStoreList = () => {
 signIn.ready(() => {
   fetchStoreList();
 });
-
-/**
- * 获得店铺数据集
- * */
-export const getStoreModel = () => {
-  return storeList;
-};
 
 /**
  * 保存店铺选择状态

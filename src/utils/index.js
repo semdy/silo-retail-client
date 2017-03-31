@@ -121,16 +121,24 @@ export const genStatsData = (statsData, fieldList) => {
     'trade.count.ol': FIELD_MONEY_OL
   };
 
+  let subAmount;
+
   fieldList.forEach((field) => {
     if (field !== FIELD_MONEY && field !== FIELD_MONEY_OL) {
       res.push({
         name: locale.stats.title[field],
         value: getItem(statsData, field).value || 0,
         suffix: locale.stats.unit[field],
-        subAmount: getItem(statsData, valueMap[field]).value
+        subAmount: subAmount = getItem(statsData, valueMap[field]).value
       });
     }
   });
+
+  if( subAmount !== undefined ){
+    res.forEach((item) => {
+      item.subAmount = item.subAmount || 0;
+    });
+  }
 
   return res;
 };

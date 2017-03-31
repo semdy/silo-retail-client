@@ -12,8 +12,7 @@ class Empty extends React.Component {
   render() {
     return (
       <div className="empty-notice">
-        <Icon name="empty" width={200} height={200}>
-        </Icon>
+        <Icon name="empty" width={200} height={200}/>
         <div className="emp-notice-text">
           {this.props.children}
         </div>

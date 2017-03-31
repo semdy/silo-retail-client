@@ -21,8 +21,7 @@ window.FastClick && FastClick.attach(document.body);
 
 const {Router, Route, IndexRedirect, hashHistory} = ReactRouter;
 
-let {Toast} = SaltUI;
-
+import {signIn} from '../services/auth';
 import reactMixin from 'react-mixin';
 import store from  './store';
 import actions from './actions';
@@ -46,7 +45,7 @@ import PageMembers from '../pages/permissionMembers';
 import Distribution from '../pages/distribution';
 import Payment from '../pages/payment';
 import GoodsInfo from '../pages/goodsinfo';
-import Test from '../pages/test';
+import NoMatch from '../pages/nomatch';
 
 class App extends React.Component {
   constructor(props) {
@@ -57,14 +56,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    getStoreList().then(() => {
+    signIn.ready(() => {
       this.setState({
         isAppReady: true
+      }, () => {
+        getStoreList();
       });
       //移除app启动动画
       document.body.removeChild(document.querySelector("#launcher"));
-    }, (err) => {
-      Toast.error(err);
     });
   }
 
@@ -122,8 +121,7 @@ ReactDOM.render(
       <Route path="permission.record" component={PageRcord}/>
       <Route path="permission.approval" component={PageApproval}/>
       <Route path="permission.members" component={PageMembers}/>
-      <Route path="test" component={Test}/>
-      {/* <Route path="*" component={NoMatch}/>*/}
+      <Route path="*" component={NoMatch}/>
     </Route>
   </Router>, document.getElementById('App')
 );
