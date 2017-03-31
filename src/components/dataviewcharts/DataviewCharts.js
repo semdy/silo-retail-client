@@ -144,7 +144,7 @@ class DataviewCharts extends Base {
   }
 
   fetchGroupData(groupPrams) {
-
+''
     if (!Array.isArray(groupPrams))
       throw new Error("fetchGroupData arguments must be typeof Array!");
 

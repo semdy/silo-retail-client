@@ -153,7 +153,7 @@ function isWindow(obj) {
   return typeof obj === 'object' && obj !== null && !!obj.setInterval;
 }
 
-function isWindowOrDoc(target){
+function isWindowOrDoc(target) {
   return isWindow(target) || (target.nodeType && target.nodeType === 9);
 }
 
@@ -172,32 +172,32 @@ export const scrollTo = (elem, scrollAttr = 'scrollTop', value = 0, duration = 6
     reqAniFrame,
     startTime = Date.now();
 
-  if( isWindowOrDoc(elem) ){
+  if (isWindowOrDoc(elem)) {
     let db = document.body,
       de = document.documentElement;
     initScroll = db[scrollAttr] || de[scrollAttr];
-    setScroll = function(value){
+    setScroll = function (value) {
       db[scrollAttr] = de[scrollAttr] = value;
     };
   } else {
     initScroll = elem[scrollAttr];
-    setScroll = function(value){
+    setScroll = function (value) {
       elem[scrollAttr] = value;
     };
   }
 
   let diffScroll = value - initScroll;
 
-  if( diffScroll === 0 ) return;
+  if (diffScroll === 0) return;
 
-  let executeScroll = function(){
-    percent = (Date.now() - startTime)/duration;
-    percent = percent >=1 ? 1 : percent;
+  let executeScroll = function () {
+    percent = (Date.now() - startTime) / duration;
+    percent = percent >= 1 ? 1 : percent;
 
-    setScroll(initScroll + diffScroll*percent);
+    setScroll(initScroll + diffScroll * percent);
     reqAniFrame = requestAnimationFrame(executeScroll);
 
-    if( percent === 1 ){
+    if (percent === 1) {
       cancelAnimationFrame(reqAniFrame);
       typeof callback === 'function' && callback.call(elem);
     }

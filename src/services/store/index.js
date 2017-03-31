@@ -78,6 +78,10 @@ export const fetchStoreList = () => {
       hashHistory.replace('/report.index');
     } else {
       if (storeList.length > 1) {
+        //默认把第一家店铺选中
+        storeList[0].selected = true;
+        //设置显示店铺名称
+        actions.setStore(storeList[0]);
         //填充店铺列表数据
         actions.setStoreList(storeList);
         //显示店铺
@@ -107,9 +111,6 @@ export const getStoreList = () => {
       if( storeErrMsg ) {
         return reject(storeErrMsg);
       }
-      //默认把第一家店铺选中
-      storeList[0].selected = true;
-      actions.setStore(storeList[0]);
       resolve(storeList);
     });
   });

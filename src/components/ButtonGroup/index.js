@@ -20,7 +20,7 @@ class ButtonGroup extends React.Component {
             return <Button
               key={i}
               {...child.props}
-              className={classnames({"t-FB1": props.flexable, [props.activeIndex == i ? "t-button-selected" : child.props.className]: !!child.props.className})}>
+              className={classnames({"t-FB1": props.flexable, [props.activeIndex === i ? "t-button-selected" : child.props.className]: !!child.props.className})}>
             </Button>
           })
       }

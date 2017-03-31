@@ -21,7 +21,8 @@ window.FastClick && FastClick.attach(document.body);
 
 const {Router, Route, IndexRedirect, hashHistory} = ReactRouter;
 
-import {signIn} from '../services/auth';
+let {Toast} = SaltUI;
+
 import reactMixin from 'react-mixin';
 import store from  './store';
 import actions from './actions';
@@ -56,13 +57,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    signIn.ready(() => {
-      getStoreList();
+    getStoreList().then(() => {
       this.setState({
         isAppReady: true
       });
       //移除app启动动画
       document.body.removeChild(document.querySelector("#launcher"));
+    }, (err) => {
+      Toast.error(err);
     });
   }
 

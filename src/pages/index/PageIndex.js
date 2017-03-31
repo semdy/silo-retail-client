@@ -29,7 +29,7 @@ class Index extends React.Component {
   }
 
   componentWillUnmount() {
-    //启用用下拉刷新
+    //启用下拉刷新
     actions.setP2rEnabled(true);
   }
 
