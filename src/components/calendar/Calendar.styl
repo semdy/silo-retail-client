@@ -1,0 +1,63 @@
+@import '../../stylus-lib/var.styl';
+
+
+.calendar-header
+  background-color #e9e9e9
+
+.calendar-cancel,
+.calendar-confirm
+  padding 15px
+
+.calendar-title
+  text-align center
+
+  .t-button-group
+    > .t-button
+      padding-left 12px
+      padding-right 12px
+
+.calendar-tools
+  padding 6px 0
+
+  .cld-date-indicator
+    margin-left 8px
+    margin-right 8px
+    min-width 80px
+    text-align center
+
+  .cld-switch
+    padding 8px
+    color gblue
+
+.calendar-weeks
+  background-color #f6f6f6
+  .cld-week
+    padding 8px
+    text-align center
+
+.calendar-rows
+  .cld-day
+    padding 8px
+    text-align center
+
+  .gray-day
+    color #999
+
+  span
+    width 24px
+    height 24px
+
+  .current
+    span
+      color #fff
+      background-color lighten(gblue, 30%)
+      radius(50%)
+
+  .selected
+    span
+      color #fff
+      background-color gblue
+      radius(50%)
+
+
+

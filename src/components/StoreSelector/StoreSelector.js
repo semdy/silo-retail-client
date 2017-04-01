@@ -82,7 +82,7 @@ class Page extends React.Component {
       storeList.length &&
       <div className="store-container">
         <Animate
-          className="store-backdrop"
+          className="backdrop"
           transitionName="fade"
           visible={showStore}
           onClick={actions.hideStoreSelector}

@@ -1,29 +1,4 @@
-makeShadow(x, y, offset, color, isInset = false)
-  if isInset
-    -webkit-box-shadow x y offset color inset
-    box-shadow x y offset color inset
-  else
-    -webkit-box-shadow x y offset color
-    box-shadow x y offset color
-
-makeTransform(attrs){
-  -webkit-transform attrs
-  transform attrs
-}
-
-makeTransition(attrs){
-  -webkit-transition attrs
-  transition attrs
-}
-
-.store-backdrop
-  position fixed
-  left 0
-  right 0
-  top 0
-  bottom 0
-  background-color rgba(0,0,0,.4)
-  z-index 301
+@import "../../stylus-lib/var.styl"
 
 .store-selector
   position fixed

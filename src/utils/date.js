@@ -8,7 +8,7 @@
  * @param {Number} year
  */
 function isLeapYear(year) {
-  return (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0);
+  return (year % 400 === 0) || (year % 4 === 0 && year % 100 !== 0);
 }
 /**
  * 获取某一年份的某一月份的天数
@@ -34,7 +34,7 @@ export const getWeekNumber = (dateObject) => {
   var yearFirstDay = new Date(year, 0, 1).getDay() || 7;
 
   var week = null;
-  if (yearFirstDay == 1) {
+  if (yearFirstDay === 1) {
     week = Math.ceil(days / 7);
   } else {
     days -= (7 - yearFirstDay + 1);

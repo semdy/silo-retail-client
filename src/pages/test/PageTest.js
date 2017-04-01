@@ -1,21 +1,27 @@
 require('./PageTest.styl');
 
-let {Calendar, Button} = SaltUI;
+let {Button} = SaltUI;
+
+import Calendar from '../../components/calendar';
+
+function getCalendarText(date) {
+  return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日'
+}
 
 class Test extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
+      show: true,
       show2: false,
-      locale: 'zh-cn'
+      locale: 'zh-cn',
+      date: new Date()
     }
   }
 
   _handleClick() {
-    let t = this;
-    t.setState({
+    this.setState({
       show: true
     });
   }
@@ -58,13 +64,20 @@ class Test extends React.Component {
     });
   }
 
+  onSelect(date){
+    this.setState({
+      date: date
+    });
+  }
+
   render() {
     let t = this;
     return (
       <div className="tCalendarDemo">
+        <div>{getCalendarText(this.state.date)}</div>
         <Button onClick={t._handleClick.bind(t)}>点我选择日期</Button>
         <Button type="secondary" onClick={t._handleClick2.bind(t)}>点我选择日期(月面板)</Button>
-        <Calendar visible={t.state.show}
+        {/*<Calendar visible={t.state.show}
                   singleMode={true}
                   value={'2015-10-03'}
                   showHalfDay={false}
@@ -81,7 +94,8 @@ class Test extends React.Component {
           onCancel={t.onCloseCalendar2.bind(t)}
           onOk={t.handleCalendarData2.bind(t)}
           locale={t.state.locale}
-        />
+        />*/}
+        <Calendar visible={this.state.show} onSelect={this.onSelect.bind(this)}></Calendar>
       </div>
 
     );

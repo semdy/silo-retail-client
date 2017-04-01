@@ -7,7 +7,7 @@ const AnimateEl = (props) => {
   const { style, visible, removeable } = props;
   if( !visible && removeable ) return <noscript></noscript>;
   let newStyle = Object.assign(style || {}, {
-    display: visible ? '' : 'none'
+    display: visible ? undefined : 'none'
   });
   return <div {...props} style={newStyle}></div>;
 };
