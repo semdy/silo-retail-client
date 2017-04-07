@@ -2,6 +2,7 @@ require('./DateNavigator.styl');
 
 let {Icon, Button} = SaltUI;
 import ButtonGroup from '../../components/ButtonGroup';
+import Calendar from '../../components/calendar';
 import classnames from 'classnames';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
@@ -37,7 +38,9 @@ class DateNavigator extends React.Component {
     this.state = {
       activeIndex: 0,
       width: window.innerWidth,
-      height: window.innerHeight
+      height: window.innerHeight,
+      date: new Date(),
+      showCalendar: false
     };
   }
 
@@ -61,8 +64,26 @@ class DateNavigator extends React.Component {
     actions.showStoreSelector();
   }
 
+  showCalendar(){
+    this.setState({
+      showCalendar: true
+    });
+  }
+
+  handleConfirm(date){
+    this.setState({
+      date: date
+    });
+  }
+
+  handleLeave(){
+    this.setState({
+      showCalendar: false
+    });
+  }
+
   render() {
-    let {width, height, isFullScreen, offset, store, activeIndex, timelines, filterType} = this.state;
+    let {width, height, isFullScreen, offset, store, activeIndex, timelines, filterType, showCalendar} = this.state;
     let date = getDateBefore(offset);
     let dateIndicator = (
       <div className="t-FBH t-FBAC t-FBJ">
@@ -79,13 +100,15 @@ class DateNavigator extends React.Component {
                onClick={actions.queryPrev}>
             <Icon name="angle-left-l" width={18} height={18}/>
           </div>
-          <Icon name="calendar" className="date-cld" width={15} height={15}/>
-          <span className="date">
-            {formatDate(date, timelines, filterType)}
-          </span>
-          <span className="day">
-            {filterType !== 'hour' ? "" : `${locale.week}${getDay(date)}`}
-          </span>
+          <div className="store-date" onClick={this.showCalendar.bind(this)}>
+            <Icon name="calendar" className="date-cld" width={15} height={15}/>
+            <span className="date">
+              {formatDate(date, timelines, filterType)}
+            </span>
+            <span className="day">
+              {filterType !== 'hour' ? "" : `${locale.week}${getDay(date)}`}
+            </span>
+          </div>
           <div className={classnames("date-arrow right t-FBH t-FBJC t-FBAC", {disabled: offset === 0})}
                onClick={actions.queryNext}>
             <Icon name="angle-right-l" width={18} height={18}/>
@@ -94,45 +117,52 @@ class DateNavigator extends React.Component {
       </div>
     );
     return (
-      <div className={classnames("date-navigator", {"full": isFullScreen, "normal": !isFullScreen})} style={{
-        left: isFullScreen ? (width - height * 0.5 - 70) + "px" : "",
-        top: isFullScreen ? -70 * 0.5 + "px" : "",
-        width: isFullScreen ? height + "px" : ""
-      }}
-      >
-        {
-          !isFullScreen ?
-            <div>
-              {dateIndicator}
-            </div>
-            :
-            (<div>
-                <ButtonGroup half={true} className="date-indicator">
-                  <Button type="minor">{dateIndicator}</Button>
-                </ButtonGroup>
-                <ButtonGroup half={true} activeIndex={activeIndex} className="t-PL16 t-PR16">
-                  <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 0, 'hour')}>{locale.hour}</Button>
-                  <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 1, 'day')}>{locale.day}</Button>
-                  <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 2, 'week')}>{locale.weekly}</Button>
-                  <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 3, 'month')}>{locale.month}</Button>
-                  <Button type="minor" className="t-button-plain"
-                          onClick={this.itemClick.bind(this, 4, 'year')}>{locale.year}</Button>
-                </ButtonGroup>
-                <ButtonGroup half={true}>
-                  <Button type="minor" className="t-button-plain" onClick={this.showStore}>
-                    {locale.chooseStore}
-                    <span className="caret">
-                    </span>
-                  </Button>
-                </ButtonGroup>
+      <div>
+        <div className={classnames("date-navigator", {"full": isFullScreen, "normal": !isFullScreen})} style={{
+          left: isFullScreen ? (width - height * 0.5 - 70) + "px" : "",
+          top: isFullScreen ? -70 * 0.5 + "px" : "",
+          width: isFullScreen ? height + "px" : ""
+        }}
+        >
+          {
+            !isFullScreen ?
+              <div>
+                {dateIndicator}
               </div>
-            )
-        }
-      </div>);
+              :
+              (<div>
+                  <ButtonGroup half={true} className="date-indicator">
+                    <Button type="minor">{dateIndicator}</Button>
+                  </ButtonGroup>
+                  <ButtonGroup half={true} activeIndex={activeIndex} className="t-PL16 t-PR16">
+                    <Button type="minor" className="t-button-plain"
+                            onClick={this.itemClick.bind(this, 0, 'hour')}>{locale.hour}</Button>
+                    <Button type="minor" className="t-button-plain"
+                            onClick={this.itemClick.bind(this, 1, 'day')}>{locale.day}</Button>
+                    <Button type="minor" className="t-button-plain"
+                            onClick={this.itemClick.bind(this, 2, 'week')}>{locale.weekly}</Button>
+                    <Button type="minor" className="t-button-plain"
+                            onClick={this.itemClick.bind(this, 3, 'month')}>{locale.month}</Button>
+                    <Button type="minor" className="t-button-plain"
+                            onClick={this.itemClick.bind(this, 4, 'year')}>{locale.year}</Button>
+                  </ButtonGroup>
+                  <ButtonGroup half={true}>
+                    <Button type="minor" className="t-button-plain" onClick={this.showStore}>
+                      {locale.chooseStore}
+                      <span className="caret">
+                      </span>
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              )
+          }
+        </div>
+        <Calendar visible={showCalendar}
+                  onConfirm={this.handleConfirm.bind(this)}
+                  onLeave={this.handleLeave.bind(this)}
+        />
+      </div>
+    )
   }
 }
 

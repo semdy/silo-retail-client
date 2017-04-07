@@ -123,5 +123,6 @@ export default {
   num: '个',
   distributeHelpText: '连带率分布的解释...',
   saleCount: '销售数量/单',
-  appLoading: '应用启动中...'
+  appLoading: '应用启动中...',
+  calendarTitle: '请选择日期'
 }

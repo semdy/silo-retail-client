@@ -10,7 +10,7 @@ import classnames from 'classnames';
  * */
 const getTrender = (value, avg) => {
   if (avg === 0) return 0;
-  return parseInt((value - avg) / avg * 100);
+  return (value - avg) / avg * 100;
 };
 
 class Item extends React.Component {
@@ -55,7 +55,11 @@ class Item extends React.Component {
                 </div>
                 {
                   trend !== 0 &&
-                  <div className="item-avg">{item.params.compare} {item.value[1]} <em className="trend-ratio">{trend + "%"}</em>
+                  <div className="item-avg">
+                    {item.params.compare} {item.value[1]}
+                    <em className="trend-ratio">
+                      {(Math.abs(trend) < 1 ? trend.toFixed(2) : parseInt(trend)) + "%"}
+                    </em>
                   </div>
                 }
               </div>

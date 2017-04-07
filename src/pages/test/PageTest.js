@@ -16,7 +16,7 @@ class Test extends React.Component {
       show: true,
       show2: false,
       locale: 'zh-cn',
-      date: new Date()
+      date: [new Date()]
     }
   }
 
@@ -64,9 +64,15 @@ class Test extends React.Component {
     });
   }
 
-  onSelect(date){
+  handleConfirm(date){
     this.setState({
-      date: date
+      date: Array.isArray(date) ? date : [date]
+    });
+  }
+
+  handleLeave(){
+    this.setState({
+      show: false
     });
   }
 
@@ -74,7 +80,13 @@ class Test extends React.Component {
     let t = this;
     return (
       <div className="tCalendarDemo">
-        <div>{getCalendarText(this.state.date)}</div>
+        <div>
+          {
+            this.state.date.map((date, i) => {
+              return <p key={i}>{getCalendarText(date)}</p>
+            })
+          }
+        </div>
         <Button onClick={t._handleClick.bind(t)}>点我选择日期</Button>
         <Button type="secondary" onClick={t._handleClick2.bind(t)}>点我选择日期(月面板)</Button>
         {/*<Calendar visible={t.state.show}
@@ -95,7 +107,11 @@ class Test extends React.Component {
           onOk={t.handleCalendarData2.bind(t)}
           locale={t.state.locale}
         />*/}
-        <Calendar visible={this.state.show} onSelect={this.onSelect.bind(this)}></Calendar>
+        <Calendar visible={this.state.show}
+                  onConfirm={this.handleConfirm.bind(this)}
+                  onLeave={this.handleLeave.bind(this)}
+        >
+        </Calendar>
       </div>
 
     );

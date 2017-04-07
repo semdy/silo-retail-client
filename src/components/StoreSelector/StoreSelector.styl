@@ -54,55 +54,27 @@
 
 
 .rotate-popup-enter {
-  -webkit-animation: rotate-popup .6s both ease;
-  animation: rotate-popup .6s both ease;
+  animation(rotate-popup .6s both ease);
 }
 
 .rotate-popup-leave {
-  -webkit-animation: rotate-popdown .6s both ease;
-  animation: rotate-popdown .6s both ease;
-}
-
-@-webkit-keyframes rotate-popup {
-  0% {
-    -webkit-transform: rotate(90deg) translate(150%, -50%);
-    transform: rotate(90deg) translate(150%, -50%);
-  }
-  100% {
-    -webkit-transform: rotate(90deg) translate(50%, -50%);
-    transform: rotate(90deg) translate(50%, -50%);
-  }
+  animation(rotate-popdown .6s both ease);
 }
 
 @keyframes rotate-popup {
   0% {
-    -webkit-transform: rotate(90deg) translate(150%, -50%);
-    transform: rotate(90deg) translate(150%, -50%);
+    transform(rotate(90deg) translate(150%, -50%));
   }
   100% {
-    -webkit-transform: rotate(90deg) translate(50%, -50%);
-    transform: rotate(90deg) translate(50%, -50%);
-  }
-}
-
-@-webkit-keyframes rotate-popdown {
-  0% {
-    -webkit-transform: rotate(90deg) translate(50%, -50%);
-    transform: rotate(90deg) translate(50%, -50%);
-  }
-  100% {
-    -webkit-transform: rotate(90deg) translate(150%, -50%);
-    transform: rotate(90deg) translate(150%, -50%);
+    transform(rotate(90deg) translate(50%, -50%));
   }
 }
 
 @keyframes rotate-popdown {
   0% {
-    -webkit-transform: rotate(90deg) translate(50%, -50%);
-    transform: rotate(90deg) translate(50%, -50%);
+    transform(rotate(90deg) translate(50%, -50%));
   }
   100% {
-    -webkit-transform: rotate(90deg) translate(150%, -50%);
-    transform: rotate(90deg) translate(150%, -50%);
+    transform(rotate(90deg) translate(150%, -50%));
   }
 }

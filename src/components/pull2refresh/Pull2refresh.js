@@ -179,7 +179,8 @@ class Pull2refresh extends React.Component {
     let {status} = this.state;
     return (
       <div ref="el" className="p2r-container">
-        <div ref="indict" className="t-FBH t-FBJC t-FBAC p2r-indicator"
+        <div ref="indict"
+             className="t-FBH t-FBJC t-FBAC p2r-indicator"
              style={{
                display: 'none'
              }}

@@ -1,3 +1,7 @@
+//定义keyframes解析前缀
+vendors = webkit official
+
+//全局蓝色
 gblue = #008cee
 
 transform(attr)
@@ -7,6 +11,10 @@ transform(attr)
 transition(attr)
   -webkit-transition attr
   transition attr
+
+animation(attr)
+  -webkit-animation attr
+  animation attr
 
 makeGradient(topColor, bottomColor)
   background -webkit-linear-gradient(top, topColor, bottomColor)

@@ -1,15 +1,15 @@
-import './animation.css';
+import './animation.styl';
 
-let { PropTypes } = React;
+let {PropTypes} = React;
 import RcAnimate from 'rc-animate';
 
 const AnimateEl = (props) => {
-  const { style, visible, removeable } = props;
-  if( !visible && removeable ) return <noscript></noscript>;
+  const {style, visible, removeable} = props;
+  if (!visible && removeable) return <noscript/>;
   let newStyle = Object.assign(style || {}, {
     display: visible ? undefined : 'none'
   });
-  return <div {...props} style={newStyle}></div>;
+  return <div {...props} style={newStyle}/>;
 };
 
 class Animate extends React.Component {
@@ -17,12 +17,14 @@ class Animate extends React.Component {
   constructor(props) {
     super(props);
   }
-  render(){
-      return (
-        <RcAnimate {...this.props} className="" style={{}}>
-          <AnimateEl {...this.props}></AnimateEl>
-        </RcAnimate>
-      );
+
+  render() {
+    let {className, style, ...props} = this.props;
+    return (
+      <RcAnimate {...props}>
+        <AnimateEl {...this.props}/>
+      </RcAnimate>
+    );
   }
 }
 

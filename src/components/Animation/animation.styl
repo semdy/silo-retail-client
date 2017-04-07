@@ -1,0 +1,66 @@
+@import "../../stylus-lib/var.styl"
+
+.fade-enter {
+  animation(fadeIn .6s both linear);
+}
+
+.fade-leave {
+  animation(fadeOut .6s both linear);
+}
+
+.popup-enter {
+  animation(popup .6s both ease);
+}
+
+.popup-leave {
+  animation(popdown .6s both ease);
+}
+
+.spin{
+  animation(spin 1.2s both linear infinite);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes popup {
+  0% {
+    transform(translate3d(0, 100%, 0));
+  }
+  100% {
+    transform(translate3d(0, 0, 0));
+  }
+}
+
+@keyframes popdown {
+  0% {
+    transform(translate3d(0, 0, 0));
+  }
+  100% {
+    transform(translate3d(0, 100%, 0));
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform(rotate(0deg));
+  }
+  100% {
+    transform(rotate(360deg));
+  }
+}

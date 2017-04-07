@@ -1,7 +1,9 @@
 require('./Popup.styl');
 
+let {Context} = SaltUI;
 let {PropTypes} = React;
 import Animate from '../../components/Animation';
+import actions from '../../app/actions';
 
 class Popup extends React.Component {
 
@@ -16,6 +18,7 @@ class Popup extends React.Component {
     this.setState({
       visible: true
     });
+    actions.setP2rEnabled(false);
   }
 
   hide() {
@@ -26,23 +29,34 @@ class Popup extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     let {visible} = nextProps;
-    if( visible === true ){
+    let isShown = this.state.visible;
+    if (visible === true && !isShown) {
       this.show();
     }
-    else if( visible === false ) {
+    else if (visible === false && isShown) {
       this.hide();
     }
   }
 
-  handleTouch(){
-    if( this.props.touchHide ){
+  handleTouch(e) {
+    e.preventDefault();
+    if (this.props.touchHide) {
       this.hide();
     }
+  }
+
+  handleLeave(){
+    this.props.onLeave();
+    actions.setP2rEnabled(true);
+  }
+
+  componentWillUnmount(){
+    actions.setP2rEnabled(true);
   }
 
   render() {
     let {visible} = this.state;
-    let {className, showBackdrop} = this.props;
+    let {className, showBackdrop, onAppear, onEnd, onEnter} = this.props;
     return (
       <div>
         {
@@ -57,7 +71,12 @@ class Popup extends React.Component {
         }
         <Animate transitionName="popup"
                  className={["popup-layer", className].join(" ").trim()}
-                 visible={visible}>
+                 visible={visible}
+                 onAppear={onAppear}
+                 onEnd={onEnd}
+                 onEnter={onEnter}
+                 onLeave={this.handleLeave.bind(this)}
+        >
           {this.props.children}
         </Animate>
       </div>
@@ -69,14 +88,22 @@ Popup.defaultProps = {
   className: '',
   visible: false,
   showBackdrop: true,
-  touchHide: true
+  touchHide: true,
+  onAppear: Context.noop,
+  onEnd: Context.noop,
+  onEnter: Context.noop,
+  onLeave: Context.noop
 };
 
 Popup.propTypes = {
   className: PropTypes.string,
   visible: PropTypes.bool,
   showBackdrop: PropTypes.bool,
-  touchHide: PropTypes.bool
+  touchHide: PropTypes.bool,
+  onAppear: PropTypes.func,
+  onEnd: PropTypes.func,
+  onEnter: PropTypes.func,
+  onLeave: PropTypes.func
 };
 
 module.exports = Popup;
