@@ -3,6 +3,7 @@ require('./PageTest.styl');
 let {Button} = SaltUI;
 
 import Calendar from '../../components/calendar';
+import {getWeekNumber} from '../../utils/date';
 
 function getCalendarText(date) {
   return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日'
@@ -13,7 +14,7 @@ class Test extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: true,
+      show: false,
       show2: false,
       locale: 'zh-cn',
       date: [new Date()]
@@ -110,6 +111,8 @@ class Test extends React.Component {
         <Calendar visible={this.state.show}
                   onConfirm={this.handleConfirm.bind(this)}
                   onLeave={this.handleLeave.bind(this)}
+                 /* min="2016-10-31"
+                  max="2027-02-26"*/
         >
         </Calendar>
       </div>
@@ -121,6 +124,7 @@ class Test extends React.Component {
   }
 
   componentDidMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {

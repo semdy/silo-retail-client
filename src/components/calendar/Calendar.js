@@ -4,8 +4,12 @@ let {PropTypes} = React;
 let {Icon, Button, Context} = SaltUI;
 import classnames from 'classnames';
 import ButtonGroup from '../ButtonGroup';
+import {getWeekNumber} from '../../utils/date';
 import Popup from '../popup';
 import locale from '../../locale';
+
+//年份间隔
+const DECADE_OFFSET = 5;
 
 //获得下一天date对象
 function nextDay(date) {
@@ -27,12 +31,19 @@ function prevDays(date, offset) {
   return date;
 }
 
+//获得指定天数后的date对象
+function nextDays(date, offset) {
+  date = new Date(date);
+  date.setDate(date.getDate() + offset);
+  return date;
+}
+
 //生成以天为单位的date对象时间戳
 function getDateTimeByDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 }
 
-//生成以天月单位的date对象时间戳
+//生成以月单位的date对象时间戳
 function getDateTimeByMonth(date) {
   return new Date(date.getFullYear(), date.getMonth(), 1).getTime();
 }
@@ -47,6 +58,40 @@ function nextMonth(date) {
 function nextYear(date) {
   date.setYear(date.getFullYear() + 1);
   return date;
+}
+
+//获得指定年数前的date对象
+function prevYears(date, offset) {
+  date = new Date(date);
+  date.setYear(date.getFullYear() - offset);
+  return date;
+}
+
+//获得指定年数后的date对象
+function nextYears(date, offset, immutable) {
+  if( immutable ){
+    date = new Date(date);
+  }
+  date.setYear(date.getFullYear() + offset);
+  return date;
+}
+
+//获得下13周的date对象
+function next13Week(date) {
+  date.setDate(date.getDate() + 13*7);
+  return date;
+}
+
+function getRealWeekNumber(date) {
+  //获得当前年份第一天是第几周
+  let weekNumber = getWeekNumber(date);
+
+  if( weekNumber === 0 ){
+    //如果第天周数为0，则获取上一年最后一天是第几周
+    weekNumber = getWeekNumber(new Date(date.getFullYear() - 1, 11, 31));
+  }
+
+  return weekNumber;
 }
 
 //生成天数据
@@ -86,6 +131,39 @@ function getYearItem(date, defaultDate, minDate, maxDate) {
   }
 }
 
+//生成周数据
+function getWeekItem(date, defaultDate, minDate, maxDate) {
+  let nowDate = defaultDate || new Date();
+  let dateYear = date.getFullYear();
+  let dateTime = getDateTimeByDay(date);
+
+  //获得当前年份第一天是第几周
+  let weekNumber = getRealWeekNumber(date);
+  if( weekNumber === 52 ){
+    dateYear = dateYear - 1;
+  }
+
+  return {
+    text: dateYear + "." + weekNumber + locale.weekly + "~" + dateYear + "." + ((weekNumber === 52 ? 0 : weekNumber) + 12) + locale.weekly,
+    value: [new Date(date), nextDays(date, 13*7)],
+    current: dateYear === nowDate.getFullYear() && weekNumber <= getRealWeekNumber(nowDate),
+    disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
+  }
+}
+
+//生成世纪数据
+function getDecadeItem(date, defaultDate, minDate, maxDate) {
+  let nowDate = defaultDate || new Date();
+  let dateYear = date.getFullYear();
+
+  return {
+    text: dateYear + locale.year + "~" + (dateYear + DECADE_OFFSET) + locale.year,
+    value: [new Date(date), nextYears(date, DECADE_OFFSET, true)],
+    current: dateYear === nowDate.getFullYear(),
+    disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
+  }
+}
+
 //生成以天为单位的日历网格model
 function getDateGridByDay(date, defaultDate, minDate, maxDate) {
   //生成date所在月份第一天的日期对象
@@ -110,7 +188,8 @@ function getDateGridByDay(date, defaultDate, minDate, maxDate) {
 
 //生成以月为单位的日历网格model
 function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
-  date = new Date([date.getFullYear() - 1, "12", "01"].join("-"));
+  //切换到上一年最后一个月
+  date = new Date(date.getFullYear() - 1, 11, 1);
   let dateMap = [];
 
   //生成3x4的二维日期对象数组
@@ -124,9 +203,30 @@ function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
   return dateMap;
 }
 
+//生成以周为单位的日历网格model
+function getDateGridByWeek(date, defaultDate, minDate, maxDate) {
+  //生成date所在年份第一天的日期对象
+  date = new Date(date.getFullYear(), 0, 1);
+  //计算日历第一格日期
+  let firstDate = prevDays(date, 13*7);
+
+  let dateMap = [];
+
+  //生成3x4的二维日期对象数组
+  for (let i = 0; i < 2; i++) {
+    dateMap[i] = [];
+    for (let k = 0; k < 2; k++) {
+      dateMap[i].push(getWeekItem(next13Week(firstDate), defaultDate, minDate, maxDate))
+    }
+  }
+
+  return dateMap;
+}
+
 //生成以年为单位的日历网格model
 function getDateGridByYear(date, defaultDate, minDate, maxDate) {
-  date = new Date([date.getFullYear() - 1, "01", "01"].join("-"));
+  //切换到上一年第一天
+  date = new Date(date.getFullYear() - 1, 0, 1);
   let dateMap = [];
 
   //生成3x4的二维日期对象数组
@@ -139,6 +239,24 @@ function getDateGridByYear(date, defaultDate, minDate, maxDate) {
 
   return dateMap;
 }
+//生成以世纪为单位的日历网格model
+function getDateGridByDecade(date, defaultDate, minDate, maxDate) {
+  //计算日历第一格日期
+  let firstDate = prevYears(date, DECADE_OFFSET);
+
+  let dateMap = [];
+
+  //生成3x4的二维日期对象数组
+  for (let i = 0; i < 3; i++) {
+    dateMap[i] = [];
+    for (let k = 0; k < 3; k++) {
+      dateMap[i].push(getDecadeItem(nextYears(firstDate, DECADE_OFFSET), defaultDate, minDate, maxDate))
+    }
+  }
+
+  return dateMap;
+}
+
 
 function getDateGrid(date, defaultDate, minDate, maxDate, type) {
   switch (type) {
@@ -146,8 +264,12 @@ function getDateGrid(date, defaultDate, minDate, maxDate, type) {
       return getDateGridByDay.apply(null, arguments);
     case 'day':
       return getDateGridByMonth.apply(null, arguments);
+    case 'week':
+      return getDateGridByWeek.apply(null, arguments);
     case 'month':
       return getDateGridByYear.apply(null, arguments);
+    case 'year':
+      return getDateGridByDecade.apply(null, arguments);
   }
 }
 
@@ -156,6 +278,8 @@ function getCalendarText(date, type) {
     case 'hour':
       return date.getFullYear() + locale.year + (date.getMonth() + 1) + locale.month;
     case 'day':
+      return date.getFullYear() + locale.year;
+    case 'week':
       return date.getFullYear() + locale.year;
     case 'month':
       return "";
@@ -220,8 +344,14 @@ class Calendar extends React.Component {
       case 'day':
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? 1 : -1));
         break;
+      case 'week':
+        this.date.setYear(this.date.getFullYear() + (flag === '+' ? 1 : -1));
+        break;
       case 'month':
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? 20 : -20));
+        break;
+      case 'year':
+        this.date.setYear(this.date.getFullYear() + (flag === '+' ? DECADE_OFFSET * 9 : -DECADE_OFFSET * 9));
         break;
     }
     return this.date;
@@ -234,7 +364,6 @@ class Calendar extends React.Component {
   }
 
   handleTypeClick(index, type) {
-    if (type === 'year') return;
     this.setState({
       activeIndex: index,
       showType: type

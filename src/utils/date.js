@@ -27,10 +27,10 @@ function getMonthDays(year, month) {
  */
 export const getWeekNumber = (dateObject) => {
   var year = dateObject.getFullYear();
-  //哪一天是哪一年中的第多少天
+  //某天是一年中的第多少天
   var days = getDayNumber(dateObject);
 
-  //哪一年第一天是星期几
+  //一年中的第一天是星期几
   var yearFirstDay = new Date(year, 0, 1).getDay() || 7;
 
   var week = null;
@@ -38,7 +38,7 @@ export const getWeekNumber = (dateObject) => {
     week = Math.ceil(days / 7);
   } else {
     days -= (7 - yearFirstDay + 1);
-    week = Math.ceil(days / 7);
+    week = Math.abs(Math.ceil(days / 7));
   }
 
   return week;

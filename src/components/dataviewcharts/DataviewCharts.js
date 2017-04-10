@@ -144,12 +144,7 @@ class DataviewCharts extends Base {
   }
 
   fetchGroupData(groupPrams) {
-''
-    if (!Array.isArray(groupPrams))
-      throw new Error("fetchGroupData arguments must be typeof Array!");
-
     let fetches = groupPrams.map(item => this.fetchData(item.storeId, item.offset));
-
     return new Promise((resolve) => {
       Promise.all(fetches).then((values) => {
         resolve(values);
