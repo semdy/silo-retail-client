@@ -66,6 +66,7 @@ class Test extends React.Component {
   }
 
   handleConfirm(date){
+    console.log(date)
     this.setState({
       date: Array.isArray(date) ? date : [date]
     });

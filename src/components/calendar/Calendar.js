@@ -332,7 +332,6 @@ class Calendar extends React.Component {
 
   _setDate() {
     this.date = this.defaultDate ? new Date(this.defaultDate) : new Date();
-    this.selectedDate = this.date;
     this._setDateGrid();
   }
 
@@ -405,7 +404,6 @@ class Calendar extends React.Component {
       data: this.state.data
     });
 
-    this.selectedDate = day.value;
     this.props.onSelect(day.value);
   }
 
@@ -415,22 +413,24 @@ class Calendar extends React.Component {
   }
 
   handleConfirm() {
-    let selectedDate = this.selectedDate;
-    if (!this.props.singleSelect) {
-      selectedDate = [];
-      this.state.data.forEach((item) => {
-        item.forEach((dateObj) => {
-          if (dateObj.selected) {
+    let selectedDate = [];
+
+    this.state.data.forEach((item) => {
+      item.forEach((dateObj) => {
+        if (dateObj.selected) {
+          selectedDate.push(dateObj.value);
+        }
+        if(dateObj.current){
+          if( Array.isArray(dateObj.value) ) {
+            selectedDate = selectedDate.concat(dateObj.value);
+          } else {
             selectedDate.push(dateObj.value);
           }
-        });
+        }
       });
-      if (selectedDate.length === 0) {
-        selectedDate = [this.selectedDate];
-      }
-    }
+    });
 
-    this.props.onConfirm(selectedDate);
+    this.props.onConfirm(selectedDate.length === 1 ? selectedDate[0] : selectedDate);
 
     setTimeout(() => {
       this.hide();
