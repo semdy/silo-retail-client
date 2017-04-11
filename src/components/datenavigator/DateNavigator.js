@@ -8,7 +8,6 @@ import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import dom from '../../utils/dom';
-import {getDateBefore} from '../../utils';
 import locale from '../../locale';
 
 const formatDate = (dateUTC, timelines, filterType) => {
@@ -18,11 +17,81 @@ const formatDate = (dateUTC, timelines, filterType) => {
     let date = filterType === 'hour' ? dateUTC.getDate() + locale.day : "";
     return `${year}${month}${date}`;
   } else {
+    if( timelines.length === 0 ) return '';
     if (filterType === 'year') {
       return [timelines[0].substr(5), timelines[timelines.length - 1].substr(5)].join("~");
     } else {
       return [timelines[0], timelines[timelines.length - 1]].join("~");
     }
+  }
+};
+
+//获取距离今天指定日期对象
+export const getDateBefore = (offset, filterType) => {
+  let date = new Date();
+  switch ( filterType ){
+    case 'hour':
+      date.setDate(date.getDate() - offset);
+      break;
+    case 'day':
+      date.setMonth(date.getMonth() - offset);
+      break;
+    case 'week':
+      date.setDate(date.getDate() - 13 * 7 * offset);
+      break;
+    case 'month':
+    case 'season':
+    case 'year':
+      date.setYear(date.getFullYear() - offset);
+      break;
+  }
+
+  return date;
+};
+
+const calculateOffset = (dateObj, filterType) => {
+  let nowDateObj = new Date();
+  let nowYear = nowDateObj.getFullYear();
+  let nowMonth = nowDateObj.getMonth();
+  let nowDate = nowDateObj.getDate();
+
+  dateObj = Array.isArray(dateObj) ? dateObj[0] : dateObj;
+  let year = dateObj.getFullYear();
+  let month = dateObj.getMonth();
+  let date = dateObj.getDate();
+
+  switch (filterType){
+    case 'hour':
+      return (new Date(nowYear, nowMonth, nowDate).getTime() - new Date(year, month, date).getTime())/(24*60*60*1000);
+    case 'day':
+      return (nowYear - year)*12 + nowMonth - month;
+    case 'week':
+      let weekNumMap = {
+        0: 1,
+        3: 2,
+        6: 3,
+        8: 4
+      };
+      let weekNum = weekNumMap[month];
+      let nowWeekNum = 1;
+      if( nowMonth >= 0 && nowMonth < 3 ){
+        nowWeekNum = 1;
+      }
+      else if( nowMonth >= 3 && nowMonth < 6 ){
+        nowWeekNum = 2;
+      }
+      else if( nowMonth >= 6 && nowMonth < 8 ){
+        nowWeekNum = 3;
+      } else {
+        weekNum = 4;
+      }
+      return (nowYear - year)*4 + nowWeekNum - weekNum;
+    case 'month':
+      return nowYear - year;
+    case 'season':
+      return (nowYear - year)*4 + Math.ceil((nowMonth + 1)/3) - Math.ceil((month + 1)/3);
+    case 'year':
+      return (nowYear - year)/5;
   }
 };
 
@@ -39,7 +108,6 @@ class DateNavigator extends React.Component {
       activeIndex: 0,
       width: window.innerWidth,
       height: window.innerHeight,
-      date: new Date(),
       showCalendar: false
     };
   }
@@ -54,8 +122,7 @@ class DateNavigator extends React.Component {
   itemClick(itemIndex, filterType) {
     if (itemIndex === this.state.activeIndex) return;
     this.setState({
-      activeIndex: itemIndex,
-      filterType: filterType
+      activeIndex: itemIndex
     });
     actions.setFilterType(filterType);
   }
@@ -70,10 +137,12 @@ class DateNavigator extends React.Component {
     });
   }
 
-  handleConfirm(date){
+  handleConfirm(date, filterType){
     this.setState({
-      date: date
+      showCalendar: false
     });
+    actions.setFilterType(filterType);
+    actions.setQueryOffset(calculateOffset(date, filterType));
   }
 
   handleLeave(){
@@ -84,7 +153,7 @@ class DateNavigator extends React.Component {
 
   render() {
     let {width, height, isFullScreen, offset, store, activeIndex, timelines, filterType, showCalendar} = this.state;
-    let date = getDateBefore(offset);
+    let date = getDateBefore(offset, filterType);
     let dateIndicator = (
       <div className="t-FBH t-FBAC t-FBJ">
         <div className="store-name"
@@ -160,6 +229,7 @@ class DateNavigator extends React.Component {
         <Calendar visible={showCalendar}
                   onConfirm={this.handleConfirm.bind(this)}
                   onLeave={this.handleLeave.bind(this)}
+                  max={new Date()}
         />
       </div>
     )

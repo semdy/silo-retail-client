@@ -164,7 +164,7 @@ module.exports = Reflux.createStore({
   },
 
   //查询具到某一时间段的数据
-  onSetQueryOffset(){
+  onSetQueryOffset(offset){
     this.state.offset = offset;
     this.updateComponent();
   },

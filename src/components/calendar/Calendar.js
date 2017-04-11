@@ -361,9 +361,9 @@ class Calendar extends React.Component {
     this.isShown = this.props.visible;
     this.selectFlag = false;
     this.lastIndex = 0;
-    this.defaultDate = DATE_REG.test(value) ? new Date(value) : null;
-    this.minDate = DATE_REG.test(min) ? new Date(min) : null;
-    this.maxDate = DATE_REG.test(max) ? new Date(max) : null;
+    this.defaultDate = value instanceof Date ? value : (DATE_REG.test(value) ? new Date(value) : null);
+    this.minDate = min instanceof Date ? min : (DATE_REG.test(min) ? new Date(min) : null);
+    this.maxDate = max instanceof Date ? max : (DATE_REG.test(max) ? new Date(max) : null);
   }
 
   show() {
@@ -490,7 +490,7 @@ class Calendar extends React.Component {
       });
     });
 
-    this.props.onConfirm(selectedDate.length === 1 ? selectedDate[0] : selectedDate);
+    this.props.onConfirm(selectedDate.length === 1 ? selectedDate[0] : selectedDate, this.state.showType);
 
     setTimeout(() => {
       this.hide();
@@ -669,8 +669,14 @@ Calendar.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   value: PropTypes.string,
-  min: PropTypes.string,
-  max: PropTypes.string,
+  min: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
+  max: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
   singleSelect: PropTypes.bool,
   onSelect: PropTypes.func,
   onCancel: PropTypes.func,
