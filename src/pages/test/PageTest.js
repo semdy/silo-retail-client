@@ -66,7 +66,6 @@ class Test extends React.Component {
   }
 
   handleConfirm(date){
-    console.log(date)
     this.setState({
       date: Array.isArray(date) ? date : [date]
     });
@@ -112,8 +111,8 @@ class Test extends React.Component {
         <Calendar visible={this.state.show}
                   onConfirm={this.handleConfirm.bind(this)}
                   onLeave={this.handleLeave.bind(this)}
-                 /* min="2016-10-31"
-                  max="2027-02-26"*/
+                  min="2016-10-31"
+                  max="2018-02-26"
         >
         </Calendar>
       </div>

@@ -14,7 +14,7 @@ let cookie = {
     path: '/'
   },
   set (key, value, expires, path, domain, secure) {
-    if (value == undefined) return;
+    if (value === undefined) return;
 
     var options = {
       expires: expires,

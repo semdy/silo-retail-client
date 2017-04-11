@@ -54,6 +54,19 @@ function nextMonth(date) {
   return date;
 }
 
+//获得指定月以前date对象
+function prevMonths(date, offset) {
+  date.setMonth(date.getMonth() - offset);
+  return date;
+}
+
+//获得指定月以后date对象
+function nextMonths(date, offset) {
+  date = new Date(date);
+  date.setMonth(date.getMonth() + offset);
+  return date;
+}
+
 //获得下一年date对象
 function nextYear(date) {
   date.setYear(date.getFullYear() + 1);
@@ -69,7 +82,7 @@ function prevYears(date, offset) {
 
 //获得指定年数后的date对象
 function nextYears(date, offset, immutable) {
-  if( immutable ){
+  if (immutable) {
     date = new Date(date);
   }
   date.setYear(date.getFullYear() + offset);
@@ -78,7 +91,13 @@ function nextYears(date, offset, immutable) {
 
 //获得下13周的date对象
 function next13Week(date) {
-  date.setDate(date.getDate() + 13*7);
+  date.setDate(date.getDate() + 13 * 7);
+  return date;
+}
+
+//获得下一季度的date对象
+function nextSeason(date) {
+  date.setMonth(date.getMonth() + 3);
   return date;
 }
 
@@ -86,7 +105,7 @@ function getRealWeekNumber(date) {
   //获得当前年份第一天是第几周
   let weekNumber = getWeekNumber(date);
 
-  if( weekNumber === 0 ){
+  if (weekNumber === 0) {
     //如果第天周数为0，则获取上一年最后一天是第几周
     weekNumber = getWeekNumber(new Date(date.getFullYear() - 1, 11, 31));
   }
@@ -107,6 +126,26 @@ function getDayItem(date, currentDate, defaultDate, minDate, maxDate) {
   }
 }
 
+//生成周数据
+function getWeekItem(date, defaultDate, minDate, maxDate) {
+  let nowDate = defaultDate || new Date();
+  let dateYear = date.getFullYear();
+  let dateTime = getDateTimeByDay(date);
+
+  //获得当前年份第一天是第几周
+  let weekNumber = getRealWeekNumber(date);
+  if (weekNumber === 52) {
+    dateYear = dateYear - 1;
+  }
+
+  return {
+    text: dateYear + "." + weekNumber + locale.weekly + "~" + dateYear + "." + ((weekNumber === 52 ? 0 : weekNumber) + 12) + locale.weekly,
+    value: [new Date(date), nextDays(date, 13 * 7)],
+    current: dateYear === nowDate.getFullYear() && weekNumber <= getRealWeekNumber(nowDate),
+    disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
+  }
+}
+
 //生成月数据
 function getMonthItem(date, defaultDate, minDate, maxDate) {
   let nowDate = defaultDate || new Date();
@@ -119,6 +158,20 @@ function getMonthItem(date, defaultDate, minDate, maxDate) {
   }
 }
 
+//生成季数据
+function getSeasonItem(date, defaultDate, minDate, maxDate) {
+  let nowDate = defaultDate || new Date();
+  let dateMonth = date.getMonth();
+  let dateMonthTime = getDateTimeByMonth(date);
+  let dateYear = date.getFullYear();
+  return {
+    text: locale.seasonString.replace('%a', Math.ceil((dateMonth + 1)/3)),
+    value: [new Date(date), nextMonths(date, 2)],
+    current: dateYear === nowDate.getFullYear() && Math.ceil((nowDate.getMonth() + 1)/3) === Math.ceil((dateMonth + 1)/3),
+    disabled: (minDate && dateMonthTime < getDateTimeByMonth(minDate)) || (maxDate && dateMonthTime > getDateTimeByMonth(maxDate))
+  }
+}
+
 //生成年数据
 function getYearItem(date, defaultDate, minDate, maxDate) {
   let nowDate = defaultDate || new Date();
@@ -128,26 +181,6 @@ function getYearItem(date, defaultDate, minDate, maxDate) {
     value: new Date(date),
     current: dateYear === nowDate.getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
-  }
-}
-
-//生成周数据
-function getWeekItem(date, defaultDate, minDate, maxDate) {
-  let nowDate = defaultDate || new Date();
-  let dateYear = date.getFullYear();
-  let dateTime = getDateTimeByDay(date);
-
-  //获得当前年份第一天是第几周
-  let weekNumber = getRealWeekNumber(date);
-  if( weekNumber === 52 ){
-    dateYear = dateYear - 1;
-  }
-
-  return {
-    text: dateYear + "." + weekNumber + locale.weekly + "~" + dateYear + "." + ((weekNumber === 52 ? 0 : weekNumber) + 12) + locale.weekly,
-    value: [new Date(date), nextDays(date, 13*7)],
-    current: dateYear === nowDate.getFullYear() && weekNumber <= getRealWeekNumber(nowDate),
-    disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
   }
 }
 
@@ -186,6 +219,26 @@ function getDateGridByDay(date, defaultDate, minDate, maxDate) {
   return dateMap;
 }
 
+//生成以周为单位的日历网格model
+function getDateGridByWeek(date, defaultDate, minDate, maxDate) {
+  //生成date所在年份第一天的日期对象
+  date = new Date(date.getFullYear(), 0, 1);
+  //计算日历第一格日期
+  let firstDate = prevDays(date, 13 * 7);
+
+  let dateMap = [];
+
+  //生成3x4的二维日期对象数组
+  for (let i = 0; i < 2; i++) {
+    dateMap[i] = [];
+    for (let k = 0; k < 2; k++) {
+      dateMap[i].push(getWeekItem(next13Week(firstDate), defaultDate, minDate, maxDate))
+    }
+  }
+
+  return dateMap;
+}
+
 //生成以月为单位的日历网格model
 function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
   //切换到上一年最后一个月
@@ -203,20 +256,18 @@ function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
   return dateMap;
 }
 
-//生成以周为单位的日历网格model
-function getDateGridByWeek(date, defaultDate, minDate, maxDate) {
-  //生成date所在年份第一天的日期对象
+//生成以季为单位的日历网格model
+function getDateGridBySeason(date, defaultDate, minDate, maxDate) {
+  //切换到上一年第一天
   date = new Date(date.getFullYear(), 0, 1);
-  //计算日历第一格日期
-  let firstDate = prevDays(date, 13*7);
-
+  date = prevMonths(date, 3);
   let dateMap = [];
 
   //生成3x4的二维日期对象数组
   for (let i = 0; i < 2; i++) {
     dateMap[i] = [];
     for (let k = 0; k < 2; k++) {
-      dateMap[i].push(getWeekItem(next13Week(firstDate), defaultDate, minDate, maxDate))
+      dateMap[i].push(getSeasonItem(nextSeason(date), defaultDate, minDate, maxDate))
     }
   }
 
@@ -239,6 +290,7 @@ function getDateGridByYear(date, defaultDate, minDate, maxDate) {
 
   return dateMap;
 }
+
 //生成以世纪为单位的日历网格model
 function getDateGridByDecade(date, defaultDate, minDate, maxDate) {
   //计算日历第一格日期
@@ -268,6 +320,8 @@ function getDateGrid(date, defaultDate, minDate, maxDate, type) {
       return getDateGridByWeek.apply(null, arguments);
     case 'month':
       return getDateGridByYear.apply(null, arguments);
+    case 'season':
+      return getDateGridBySeason.apply(null, arguments);
     case 'year':
       return getDateGridByDecade.apply(null, arguments);
   }
@@ -282,6 +336,10 @@ function getCalendarText(date, type) {
     case 'week':
       return date.getFullYear() + locale.year;
     case 'month':
+      return date.getFullYear() + "~" + (date.getFullYear() + 19);
+    case 'season':
+      return date.getFullYear() + locale.year;
+    case 'year':
       return "";
   }
 }
@@ -306,7 +364,6 @@ class Calendar extends React.Component {
     this.defaultDate = DATE_REG.test(value) ? new Date(value) : null;
     this.minDate = DATE_REG.test(min) ? new Date(min) : null;
     this.maxDate = DATE_REG.test(max) ? new Date(max) : null;
-
   }
 
   show() {
@@ -348,6 +405,9 @@ class Calendar extends React.Component {
         break;
       case 'month':
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? 20 : -20));
+        break;
+      case 'season':
+        this.date.setYear(this.date.getFullYear() + (flag === '+' ? 1 : -1));
         break;
       case 'year':
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? DECADE_OFFSET * 9 : -DECADE_OFFSET * 9));
@@ -420,8 +480,8 @@ class Calendar extends React.Component {
         if (dateObj.selected) {
           selectedDate.push(dateObj.value);
         }
-        if(dateObj.current){
-          if( Array.isArray(dateObj.value) ) {
+        if (dateObj.current) {
+          if (Array.isArray(dateObj.value)) {
             selectedDate = selectedDate.concat(dateObj.value);
           } else {
             selectedDate.push(dateObj.value);
@@ -497,7 +557,14 @@ class Calendar extends React.Component {
                   <Button type="minor"
                           size="small"
                           className="t-button-plain"
-                          onClick={this.handleTypeClick.bind(this, 4, 'year')}
+                          onClick={this.handleTypeClick.bind(this, 4, 'season')}
+                  >
+                    {locale.season}
+                  </Button>
+                  <Button type="minor"
+                          size="small"
+                          className="t-button-plain"
+                          onClick={this.handleTypeClick.bind(this, 5, 'year')}
                   >
                     {locale.year}
                   </Button>
