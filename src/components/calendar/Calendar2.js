@@ -268,7 +268,7 @@ class Calendar extends React.Component {
                                  }
                                  onClick={this.handleDayClick.bind(this, item, i, k)}
                             >
-                              <span className="t-FBH t-FBAC t-FBJC">{formatter(item.text)}</span>
+                              <span className="t-FBH t-FBAC t-FBJC">{formatter(item)}</span>
                             </div>
                           )
                         })
@@ -296,7 +296,7 @@ Calendar.defaultProps = {
   onCancel: Context.noop,
   onConfirm: Context.noop,
   formatter: function (day) {
-    return day;
+    return day.text;
   },
   onAppear: Context.noop,
   onEnd: Context.noop,
