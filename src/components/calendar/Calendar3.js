@@ -202,7 +202,7 @@ function getDateGridByDay(date, defaultDate, minDate, maxDate) {
   //生成date所在月份第一天的日期对象
   date = new Date(date.getFullYear(), date.getMonth(), 1);
   //计算date所在月1号是周几
-  let theDay = date.getDay(date) || 7;
+  let theDay = date.getDay(date);
   //计算日历第一格日期
   let firstDate = prevDays(date, theDay + 1);
 
