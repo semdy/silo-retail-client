@@ -358,7 +358,7 @@ class Calendar extends React.Component {
     };
 
     let {value, min, max} = this.props;
-    this.isShown = false;
+    this.isShown = this.props.visible;
     this.selectFlag = false;
     this.lastIndex = 0;
     this.defaultDate = value instanceof Date ? value : (DATE_REG.test(value) ? new Date(value) : null);
@@ -367,10 +367,12 @@ class Calendar extends React.Component {
   }
 
   show() {
+    this.isShown = true;
     this.refs.popup.show();
   }
 
   hide() {
+    this.isShown = false;
     this.refs.popup.hide();
   }
 
@@ -464,6 +466,11 @@ class Calendar extends React.Component {
     this.props.onSelect(day.value);
   }
 
+  handleLeave() {
+    this.isShown = false;
+    this.props.onLeave();
+  }
+
   handleConfirm() {
     let selectedDate = [];
 
@@ -507,7 +514,7 @@ class Calendar extends React.Component {
     let {activeIndex, data, showType} = this.state;
     let {className, formatter, title, ...popupProps} = this.props;
     return (
-      <Popup ref="popup" {...popupProps}>
+      <Popup ref="popup" {...popupProps} onLeave={this.handleLeave.bind(this)}>
         <div className={["calendar-container", className].join(" ").trim()}>
           <div className="t-FBH t-FBAC calendar-header">
             <span className="calendar-cancel"

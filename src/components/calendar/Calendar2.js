@@ -49,7 +49,7 @@ function getDateGrid(date, defaultDate, minDate, maxDate) {
   //生成date所在月份第一天的日期对象
   date = new Date(date.getFullYear(), date.getMonth(), 1);
   //计算date所在月1号是周几
-  let theDay = date.getDay(date);
+  let theDay = date.getDay(date) || 7;
   //计算日历第一格日期
   let firstDate = prevDays(date, theDay + 1);
 
@@ -82,22 +82,19 @@ class Calendar extends React.Component {
     };
 
     let {value, min, max} = this.props;
-    this.isShown = this.props.visible;
+    this.isShown = false;
     this.selectFlag = false;
     this.lastIndex = 0;
-    this.defaultDate = DATE_REG.test(value) ? new Date(value) : null;
-    this.minDate = DATE_REG.test(min) ? new Date(min) : null;
-    this.maxDate = DATE_REG.test(max) ? new Date(max) : null;
+    this.defaultDate = value instanceof Date ? value : (DATE_REG.test(value) ? new Date(value) : null);
+    this.minDate = min instanceof Date ? min : (DATE_REG.test(min) ? new Date(min) : null);
+    this.maxDate = max instanceof Date ? max : (DATE_REG.test(max) ? new Date(max) : null);
   }
 
   show() {
-    this.isShown = true;
-    this._setDate();
     this.refs.popup.show();
   }
 
   hide() {
-    this.isShown = false;
     this.refs.popup.hide();
   }
 
@@ -111,7 +108,7 @@ class Calendar extends React.Component {
     this._setDateGrid();
   }
 
-  _setDate(){
+  reset() {
     this.date = this.defaultDate ? new Date(this.defaultDate) : new Date();
     this.selectedDate = this.date;
     this._setDateGrid();
@@ -165,11 +162,6 @@ class Calendar extends React.Component {
     this.props.onSelect(day.value);
   }
 
-  handleLeave(){
-    this.isShown = false;
-    this.props.onLeave();
-  }
-
   handleConfirm(){
     let selectedDate = this.selectedDate;
     if( !this.props.singleSelect ){
@@ -203,7 +195,7 @@ class Calendar extends React.Component {
     let {visible} = nextProps;
     if (visible === true && !this.isShown) {
       this.isShown = true;
-      this._setDate();
+      this.reset();
     }
   }
 
@@ -211,7 +203,7 @@ class Calendar extends React.Component {
     let {data} = this.state;
     let {className, formatter, title, ...popupProps} = this.props;
     return (
-      <Popup ref="popup" {...popupProps} onLeave={this.handleLeave.bind(this)}>
+      <Popup ref="popup" {...popupProps}>
         <div className={["calendar-container", className].join(" ").trim()}>
           <div className="t-FBH t-FBAC calendar-header">
             <span className="calendar-cancel"
@@ -316,8 +308,14 @@ Calendar.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   value: PropTypes.string,
-  min: PropTypes.string,
-  max: PropTypes.string,
+  min: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
+  max: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
   singleSelect: PropTypes.bool,
   onSelect: PropTypes.func,
   onCancel: PropTypes.func,

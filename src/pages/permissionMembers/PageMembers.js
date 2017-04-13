@@ -69,7 +69,7 @@ class Members extends React.Component {
   handleRemove(userId, index) {
     utils.ask(locale.confirm).then(() => {
       this.doRemove(userId, index);
-    });
+    }, () => {});
   }
 
   render() {
