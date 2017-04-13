@@ -1,4 +1,4 @@
-## salt-demo
+## silo-retail-client
 
 ---
 
