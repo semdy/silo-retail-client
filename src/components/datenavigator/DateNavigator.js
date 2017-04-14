@@ -55,7 +55,6 @@ const calculateOffset = (dateObj, filterType) => {
   let nowMonth = nowDateObj.getMonth();
   let nowDate = nowDateObj.getDate();
 
-  dateObj = Array.isArray(dateObj) ? dateObj[0] : dateObj;
   let year = dateObj.getFullYear();
   let month = dateObj.getMonth();
   let date = dateObj.getDate();
@@ -109,14 +108,32 @@ class DateNavigator extends React.Component {
       activeIndex: 0,
       width: window.innerWidth,
       height: window.innerHeight,
-      showCalendar: false
+      showCalendar: false,
+      showFilter: false,
+      calendarTitle: ''
     };
+
   }
 
   componentWillUnmount() {
     if (this.state.isFullScreen) {
       actions.setFullScreen(false);
       dom.removeClass(document.body, "page-fullscreen");
+    }
+  }
+
+  componentDidMount(){
+    if( location.hash.split("?")[0] === '#/report.sale' ){
+      this.setState({
+        showFilter: true,
+        calendarTitle: ''
+      });
+    } else {
+      this.setState({
+        showFilter: false,
+        calendarTitle: locale.calendarTitle
+      });
+      actions.setFilterType('hour');
     }
   }
 
@@ -139,6 +156,7 @@ class DateNavigator extends React.Component {
   }
 
   handleConfirm(date, filterType){
+    date = Array.isArray(date) ? date[0] : date;
     this.setState({
       showCalendar: false
     });
@@ -153,8 +171,12 @@ class DateNavigator extends React.Component {
   }
 
   render() {
-    let {width, height, isFullScreen, offset, store, activeIndex, timelines, filterType, showCalendar} = this.state;
+    let {width, height, isFullScreen, offset,
+      store, activeIndex, timelines, filterType,
+      showCalendar, showFilter, calendarTitle} = this.state;
+
     let date = getDateBefore(offset, filterType);
+
     let dateIndicator = (
       <div className="t-FBH t-FBAC t-FBJ">
         <div className="store-name"
@@ -228,8 +250,11 @@ class DateNavigator extends React.Component {
           }
         </div>
         <Calendar visible={showCalendar}
+                  showFilter={showFilter}
+                  title={calendarTitle}
                   onConfirm={this.handleConfirm.bind(this)}
                   onLeave={this.handleLeave.bind(this)}
+                  value={date}
                   max={new Date()}
         />
       </div>

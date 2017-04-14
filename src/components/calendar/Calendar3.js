@@ -667,7 +667,10 @@ Calendar.defaultProps = {
 Calendar.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
   min: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(Date)

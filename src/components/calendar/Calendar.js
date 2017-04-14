@@ -123,6 +123,7 @@ function getDayItem(date, currentDate, defaultDate, minDate, maxDate) {
     text: date.getDate(),
     value: new Date(date),
     current: dateTime === getDateTimeByDay(nowDate),
+    currentBlur: dateTime === getDateTimeByDay(new Date()),
     gray: date.getMonth() !== currentDate.getMonth(),
     disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
   }
@@ -358,7 +359,7 @@ class Calendar extends React.Component {
     };
 
     let {value, min, max} = this.props;
-    this.isShown = false;
+    this.isShown = this.props.visible;
     this.selectFlag = false;
     this.lastIndex = 0;
     this.defaultDate = value instanceof Date ? value : (DATE_REG.test(value) ? new Date(value) : null);
@@ -367,10 +368,12 @@ class Calendar extends React.Component {
   }
 
   show() {
+    this.isShown = true;
     this.refs.popup.show();
   }
 
   hide() {
+    this.isShown = false;
     this.refs.popup.hide();
   }
 
@@ -464,6 +467,11 @@ class Calendar extends React.Component {
     this.props.onSelect(day.value);
   }
 
+  handleLeave() {
+    this.isShown = false;
+    this.props.onLeave();
+  }
+
   handleConfirm() {
     let selectedDate = [];
 
@@ -496,18 +504,19 @@ class Calendar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let {visible} = nextProps;
+    let {visible, value} = nextProps;
     if (visible === true && !this.isShown) {
       this.isShown = true;
+      this.defaultDate = value;
       this.reset();
     }
   }
 
   render() {
     let {activeIndex, data, showType} = this.state;
-    let {className, formatter, title, ...popupProps} = this.props;
+    let {className, formatter, title, showFilter, ...popupProps} = this.props;
     return (
-      <Popup ref="popup" {...popupProps}>
+      <Popup ref="popup" {...popupProps} onLeave={this.handleLeave.bind(this)}>
         <div className={["calendar-container", className].join(" ").trim()}>
           <div className="t-FBH t-FBAC calendar-header">
             <span className="calendar-cancel"
@@ -516,7 +525,7 @@ class Calendar extends React.Component {
             </span>
             <div className="t-FB1 calendar-title">
               {
-                title ||
+                title ? title : (showFilter &&
                 <ButtonGroup half={true} activeIndex={activeIndex}>
                   <Button type="minor"
                           size="small"
@@ -560,7 +569,7 @@ class Calendar extends React.Component {
                   >
                     {locale.year}
                   </Button>
-                </ButtonGroup>
+                </ButtonGroup>)
               }
             </div>
             <span className="calendar-confirm"
@@ -615,7 +624,7 @@ class Calendar extends React.Component {
                                      "gray-day": item.gray,
                                      "selected": item.selected,
                                      "current": item.current,
-                                     "current-blur": item.currentBlur,
+                                     "current-blur": item.currentBlur && !item.current,
                                      "disabled": item.disabled
                                    })
                                  }
@@ -645,6 +654,7 @@ Calendar.defaultProps = {
   min: '',  //最大值
   max: '',  //最小值
   singleSelect: true, //是否单选
+  showFilter: true,  //是否显示类型筛选
   onSelect: Context.noop,
   onCancel: Context.noop,
   onConfirm: Context.noop,
@@ -660,7 +670,10 @@ Calendar.defaultProps = {
 Calendar.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
   min: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(Date)
@@ -669,7 +682,8 @@ Calendar.propTypes = {
     PropTypes.string,
     PropTypes.instanceOf(Date)
   ]),
-  singleSelect: PropTypes.bool,
+  singleSelect: PropTypes.bool.isRequired,
+  showFilter: PropTypes.bool.isRequired,
   onSelect: PropTypes.func,
   onCancel: PropTypes.func,
   onConfirm: PropTypes.func,
