@@ -40,7 +40,7 @@ export const getDateBefore = (offset, filterType) => {
       date.setDate(date.getDate() - 13 * 7 * offset);
       break;
     case 'month':
-    case 'season':
+    case 'quarter':
     case 'year':
       date.setYear(date.getFullYear() - offset);
       break;
@@ -88,10 +88,11 @@ const calculateOffset = (dateObj, filterType) => {
       return (nowYear - year)*4 + nowWeekNum - weekNum;
     case 'month':
       return nowYear - year;
-    case 'season':
-      return (nowYear - year)*4 + Math.ceil((nowMonth + 1)/3) - Math.ceil((month + 1)/3);
+    case 'quarter':
+      //return (nowYear - year)*4 + Math.ceil((nowMonth + 1)/3) - Math.ceil((month + 1)/3);
+      return (nowYear - 1 - year)/2;
     case 'year':
-      return (nowYear - year)/5;
+      return (nowYear - 4 - year)/5;
   }
 };
 

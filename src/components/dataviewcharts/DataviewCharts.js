@@ -1,5 +1,6 @@
 require('./DataviewCharts.styl');
 
+let {Toast} = SaltUI;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
@@ -27,6 +28,9 @@ const formatTime = (time, bytype) => {
     case 'month':
       ret = date.getMonth() + 1;
       break;
+    case 'quarter':
+      ret = Math.ceil((date.getMonth() + 1)/3);
+      break;
     case 'year':
       ret = year;
       break;
@@ -40,6 +44,7 @@ const UNIT_MAP = {
   day: locale.day,
   week: locale.weekly,
   month: locale.month,
+  quarter: locale.quarter,
   year: locale.year
 };
 
@@ -155,13 +160,17 @@ class DataviewCharts extends Base {
   setData(values) {
     let cacheData = [];
 
+    //将时间线按小到大排序
     const timelines = Object.keys(genGroupKeyMap(values, cacheData, this.state.filterType)).sort((a, b) => {
       return parseFloat(a) - parseFloat(b)
     });
+    //把年份截掉
     const xAxisData = timelines.map(xdata => xdata.charAt(5) === "0" ? xdata.substr(6) : xdata.substr(5));
+    //提取y轴的数据
     const yAxisData = extractYAxisData(zeroFill(cacheData, timelines));
 
     actions.setTimelines(timelines);
+
     this.setState({
       loaded: true,
       data: {
@@ -175,17 +184,32 @@ class DataviewCharts extends Base {
     });
   }
 
-  setParams(storeId, offset) {
-    this.fetchParams.forEach((item, i) => {
-      this.fetchParams[i].offset = offset + i;
-      this.fetchParams[i].storeId = storeId;
+  getParams(storeId, offset) {
+    let params = [];
+    let {filterType} = this.state;
+    //如果按周或者年排，则不作对比
+    if( filterType === 'week' || filterType === 'year' ){
+      params = this.fetchParams.slice(0, 1);
+    } else {
+      params = this.fetchParams.slice();
+    }
+    params.forEach((item, i) => {
+      params[i].offset = offset + i;
+      params[i].storeId = storeId;
     });
+
+    return params;
   }
 
   fetch() {
     let {store, offset} = this.state;
-    this.setParams(store.storeId, offset);
-    this.fetchGroupData(this.fetchParams).then((values) => {
+    this.fetchGroupData(this.getParams(store.storeId, offset)).then((values) => {
+      let isEmpty = values.every((value) => {
+        return value.axisX.time.length === 0;
+      });
+      if( isEmpty ){
+        return Toast.error(locale.dataviewEmpty);
+      }
       this.setData(values);
       this.refs.charts.refresh();
     });

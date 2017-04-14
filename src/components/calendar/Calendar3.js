@@ -96,7 +96,7 @@ function next13Week(date) {
 }
 
 //获得下一季度的date对象
-function nextSeason(date) {
+function nextQuarter(date) {
   date.setMonth(date.getMonth() + 3);
   return date;
 }
@@ -159,13 +159,13 @@ function getMonthItem(date, defaultDate, minDate, maxDate) {
 }
 
 //生成季数据
-function getSeasonItem(date, defaultDate, minDate, maxDate) {
+function getQuarterItem(date, defaultDate, minDate, maxDate) {
   let nowDate = defaultDate || new Date();
   let dateMonth = date.getMonth();
   let dateMonthTime = getDateTimeByMonth(date);
   let dateYear = date.getFullYear();
   return {
-    text: locale.seasonString.replace('%a', Math.ceil((dateMonth + 1)/3)),
+    text: locale.quarterString.replace('%a', Math.ceil((dateMonth + 1)/3)),
     value: [new Date(date), nextMonths(date, 2)],
     current: dateYear === nowDate.getFullYear() && Math.ceil((nowDate.getMonth() + 1)/3) === Math.ceil((dateMonth + 1)/3),
     disabled: (minDate && dateMonthTime < getDateTimeByMonth(minDate)) || (maxDate && dateMonthTime > getDateTimeByMonth(maxDate))
@@ -257,7 +257,7 @@ function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
 }
 
 //生成以季为单位的日历网格model
-function getDateGridBySeason(date, defaultDate, minDate, maxDate) {
+function getDateGridByQuarter(date, defaultDate, minDate, maxDate) {
   //切换到上一年第一天
   date = new Date(date.getFullYear(), 0, 1);
   date = prevMonths(date, 3);
@@ -267,7 +267,7 @@ function getDateGridBySeason(date, defaultDate, minDate, maxDate) {
   for (let i = 0; i < 2; i++) {
     dateMap[i] = [];
     for (let k = 0; k < 2; k++) {
-      dateMap[i].push(getSeasonItem(nextSeason(date), defaultDate, minDate, maxDate))
+      dateMap[i].push(getQuarterItem(nextQuarter(date), defaultDate, minDate, maxDate))
     }
   }
 
@@ -320,8 +320,8 @@ function getDateGrid(date, defaultDate, minDate, maxDate, type) {
       return getDateGridByWeek.apply(null, arguments);
     case 'month':
       return getDateGridByYear.apply(null, arguments);
-    case 'season':
-      return getDateGridBySeason.apply(null, arguments);
+    case 'quarter':
+      return getDateGridByQuarter.apply(null, arguments);
     case 'year':
       return getDateGridByDecade.apply(null, arguments);
   }
@@ -337,7 +337,7 @@ function getCalendarText(date, type) {
       return date.getFullYear() + locale.year;
     case 'month':
       return date.getFullYear() + "~" + (date.getFullYear() + 19);
-    case 'season':
+    case 'quarter':
       return date.getFullYear() + locale.year;
     case 'year':
       return "";
@@ -405,7 +405,7 @@ class Calendar extends React.Component {
       case 'month':
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? 20 : -20));
         break;
-      case 'season':
+      case 'quarter':
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? 1 : -1));
         break;
       case 'year':
@@ -556,9 +556,9 @@ class Calendar extends React.Component {
                   <Button type="minor"
                           size="small"
                           className="t-button-plain"
-                          onClick={this.handleTypeClick.bind(this, 4, 'season')}
+                          onClick={this.handleTypeClick.bind(this, 4, 'quarter')}
                   >
-                    {locale.season}
+                    {locale.quarter}
                   </Button>
                   <Button type="minor"
                           size="small"

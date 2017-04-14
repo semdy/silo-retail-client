@@ -108,15 +108,15 @@ export default {
   loadMore: '加载更多...',
   year: '年',
   month: '月',
-  season: '季',
+  quarter: '季',
   day: '日',
   week: '星期',
   weekly: '周',
   hour: '时',
-  seasonString: '第%a季度',
+  quarterString: '第%a季度',
   chooseStore: '选择对比门店',
   searchStorePlaceholder: '请输入要查询的门店',
-  dataviewLegendNames: ["当前订单量   ", "当前营业额", "前一日订单量", "前一日营业额"],
+  dataviewLegendNames: ["当前周期订单量", "当前周期营业额", "前一周期订单量", "前一周期营业额"],
   totalOrder: '总订单量',
   totalAmount: '总营业额',
   orderNum: '订单量',
@@ -126,5 +126,6 @@ export default {
   distributeHelpText: '连带率分布的解释...',
   saleCount: '销售数量/单',
   appLoading: '应用启动中...',
-  calendarTitle: '请选择日期'
+  calendarTitle: '请选择日期',
+  dataviewEmpty: '当前周期没有数据'
 }

@@ -8,10 +8,8 @@ import {getWeekNumber} from '../../utils/date';
 import Popup from '../popup';
 import locale from '../../locale';
 
-//世纪年份间隔
+//年份间隔
 const DECADE_OFFSET = 5;
-//季度年份间隔
-const YEAR_OFFSET = 2;
 
 //获得下一天date对象
 function nextDay(date) {
@@ -163,13 +161,14 @@ function getMonthItem(date, defaultDate, minDate, maxDate) {
 //生成季数据
 function getQuarterItem(date, defaultDate, minDate, maxDate) {
   let nowDate = defaultDate || new Date();
+  let dateMonth = date.getMonth();
+  let dateMonthTime = getDateTimeByMonth(date);
   let dateYear = date.getFullYear();
-
   return {
-    text: (dateYear - YEAR_OFFSET + 1) + locale.year + "~" + dateYear + locale.year,
-    value: [prevYears(date, YEAR_OFFSET - 1, true), new Date(date)],
-    current: dateYear === nowDate.getFullYear(),
-    disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
+    text: locale.quarterString.replace('%a', Math.ceil((dateMonth + 1)/3)),
+    value: [new Date(date), nextMonths(date, 2)],
+    current: dateYear === nowDate.getFullYear() && Math.ceil((nowDate.getMonth() + 1)/3) === Math.ceil((dateMonth + 1)/3),
+    disabled: (minDate && dateMonthTime < getDateTimeByMonth(minDate)) || (maxDate && dateMonthTime > getDateTimeByMonth(maxDate))
   }
 }
 
@@ -191,8 +190,8 @@ function getDecadeItem(date, defaultDate, minDate, maxDate) {
   let dateYear = date.getFullYear();
 
   return {
-    text: (dateYear - DECADE_OFFSET + 1) + locale.year + "~" + dateYear + locale.year,
-    value: [prevYears(date, DECADE_OFFSET - 1, true), new Date(date)],
+    text: dateYear + locale.year + "~" + (dateYear + DECADE_OFFSET) + locale.year,
+    value: [new Date(date), nextYears(date, DECADE_OFFSET, true)],
     current: dateYear === nowDate.getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
   }
@@ -259,16 +258,16 @@ function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
 
 //生成以季为单位的日历网格model
 function getDateGridByQuarter(date, defaultDate, minDate, maxDate) {
-  //计算日历第一格日期
-  let firstDate = prevYears(date, 8 * YEAR_OFFSET);
-
+  //切换到上一年第一天
+  date = new Date(date.getFullYear(), 0, 1);
+  date = prevMonths(date, 3);
   let dateMap = [];
 
   //生成3x4的二维日期对象数组
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 2; i++) {
     dateMap[i] = [];
-    for (let k = 0; k < 3; k++) {
-      dateMap[i].push(getQuarterItem(nextYears(firstDate, YEAR_OFFSET), defaultDate, minDate, maxDate))
+    for (let k = 0; k < 2; k++) {
+      dateMap[i].push(getQuarterItem(nextQuarter(date), defaultDate, minDate, maxDate))
     }
   }
 
@@ -277,8 +276,8 @@ function getDateGridByQuarter(date, defaultDate, minDate, maxDate) {
 
 //生成以年为单位的日历网格model
 function getDateGridByYear(date, defaultDate, minDate, maxDate) {
-  //切换到上19年第一天
-  date = new Date(date.getFullYear() - 19, 0, 1);
+  //切换到上一年第一天
+  date = new Date(date.getFullYear() - 1, 0, 1);
   let dateMap = [];
 
   //生成3x4的二维日期对象数组
@@ -295,7 +294,7 @@ function getDateGridByYear(date, defaultDate, minDate, maxDate) {
 //生成以世纪为单位的日历网格model
 function getDateGridByDecade(date, defaultDate, minDate, maxDate) {
   //计算日历第一格日期
-  let firstDate = prevYears(date, 8 * DECADE_OFFSET);
+  let firstDate = prevYears(date, DECADE_OFFSET);
 
   let dateMap = [];
 
@@ -337,8 +336,9 @@ function getCalendarText(date, type) {
     case 'week':
       return date.getFullYear() + locale.year;
     case 'month':
-      return (date.getFullYear() - 18) + "~" + (date.getFullYear() + 1);
+      return date.getFullYear() + "~" + (date.getFullYear() + 19);
     case 'quarter':
+      return date.getFullYear() + locale.year;
     case 'year':
       return "";
   }
@@ -404,7 +404,7 @@ class Calendar extends React.Component {
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? 20 : -20));
         break;
       case 'quarter':
-        this.date.setYear(this.date.getFullYear() + (flag === '+' ? YEAR_OFFSET * 9 : -YEAR_OFFSET * 9));
+        this.date.setYear(this.date.getFullYear() + (flag === '+' ? 1 : -1));
         break;
       case 'year':
         this.date.setYear(this.date.getFullYear() + (flag === '+' ? DECADE_OFFSET * 9 : -DECADE_OFFSET * 9));
