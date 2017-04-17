@@ -18,7 +18,13 @@ class Popup extends React.Component {
     this.setState({
       visible: true
     });
-    actions.setP2rEnabled(false);
+
+    /**
+     * 加延迟以保证动画的流畅性
+     */
+    setTimeout(() => {
+      actions.setP2rEnabled(false);
+    }, 600);
   }
 
   hide() {

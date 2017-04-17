@@ -180,7 +180,7 @@ class DateNavigator extends React.Component {
     let dateIndicator = (
       <div className="t-FBH t-FBAC t-FBJ">
         <div className="store-name"
-             onClick={this.showStore}
+             onClick={this.showStore.bind(this)}
              style={{display: isFullScreen ? "none" : undefined}}>
           <Icon name="store" className="store-icon" width={20} height={20}/>
           <span className="store-text">

@@ -97,12 +97,6 @@ function next13Week(date) {
   return date;
 }
 
-//获得下一季度的date对象
-function nextQuarter(date) {
-  date.setMonth(date.getMonth() + 3);
-  return date;
-}
-
 function getRealWeekNumber(date) {
   //获得当前年份第一天是第几周
   let weekNumber = getWeekNumber(date);
@@ -113,6 +107,10 @@ function getRealWeekNumber(date) {
   }
 
   return weekNumber;
+}
+
+function getFloat(year, week) {
+  return parseFloat([year, week < 10 ? "0" + week : week].join("."));
 }
 
 //生成天数据
@@ -137,14 +135,19 @@ function getWeekItem(date, defaultDate, minDate, maxDate) {
 
   //获得当前年份第一天是第几周
   let weekNumber = getRealWeekNumber(date);
-  if (weekNumber === 52) {
+  if (weekNumber >= 52) {
     dateYear = dateYear - 1;
   }
 
+  let lastWeekCycle = weekNumber >= 52;
+  let defWeekNumber = getFloat(nowDate.getFullYear(), getRealWeekNumber(nowDate));
+  let nowWeekNumber = getFloat(new Date().getFullYear(), getRealWeekNumber(new Date()));
+
   return {
-    text: dateYear + "." + weekNumber + locale.weekly + "~" + dateYear + "." + ((weekNumber === 52 ? 0 : weekNumber) + 12) + locale.weekly,
+    text: dateYear + "." + weekNumber + locale.weekly + "~" + (lastWeekCycle ? dateYear + 1 :  dateYear) + "." + ((lastWeekCycle ? 0 : weekNumber) + 12) + locale.weekly,
     value: [new Date(date), nextDays(date, 13 * 7)],
-    current: dateYear === nowDate.getFullYear() && weekNumber <= getRealWeekNumber(nowDate),
+    current: defWeekNumber >= getFloat(dateYear, weekNumber) && defWeekNumber <= getFloat(lastWeekCycle ? dateYear + 1 : dateYear, (lastWeekCycle ? 0 : weekNumber) + 12),
+    currentBlur: nowWeekNumber >= getFloat(dateYear, weekNumber) && nowWeekNumber <= getFloat(lastWeekCycle ? dateYear + 1 : dateYear, (lastWeekCycle ? 0 : weekNumber) + 12),
     disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
   }
 }
@@ -157,6 +160,7 @@ function getMonthItem(date, defaultDate, minDate, maxDate) {
     text: (date.getMonth() + 1) + locale.month,
     value: new Date(date),
     current: dateMonth === getDateTimeByMonth(nowDate),
+    currentBlur: dateMonth === getDateTimeByMonth(new Date()),
     disabled: (minDate && dateMonth < getDateTimeByMonth(minDate)) || (maxDate && dateMonth > getDateTimeByMonth(maxDate))
   }
 }
@@ -169,7 +173,8 @@ function getQuarterItem(date, defaultDate, minDate, maxDate) {
   return {
     text: (dateYear - YEAR_OFFSET + 1) + locale.year + "~" + dateYear + locale.year,
     value: [prevYears(date, YEAR_OFFSET - 1, true), new Date(date)],
-    current: dateYear === nowDate.getFullYear(),
+    current: dateYear - YEAR_OFFSET + 1 <= nowDate.getFullYear() && nowDate.getFullYear() <= dateYear,
+    currentBlur: dateYear === new Date().getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
   }
 }
@@ -182,6 +187,7 @@ function getYearItem(date, defaultDate, minDate, maxDate) {
     text: dateYear + locale.year,
     value: new Date(date),
     current: dateYear === nowDate.getFullYear(),
+    currentBlur: dateYear === new Date().getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
   }
 }
@@ -194,7 +200,8 @@ function getDecadeItem(date, defaultDate, minDate, maxDate) {
   return {
     text: (dateYear - DECADE_OFFSET + 1) + locale.year + "~" + dateYear + locale.year,
     value: [prevYears(date, DECADE_OFFSET - 1, true), new Date(date)],
-    current: dateYear === nowDate.getFullYear(),
+    current: dateYear - DECADE_OFFSET + 1 <= nowDate.getFullYear() && nowDate.getFullYear() <= dateYear,
+    currentBlur: dateYear === new Date().getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
   }
 }
@@ -261,7 +268,7 @@ function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
 //生成以季为单位的日历网格model
 function getDateGridByQuarter(date, defaultDate, minDate, maxDate) {
   //计算日历第一格日期
-  let firstDate = prevYears(date, 8 * YEAR_OFFSET);
+  let firstDate = prevYears(new Date(), 8 * YEAR_OFFSET);
 
   let dateMap = [];
 
@@ -279,7 +286,7 @@ function getDateGridByQuarter(date, defaultDate, minDate, maxDate) {
 //生成以年为单位的日历网格model
 function getDateGridByYear(date, defaultDate, minDate, maxDate) {
   //切换到上19年第一天
-  date = new Date(date.getFullYear() - 19, 0, 1);
+  date = new Date(new Date().getFullYear() - 19, 0, 1);
   let dateMap = [];
 
   //生成3x4的二维日期对象数组
@@ -296,7 +303,7 @@ function getDateGridByYear(date, defaultDate, minDate, maxDate) {
 //生成以世纪为单位的日历网格model
 function getDateGridByDecade(date, defaultDate, minDate, maxDate) {
   //计算日历第一格日期
-  let firstDate = prevYears(date, 8 * DECADE_OFFSET);
+  let firstDate = prevYears(new Date(), 8 * DECADE_OFFSET);
 
   let dateMap = [];
 
@@ -378,12 +385,12 @@ class Calendar extends React.Component {
   }
 
   showPrev() {
-    this._getDateByStep('-');
+    this._getDateByStep(false);
     this._setDateGrid();
   }
 
   showNext() {
-    this._getDateByStep('+');
+    this._getDateByStep(true);
     this._setDateGrid();
   }
 
@@ -395,22 +402,22 @@ class Calendar extends React.Component {
   _getDateByStep(flag) {
     switch (this.state.showType) {
       case 'hour':
-        this.date.setMonth(this.date.getMonth() + (flag === '+' ? 1 : -1));
+        this.date.setMonth(this.date.getMonth() + (flag ? 1 : -1));
         break;
       case 'day':
-        this.date.setYear(this.date.getFullYear() + (flag === '+' ? 1 : -1));
+        this.date.setYear(this.date.getFullYear() + (flag ? 1 : -1));
         break;
       case 'week':
-        this.date.setYear(this.date.getFullYear() + (flag === '+' ? 1 : -1));
+        this.date.setYear(this.date.getFullYear() + (flag ? 1 : -1));
         break;
       case 'month':
-        this.date.setYear(this.date.getFullYear() + (flag === '+' ? 20 : -20));
+        this.date.setYear(this.date.getFullYear() + (flag ? 20 : -20));
         break;
       case 'quarter':
-        this.date.setYear(this.date.getFullYear() + (flag === '+' ? YEAR_OFFSET * 9 : -YEAR_OFFSET * 9));
+        this.date.setYear(this.date.getFullYear() + (flag ? YEAR_OFFSET * 9 : -YEAR_OFFSET * 9));
         break;
       case 'year':
-        this.date.setYear(this.date.getFullYear() + (flag === '+' ? DECADE_OFFSET * 9 : -DECADE_OFFSET * 9));
+        this.date.setYear(this.date.getFullYear() + (flag ? DECADE_OFFSET * 9 : -DECADE_OFFSET * 9));
         break;
     }
     return this.date;
@@ -453,7 +460,6 @@ class Calendar extends React.Component {
         }
         if (item.current) {
           item.current = false;
-          item.currentBlur = true;
         }
       });
     });
@@ -624,7 +630,7 @@ class Calendar extends React.Component {
                                      "gray-day": item.gray,
                                      "selected": item.selected,
                                      "current": item.current,
-                                     "current-blur": item.currentBlur && !item.current,
+                                     "current-blur": item.currentBlur,
                                      "disabled": item.disabled
                                    })
                                  }
