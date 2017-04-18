@@ -120,9 +120,9 @@ function getDayItem(date, currentDate, defaultDate, minDate, maxDate) {
   return {
     text: date.getDate(),
     value: new Date(date),
-    current: dateTime === getDateTimeByDay(nowDate),
-    currentBlur: dateTime === getDateTimeByDay(new Date()),
-    gray: date.getMonth() !== currentDate.getMonth(),
+    selected: dateTime === getDateTimeByDay(nowDate),
+    current: dateTime === getDateTimeByDay(new Date()),
+    outside: date.getMonth() !== currentDate.getMonth(),
     disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
   }
 }
@@ -146,8 +146,8 @@ function getWeekItem(date, defaultDate, minDate, maxDate) {
   return {
     text: dateYear + "." + weekNumber + locale.weekly + "~" + (lastWeekCycle ? dateYear + 1 :  dateYear) + "." + ((lastWeekCycle ? 0 : weekNumber) + 12) + locale.weekly,
     value: [new Date(date), nextDays(date, 13 * 7)],
-    current: defWeekNumber >= getFloat(dateYear, weekNumber) && defWeekNumber <= getFloat(lastWeekCycle ? dateYear + 1 : dateYear, (lastWeekCycle ? 0 : weekNumber) + 12),
-    currentBlur: nowWeekNumber >= getFloat(dateYear, weekNumber) && nowWeekNumber <= getFloat(lastWeekCycle ? dateYear + 1 : dateYear, (lastWeekCycle ? 0 : weekNumber) + 12),
+    selected: defWeekNumber >= getFloat(dateYear, weekNumber) && defWeekNumber <= getFloat(lastWeekCycle ? dateYear + 1 : dateYear, (lastWeekCycle ? 0 : weekNumber) + 12),
+    current: nowWeekNumber >= getFloat(dateYear, weekNumber) && nowWeekNumber <= getFloat(lastWeekCycle ? dateYear + 1 : dateYear, (lastWeekCycle ? 0 : weekNumber) + 12),
     disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
   }
 }
@@ -159,8 +159,8 @@ function getMonthItem(date, defaultDate, minDate, maxDate) {
   return {
     text: (date.getMonth() + 1) + locale.month,
     value: new Date(date),
-    current: dateMonth === getDateTimeByMonth(nowDate),
-    currentBlur: dateMonth === getDateTimeByMonth(new Date()),
+    selected: dateMonth === getDateTimeByMonth(nowDate),
+    current: dateMonth === getDateTimeByMonth(new Date()),
     disabled: (minDate && dateMonth < getDateTimeByMonth(minDate)) || (maxDate && dateMonth > getDateTimeByMonth(maxDate))
   }
 }
@@ -173,8 +173,8 @@ function getQuarterItem(date, defaultDate, minDate, maxDate) {
   return {
     text: (dateYear - YEAR_OFFSET + 1) + locale.year + "~" + dateYear + locale.year,
     value: [prevYears(date, YEAR_OFFSET - 1, true), new Date(date)],
-    current: dateYear - YEAR_OFFSET + 1 <= nowDate.getFullYear() && nowDate.getFullYear() <= dateYear,
-    currentBlur: dateYear === new Date().getFullYear(),
+    selected: dateYear - YEAR_OFFSET + 1 <= nowDate.getFullYear() && nowDate.getFullYear() <= dateYear,
+    current: dateYear === new Date().getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
   }
 }
@@ -186,8 +186,8 @@ function getYearItem(date, defaultDate, minDate, maxDate) {
   return {
     text: dateYear + locale.year,
     value: new Date(date),
-    current: dateYear === nowDate.getFullYear(),
-    currentBlur: dateYear === new Date().getFullYear(),
+    selected: dateYear === nowDate.getFullYear(),
+    current: dateYear === new Date().getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
   }
 }
@@ -200,8 +200,8 @@ function getDecadeItem(date, defaultDate, minDate, maxDate) {
   return {
     text: (dateYear - DECADE_OFFSET + 1) + locale.year + "~" + dateYear + locale.year,
     value: [prevYears(date, DECADE_OFFSET - 1, true), new Date(date)],
-    current: dateYear - DECADE_OFFSET + 1 <= nowDate.getFullYear() && nowDate.getFullYear() <= dateYear,
-    currentBlur: dateYear === new Date().getFullYear(),
+    selected: dateYear - DECADE_OFFSET + 1 <= nowDate.getFullYear() && nowDate.getFullYear() <= dateYear,
+    current: dateYear === new Date().getFullYear(),
     disabled: (minDate && dateYear < minDate.getFullYear()) || (maxDate && dateYear > maxDate.getFullYear())
   }
 }
@@ -268,7 +268,7 @@ function getDateGridByMonth(date, defaultDate, minDate, maxDate) {
 //生成以季为单位的日历网格model
 function getDateGridByQuarter(date, defaultDate, minDate, maxDate) {
   //计算日历第一格日期
-  let firstDate = prevYears(new Date(), 8 * YEAR_OFFSET);
+  let firstDate = prevYears(date, 8 * YEAR_OFFSET);
 
   let dateMap = [];
 
@@ -286,7 +286,7 @@ function getDateGridByQuarter(date, defaultDate, minDate, maxDate) {
 //生成以年为单位的日历网格model
 function getDateGridByYear(date, defaultDate, minDate, maxDate) {
   //切换到上19年第一天
-  date = new Date(new Date().getFullYear() - 19, 0, 1);
+  date = new Date(date.getFullYear() - 19, 0, 1);
   let dateMap = [];
 
   //生成3x4的二维日期对象数组
@@ -303,7 +303,7 @@ function getDateGridByYear(date, defaultDate, minDate, maxDate) {
 //生成以世纪为单位的日历网格model
 function getDateGridByDecade(date, defaultDate, minDate, maxDate) {
   //计算日历第一格日期
-  let firstDate = prevYears(new Date(), 8 * DECADE_OFFSET);
+  let firstDate = prevYears(date, 8 * DECADE_OFFSET);
 
   let dateMap = [];
 
@@ -458,9 +458,6 @@ class Calendar extends React.Component {
             item.selected = false;
           }
         }
-        if (item.current) {
-          item.current = false;
-        }
       });
     });
 
@@ -484,9 +481,6 @@ class Calendar extends React.Component {
     this.state.data.forEach((item) => {
       item.forEach((dateObj) => {
         if (dateObj.selected) {
-          selectedDate.push(dateObj.value);
-        }
-        if (dateObj.current) {
           if (Array.isArray(dateObj.value)) {
             selectedDate = selectedDate.concat(dateObj.value);
           } else {
@@ -626,11 +620,10 @@ class Calendar extends React.Component {
                           return (
                             <div key={k}
                                  className={
-                                   classnames("t-FB1 t-FBH t-FBAC t-FBJC cld-day", {
-                                     "gray-day": item.gray,
+                                   classnames("t-FB1 t-FBH t-FBAC t-FBJC cld-item", {
+                                     "outside": item.outside,
                                      "selected": item.selected,
                                      "current": item.current,
-                                     "current-blur": item.currentBlur,
                                      "disabled": item.disabled
                                    })
                                  }

@@ -3,7 +3,7 @@ require('./Popup.styl');
 let {Context} = SaltUI;
 let {PropTypes} = React;
 import Animate from '../../components/Animation';
-import actions from '../../app/actions';
+import dom from '../../utils/dom';
 
 class Popup extends React.Component {
 
@@ -18,13 +18,6 @@ class Popup extends React.Component {
     this.setState({
       visible: true
     });
-
-    /**
-     * 加延迟以保证动画的流畅性
-     */
-    setTimeout(() => {
-      actions.setP2rEnabled(false);
-    }, 600);
   }
 
   hide() {
@@ -51,20 +44,24 @@ class Popup extends React.Component {
     }
   }
 
-  handleLeave(){
-    this.props.onLeave();
-    actions.setP2rEnabled(true);
+  touchStartHandler(e){
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  componentDidMount(){
+    dom.on(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
   }
 
   componentWillUnmount(){
-    actions.setP2rEnabled(true);
+    dom.off(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
   }
 
   render() {
     let {visible} = this.state;
-    let {className, showBackdrop, onAppear, onEnd, onEnter} = this.props;
+    let {className, showBackdrop, onAppear, onEnd, onEnter, onLeave} = this.props;
     return (
-      <div>
+      <div ref="el">
         {
           showBackdrop &&
           <Animate
@@ -81,7 +78,7 @@ class Popup extends React.Component {
                  onAppear={onAppear}
                  onEnd={onEnd}
                  onEnter={onEnter}
-                 onLeave={this.handleLeave.bind(this)}
+                 onLeave={onLeave}
         >
           {this.props.children}
         </Animate>
