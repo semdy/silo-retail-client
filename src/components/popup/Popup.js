@@ -45,7 +45,6 @@ class Popup extends React.Component {
   }
 
   touchStartHandler(e){
-    e.preventDefault();
     e.stopPropagation();
   }
 
