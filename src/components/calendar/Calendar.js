@@ -622,8 +622,8 @@ class Calendar extends React.Component {
                                  className={
                                    classnames("t-FB1 t-FBH t-FBAC t-FBJC cld-item", {
                                      "outside": item.outside,
-                                     "selected": item.selected,
                                      "current": item.current,
+                                     "selected": item.selected,
                                      "disabled": item.disabled
                                    })
                                  }
