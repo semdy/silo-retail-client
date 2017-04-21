@@ -73,7 +73,7 @@ class App extends React.Component {
   }
 
   render() {
-    let {isAppReady, storeListVisible, showHeader, headerTitle, shownP2r, isP2rEnabled} = this.state;
+    let {isAppReady, showHeader, headerTitle, shownP2r, isP2rEnabled} = this.state;
 
     return (
       isAppReady &&
@@ -96,9 +96,7 @@ class App extends React.Component {
               {this.props.children}
             </div>
           </Pull2refresh>
-          {
-            storeListVisible && <StoreSelector/>
-          }
+          <StoreSelector/>
           <Navgationmask/>
         </div>
       </div>

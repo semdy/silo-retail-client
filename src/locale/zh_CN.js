@@ -127,5 +127,6 @@ export default {
   saleCount: '销售数量/单',
   appLoading: '应用启动中...',
   calendarTitle: '请选择日期',
-  dataviewEmpty: '当前周期没有数据'
+  dataviewEmpty: '当前周期没有数据',
+  envError: '环境参数配置错误'
 }

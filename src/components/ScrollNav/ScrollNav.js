@@ -106,12 +106,6 @@ class Page extends React.Component {
             </div>
           </div>
         </div>
-        {/*{
-          storeListVisible &&
-          <div className="scroll-nav-toolbar right" onClick={this.rightFun.bind(this)}>
-            <Icon name="store" width={20} height={20}/>
-          </div>
-        }*/}
       </div>
     );
   }

@@ -19,7 +19,6 @@ class ScrollLoader extends React.Component {
     setTimeout(() => {
       this.createDetector();
     }, 200);
-
   }
 
   componentWillUnmount() {
@@ -37,7 +36,6 @@ class ScrollLoader extends React.Component {
   createDetector(){
     let self = this;
     let {container, scroller, onScroll, onReach, bufferPx, time} = this.props;
-
     this.scrollDetector = new ScrollDetector({
       container: container,
       scroller: scroller || this.refs.loader,

@@ -16,8 +16,6 @@ module.exports = Reflux.createStore({
     storeList: [],
     //店铺列表是否多选
     storeMultiable: false,
-    //是否显示店铺列表
-    storeListVisible: false,
     //店铺弹层标题
     storeSelectorTitle: locale.storeLocale.singleTitle,
     //是否显示顶部header
@@ -98,18 +96,6 @@ module.exports = Reflux.createStore({
   //设置全屏
   onSetFullScreen (bool) {
     this.state.isFullScreen = bool;
-    this.updateComponent();
-  },
-
-  //显示店铺列表
-  onShowStoreList(){
-    this.state.storeListVisible = true;
-    this.updateComponent();
-  },
-
-  //隐藏店铺列表
-  onHideStoreList(){
-    this.state.storeListVisible = false;
     this.updateComponent();
   },
 

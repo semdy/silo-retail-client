@@ -18,7 +18,8 @@ class Apply extends React.Component {
     super(props);
     this.state = {
       data: [],
-      loaded: false
+      loaded: false,
+      container: window
     };
     this.keyword = '';
   }
@@ -29,6 +30,9 @@ class Apply extends React.Component {
     //禁用下拉刷新
     actions.setP2rEnabled(false);
     this.doSearch(this.keyword);
+    this.setState({
+      container: this.refs.container
+    });
   }
 
   componentWillUnmount() {
@@ -78,7 +82,7 @@ class Apply extends React.Component {
   }
 
   render() {
-    let {loaded, data} = this.state;
+    let {loaded, data, container} = this.state;
     return (
       <div className="permission-apply">
         <SearchBar placeholder={locale.searchStorePlaceholder}
@@ -86,7 +90,7 @@ class Apply extends React.Component {
         >
         </SearchBar>
         <div ref="container" className="group-wrapper">
-          <ScrollLoader container={this.refs.container} onReach={this.handleLoader.bind(this)}>
+          <ScrollLoader container={container} onReach={this.handleLoader.bind(this)}>
             {
               loaded && (
                 data.length > 0 ? data.map((item, i) => {

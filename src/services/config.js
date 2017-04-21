@@ -1,6 +1,7 @@
 
 let {Toast} = SaltUI;
 import { queryUrlParams } from '../utils';
+import locale from '../locale';
 
 /* 基础配置 */
 let config = {};
@@ -12,16 +13,16 @@ const urlParams = queryUrlParams();
 const envConfigs = {
   release: {
     urlAppRoot: 'http://it.zaofans.com/silo/app/retail/',
-    keyApp: 1050,
+    keyApp: 1050
   },
   test: {
     urlAppRoot: 'http://it.zaofans.com/silo/app/retail/',
-    keyApp: 1051,
+    keyApp: 1051
   },
   debug: {
     urlAppRoot: 'http://it.zaofans.com/hawk/app/retail/',
-    keyApp: 1052,
-  },
+    keyApp: 1052
+  }
 };
 
 let envKey = urlParams['env'];
@@ -30,7 +31,7 @@ if (!envKey) {
 }
 const env = envConfigs[envKey];
 if (!env) {
-  Toast.error('环境参数配置错误\n' + envKey);
+  Toast.error(locale.envError + envKey);
 }
 
 config.env = env || {};

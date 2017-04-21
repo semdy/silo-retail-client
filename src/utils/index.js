@@ -30,30 +30,6 @@ export const queryUrlParams = () => {
 export const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
 
 export const ask = (prompMsg) => {
-  /*return new Promise((resolve, reject) => {
-   if (isDD) {
-   dd.device.notification.confirm({
-   message: prompMsg,
-   title: locale.prompt,
-   buttonLabels: [locale.ok, locale.cancel],
-   onSuccess: function (result) {
-   if (result.buttonIndex == 0) {
-   resolve();
-   } else {
-   reject();
-   }
-   },
-   onFail: function (err) {
-   reject(err);
-   }
-   });
-   } else {
-   if (confirm(prompMsg)) {
-   resolve();
-   }
-   }
-   });*/
-
   return new Promise((resolve, reject) => {
     Dialog.confirm({
       title: locale.prompt,
