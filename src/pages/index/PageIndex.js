@@ -1,8 +1,8 @@
 require('./PageIndex.styl');
 
-let {Button} = SaltUI;
+let {Context, Button} = SaltUI;
 let {hashHistory} = ReactRouter;
-import actions from '../../app/actions';
+import dom from '../../utils/dom';
 import Empty from '../../components/empty';
 import {getStoreList} from '../../services/store';
 import locale from '../../locale';
@@ -16,9 +16,11 @@ class Index extends React.Component {
     };
   }
 
+  touchStartHandler(e) {
+    e.stopPropagation();
+  }
+
   componentDidMount() {
-    //禁用下拉刷新
-    actions.setP2rEnabled(false);
     getStoreList().then((storeList) => {
       if (storeList.length > 0) {
         hashHistory.replace('/report.survey');
@@ -28,16 +30,18 @@ class Index extends React.Component {
         });
       }
     });
+
+    //禁用下拉刷新
+    dom.on(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
   }
 
   componentWillUnmount() {
-    //启用下拉刷新
-    actions.setP2rEnabled(true);
+    dom.off(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
   }
 
   render() {
     return (
-      <div>
+      <div ref="el" className="responsive">
         {
           this.state.show &&
           <Empty>

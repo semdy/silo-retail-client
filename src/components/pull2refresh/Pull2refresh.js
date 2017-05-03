@@ -89,7 +89,6 @@ class Pull2refresh extends React.Component {
   }
 
   _touchstart(e) {
-
     if (!this.props.enabled || this.props.scroller.scrollTop > 0) return;
 
     e.stopPropagation();
