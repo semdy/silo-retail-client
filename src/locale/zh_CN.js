@@ -2,7 +2,7 @@
  * Created by mcake on 2017/3/15.
  */
 export default {
-  loading: '加载中, 请稍候...',
+  loading: '加载中...',
   serverError: '服务器异常或没有数据',
   disconnect: '与服务器连接失败',
   singnFailed: '签名失败',
@@ -128,5 +128,7 @@ export default {
   appLoading: '应用启动中...',
   calendarTitle: '请选择日期',
   dataviewEmpty: '当前周期没有数据',
-  envError: '环境参数配置错误'
+  envError: '环境参数配置错误',
+  noStores: "您未分配任务店铺",
+  loadStoresFail: "加载店铺失败"
 }

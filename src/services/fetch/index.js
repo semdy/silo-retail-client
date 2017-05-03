@@ -1,5 +1,5 @@
 import {isRPC, env} from '../config'
-import {signIn, session} from '../auth';
+import {session} from '../auth';
 import actions from '../../app/actions';
 import locale from '../../locale';
 import config from '../../config';
@@ -8,7 +8,7 @@ let {Toast} = SaltUI;
 let requestCount = 0;
 let requestError = false;
 
-let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
+let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading = true) => {
   return new Promise((resolve, reject) => {
 
     body = Object.assign(body, {lang: config.lang});
@@ -17,7 +17,7 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
     requestError = false;
 
     if (requestCount === 1) {
-      Toast.loading(locale.loading);
+      showLoading && Toast.loading(locale.loading);
     }
 
     let rejectMsg = '';
@@ -75,27 +75,14 @@ let request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
   });
 };
 
-let fetch = (args) => {
-  return new Promise((resolve, reject) => {
-    signIn.ready(() => {
-      request(args).then((res) => {
-        resolve(res);
-      }, (err) => {
-        reject(err);
-      });
-    });
-  });
+fetch.post = (url, params = {}, showLoading) => {
+  return fetch(Object.assign({body: params}, {url, method: 'post'}), showLoading);
 };
 
-fetch.post = (url, params = {}) => {
-  return fetch(Object.assign({body: params}, {url, method: 'post'}));
-};
-
-fetch.get = (url, params = {}) => {
-  return fetch(Object.assign({body: params}, {url, method: 'get'}));
+fetch.get = (url, params = {}, showLoading) => {
+  return fetch(Object.assign({body: params}, {url, method: 'get'}), showLoading);
 };
 
 module.exports = {
-  request,
   fetch
 };

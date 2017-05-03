@@ -37,7 +37,7 @@ class SurveyBarChart extends BaseBarChart {
       //隐藏坐标轴
       showAxis: false,
       width: window.innerWidth/2,
-      height: 150
+      height: 100
     };
   }
 

@@ -65,13 +65,13 @@ class BarChart extends React.Component {
     let chartOptions = {
       color: ['#f39726'],
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        confine: true   //http://echarts.baidu.com/option.html#tooltip.confine
       },
       grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
+        top: '20%',
+        bottom: '5%',
+        containLabel: this.props.showAxis
       },
       xAxis: [],
       yAxis: [

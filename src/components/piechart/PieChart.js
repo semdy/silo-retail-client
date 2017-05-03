@@ -65,7 +65,8 @@ class PieChart extends React.Component {
     let chartOptions = {
       tooltip: {
         trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
+        formatter: "{a} <br/>{b}: {c} ({d}%)",
+        confine: true   //http://echarts.baidu.com/option.html#tooltip.confine
       },
       legend: {
         show: this.props.showLegend,

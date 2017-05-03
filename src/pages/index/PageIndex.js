@@ -19,12 +19,14 @@ class Index extends React.Component {
   componentDidMount() {
     //禁用下拉刷新
     actions.setP2rEnabled(false);
-    getStoreList().then(() => {
-      hashHistory.replace('/report.survey');
-    }, () => {
-      this.setState({
-        show: true
-      });
+    getStoreList().then((storeList) => {
+      if (storeList.length > 0) {
+        hashHistory.replace('/report.survey');
+      } else {
+        this.setState({
+          show: true
+        });
+      }
     });
   }
 

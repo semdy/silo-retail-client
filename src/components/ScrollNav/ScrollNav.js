@@ -1,12 +1,11 @@
 require('./ScrollNav.styl');
 
-let {Context, Icon} = SaltUI;
+let {Scroller, Context, Icon} = SaltUI;
 let {PropTypes} = React;
 let {Link} = ReactRouter;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import {scrollTo} from '../../utils';
 
 class Page extends React.Component {
   constructor(props) {
@@ -37,10 +36,11 @@ class Page extends React.Component {
   }
 
   scrollTo(index){
-    scrollTo(this.refs.container, 'scrollLeft', this._getScrollValue(index) + 12, 400);
+    this.scroller.scrollTo(this._getScrollValue(index), 0, 600);
   }
 
   componentDidMount() {
+    this.scroller = this.refs.container.scroller;
     this.navElements = [].slice.call(this.refs.scroller.children);
 
     let curPath = location.hash.substr(1).split("?")[0];
@@ -52,8 +52,15 @@ class Page extends React.Component {
     }
   }
 
+  componentWillUnmount(){
+    this.scroller.destroy();
+  }
+
   _getScrollValue(index){
     let width = 0;
+    let WD = this.scroller.wrapper.offsetWidth;
+    let SD = this.refs.scroller.offsetWidth;
+
     for(let i = 0, items = this.navElements; i < items.length; i++){
       if( i > index ) break;
       if( i === index ){
@@ -63,7 +70,15 @@ class Page extends React.Component {
       }
     }
 
-    return width - this.refs.container.offsetWidth/2;
+    width = width - WD/2 + 12;
+
+    if( width < 0 ){
+      width = 0;
+    } else if( width > SD - WD ){
+      width = SD - WD
+    }
+
+    return -width;
   }
 
   _getNavIndex(path) {
@@ -85,27 +100,25 @@ class Page extends React.Component {
         <div className="scroll-nav-toolbar left" onClick={this.handleMenuFun.bind(this)}>
           <Icon name="menu" width={20} height={20}/>
         </div>
-        <div className="scroll-nav-contain">
-          <div ref="container" className="scroll-nav-bd">
-            <div ref="scroller" className="scroll-nav-scroller">
-              {
-                items.map((item, index) => {
-                  return (
-                    <Link to={item.path}
-                          key={'nav' + index}
-                          className="scroll-nav-item"
-                          activeClassName="active"
-                          onClick={this.handleRoute.bind(this, index)}
-                          onDoubleClick={this.handleDblClick.bind(this)}
-                    >
-                      <span>{item.text}</span>
-                    </Link>
-                  )
-                })
-              }
-            </div>
+        <Scroller ref="container" scrollX={true} scrollY={false} momentum={false} className="scroll-nav-contain">
+          <div ref="scroller" className="scroll-nav-scroller">
+            {
+              items.map((item, index) => {
+                return (
+                  <Link to={item.path}
+                        key={'nav' + index}
+                        className="scroll-nav-item"
+                        activeClassName="active"
+                        onClick={this.handleRoute.bind(this, index)}
+                        onDoubleClick={this.handleDblClick.bind(this)}
+                  >
+                    <span>{item.text}</span>
+                  </Link>
+                )
+              })
+            }
           </div>
-        </div>
+        </Scroller>
       </div>
     );
   }

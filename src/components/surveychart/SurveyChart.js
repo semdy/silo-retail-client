@@ -1,7 +1,7 @@
 import './SurveyChart.styl';
 
-import SurveyBarChart from '../../components/surveyBarchart';
 import SurveyLineChart from '../../components/surveyLinechart';
+import SurveyBarChart from '../../components/surveyBarchart';
 
 class SurveyChart extends React.Component {
 

@@ -1,8 +1,4 @@
-.icon
-  display inline-block
-  width 20px
-  height 20px
-  overflow hidden
+@import "../../stylus-lib/var.styl"
 
 .page-scrollNav
   padding-top 50px
@@ -24,15 +20,9 @@
     padding-right 44px
 
 .scroll-nav-contain
+  width 100%
   height 50px
   overflow hidden
-
-.scroll-nav-bd
-  width 100%
-  padding-bottom 10px
-  overflow-x auto
-  overflow-y hidden
-  -webkit-overflow-scrolling touch
 
 .scroll-nav-scroller
   white-space nowrap
@@ -48,8 +38,8 @@
   white-space nowrap
 
   &.active {
-    color #06c
-    font-size 16px
+    color darken(gblue, 30%)
+    font-size 15px
   }
 
 .scroll-nav-toolbar

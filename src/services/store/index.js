@@ -3,6 +3,7 @@ let {hashHistory} = ReactRouter;
 import {fetch} from '../fetch';
 import {signIn} from '../auth';
 import actions from '../../app/actions';
+import locale from '../../locale';
 
 //常量
 const AUTH_TYPE = 17001;
@@ -26,7 +27,7 @@ export const fetchReportPayment = (query, storeId, offset) => {
 
 let readyQueue = [];
 let isReady = false;
-let storeErrMsg = null;
+let storeErrMsg = "";
 let storeList = [];
 let selectedStoreList = [];
 let manager = {
@@ -34,7 +35,7 @@ let manager = {
   userId: null
 };
 
-function storeReady(fun) {
+export const appReady = (fun) => {
   if (typeof fun === 'function') {
     if (!isReady) {
       readyQueue.push(fun);
@@ -42,7 +43,7 @@ function storeReady(fun) {
       fun();
     }
   }
-}
+};
 
 function triggerReady() {
   isReady = true;
@@ -59,8 +60,8 @@ function triggerReady() {
 
 export const fetchStoreList = () => {
   isReady = false;
-  storeErrMsg = null;
-  fetch.post('7103.json').then((res) => {
+  storeErrMsg = "";
+  fetch.post('7103.json', {}, false).then((res) => {
     storeList = res.data;
     manager.storeId = res.idAsManager;
     manager.userId = res.managerUserId;
@@ -73,11 +74,12 @@ export const fetchStoreList = () => {
     }
 
     if (storeList.length === 0) {
-      storeErrMsg = "empty storelist data";
       //隐藏顶部导航
       actions.showScrollNav(false);
       hashHistory.replace('/report.index');
     } else {
+      //设置显示店铺名称
+      actions.setStore(storeList[0]);
       //默认把第一家店铺选中
       storeList[0].selected = true;
       //填充店铺列表数据
@@ -87,7 +89,7 @@ export const fetchStoreList = () => {
     }
     triggerReady();
   }, (err) => {
-    storeErrMsg = "get storeList error => " + err;
+    storeErrMsg = locale.loadStoresFail;
     triggerReady();
   });
 };
@@ -99,18 +101,16 @@ export const fetchStoreList = () => {
 export const getStoreList = () => {
   return new Promise((resolve, reject) => {
     if (selectedStoreList.length > 0) {
-      actions.setStore(selectedStoreList[0]);
       return resolve(selectedStoreList);
     }
-    storeReady(() => {
-      if( storeErrMsg ) {
-        Toast.error(storeErrMsg);
-        return reject(storeErrMsg);
-      }
-      //设置显示店铺名称
-      actions.setStore(storeList[0]);
-      resolve(storeList);
-    });
+    if( storeErrMsg ) {
+      Toast.error(storeErrMsg);
+      return reject(storeErrMsg);
+    }
+    if( storeList.length === 0 ){
+      Toast.error(locale.noStores);
+    }
+    resolve(storeList);
   });
 };
 
@@ -124,6 +124,8 @@ signIn.ready(() => {
  * @return {*}
  */
 export const setStoreModel = (stores) => {
+  //设置显示店铺名称
+  actions.setStore(stores[0]);
   return selectedStoreList = stores;
 };
 
@@ -199,20 +201,17 @@ export const authorityApplyRecord = (pageCode = 1, pageSize = 50) => {
  * */
 export const authorityApproval = (pageCode = 1, pageSize = 50) => {
   return new Promise((resolve, reject) => {
-    storeReady(() => {
-      let params = {
-        authType: AUTH_TYPE,
-        pageCode,
-        pageSize,
-        authParamStr: getManager().storeId //店长所在店铺storeId
-      };
+    let params = {
+      authType: AUTH_TYPE,
+      pageCode,
+      pageSize,
+      authParamStr: getManager().storeId //店长所在店铺storeId
+    };
 
-      fetch.post('7017.json', params).then((res) => {
-        resolve(res.data);
-      }, (err) => {
-        reject(err);
-      });
-
+    fetch.post('7017.json', params).then((res) => {
+      resolve(res.data);
+    }, (err) => {
+      reject(err);
     });
   });
 };
@@ -239,20 +238,17 @@ export const authorityApprove = (applyId, agreed) => {
  * */
 export const authorityUserList = (pageCode = 1, pageSize = 50) => {
   return new Promise((resolve, reject) => {
-    storeReady(() => {
-      let params = {
-        pageSize,
-        pageCode,
-        authType: AUTH_TYPE,
-        authParamStr: getManager().storeId //获取店长所在店铺storeId
-      };
+    let params = {
+      pageSize,
+      pageCode,
+      authType: AUTH_TYPE,
+      authParamStr: getManager().storeId //获取店长所在店铺storeId
+    };
 
-      fetch.post('7019.json', params).then((res) => {
-        resolve(res.data);
-      }, (err) => {
-        reject(err);
-      });
-
+    fetch.post('7019.json', params).then((res) => {
+      resolve(res.data);
+    }, (err) => {
+      reject(err);
     });
   });
 };
@@ -264,7 +260,7 @@ export const authorityUserList = (pageCode = 1, pageSize = 50) => {
  * */
 export const authorityRemove = (userId) => {
   return new Promise((resolve, reject) => {
-    storeReady(() => {
+    appReady(() => {
       let params = {
         userId,
         authType: AUTH_TYPE,

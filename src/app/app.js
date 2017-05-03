@@ -2,26 +2,10 @@ require('../pollyfill/');
 require('../services/auth').signIn();
 require('./app.styl');
 
-// 插入 demo svg
 let TingleIconSymbolsDemo = require('./../images/tingle-icon-symbols.svg');
-let symbols = document.createElement('div');
-ReactDOM.render(<TingleIconSymbolsDemo/>, symbols);
-symbols.className = 't-hide';
-(document.body || document.documentElement).appendChild(symbols);
-
-if (__LOCAL__ && window.chrome && window.chrome.webstore) { // This is a Chrome only hack
-  // see https://github.com/livereload/livereload-extensions/issues/26
-  setInterval(function () {
-    document.body.focus();
-  }, 200);
-}
-
-// bind fastclick
-window.FastClick && FastClick.attach(document.body);
 
 const {Router, Route, IndexRedirect, hashHistory} = ReactRouter;
 
-import {signIn} from '../services/auth';
 import reactMixin from 'react-mixin';
 import store from  './store';
 import actions from './actions';
@@ -32,7 +16,7 @@ import StoreSelector from '../components/StoreSelector';
 import Pull2refresh from '../components/pull2refresh';
 import {scrollNavItems, navItems} from '../models/navs';
 import Header from '../components/header';
-import {getStoreList} from '../services/store';
+import {appReady} from '../services/store';
 
 
 import Index from '../pages/index';
@@ -51,32 +35,12 @@ import Test from '../pages/test';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isAppReady: false
-    };
-  }
-
-  componentDidMount() {
-    signIn.ready(() => {
-      this.setState({
-        isAppReady: true
-      }, () => {
-        getStoreList();
-      });
-      //移除app启动动画
-      document.body.removeChild(document.querySelector("#launcher"));
-    });
-  }
-
-  handleRelease() {
-    actions.doRefresh();
   }
 
   render() {
-    let {isAppReady, showHeader, headerTitle, shownP2r, isP2rEnabled} = this.state;
+    let {showHeader, headerTitle, shownP2r, isP2rEnabled} = this.state;
 
     return (
-      isAppReady &&
       <div className="app-body">
         <Navigation items={navItems}/>
         <div className="page-container page-scrollNav">
@@ -90,7 +54,7 @@ class App extends React.Component {
           <Pull2refresh enabled={isP2rEnabled}
                         show={shownP2r}
                         scroller={this.refs.content}
-                        onRelease={this.handleRelease}
+                        onRelease={actions.doRefresh}
           >
             <div ref="content" className="page-content">
               {this.props.children}
@@ -106,22 +70,44 @@ class App extends React.Component {
 
 reactMixin.onClass(App, Reflux.connect(store));
 
-ReactDOM.render(
-  <Router history={hashHistory}>
-    <Route name="app" path="/" component={App}>
-      <IndexRedirect to="/report.index"/>
-      <Route path="report.index" component={Index}/>
-      <Route path="report.survey" component={Survey}/>
-      <Route path="report.sale" component={DataView}/>
-      <Route path="report.distribution" component={Distribution}/>
-      <Route path="report.payment" component={Payment}/>
-      <Route path="report.goodsinfo" component={GoodsInfo}/>
-      <Route path="permission.apply" component={PageApply}/>
-      <Route path="permission.record" component={PageRcord}/>
-      <Route path="permission.approval" component={PageApproval}/>
-      <Route path="permission.members" component={PageMembers}/>
-      <Route path="test" component={Test}/>
-      <Route path="*" component={NoMatch}/>
-    </Route>
-  </Router>, document.getElementById('App')
-);
+
+appReady(() => {
+  //移除app启动动画
+  document.body.removeChild(document.getElementById("launcher"));
+
+  // 插入svg
+  let symbols = document.createElement('div');
+  symbols.className = 't-hide';
+  ReactDOM.render(<TingleIconSymbolsDemo/>, symbols);
+  document.body.appendChild(symbols);
+
+  // bind fastclick
+  window.FastClick && FastClick.attach(document.body);
+
+  if (__LOCAL__ && window.chrome && window.chrome.webstore) { // This is a Chrome only hack
+    // see https://github.com/livereload/livereload-extensions/issues/26
+    setInterval(function () {
+      document.body.focus();
+    }, 200);
+  }
+
+  ReactDOM.render(
+    <Router history={hashHistory}>
+      <Route name="app" path="/" component={App}>
+        <IndexRedirect to="/report.index"/>
+        <Route path="report.index" component={Index}/>
+        <Route path="report.survey" component={Survey}/>
+        <Route path="report.sale" component={DataView}/>
+        <Route path="report.distribution" component={Distribution}/>
+        <Route path="report.payment" component={Payment}/>
+        <Route path="report.goodsinfo" component={GoodsInfo}/>
+        <Route path="permission.apply" component={PageApply}/>
+        <Route path="permission.record" component={PageRcord}/>
+        <Route path="permission.approval" component={PageApproval}/>
+        <Route path="permission.members" component={PageMembers}/>
+        <Route path="test" component={Test}/>
+        <Route path="*" component={NoMatch}/>
+      </Route>
+    </Router>, document.getElementById('App')
+  );
+});

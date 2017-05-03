@@ -39,14 +39,6 @@ class Navigation extends React.Component {
     });
   }
 
-  _showNavHanlder(visible) {
-    if (visible) {
-      this.show();
-    } else {
-      this.hide();
-    }
-  }
-
   setMenus(isAdmin) {
     this.state.items.forEach((item) => {
       if (item.admin) {
@@ -58,17 +50,17 @@ class Navigation extends React.Component {
     });
   }
 
-  componentDidMount() {
-    store.emitter.on("showNavigation", this._showNavHanlder, this);
-  }
-
-  componentWillUnmount() {
-    store.emitter.off("showNavigation", this._showNavHanlder);
-  }
-
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.isAdmin !== this.state.isAdmin) {
+    let {isAdmin, navVisible} = this.state;
+    if (prevState.isAdmin !== isAdmin) {
       this.setMenus(this.state.isAdmin);
+    }
+    if (prevState.navVisible !== navVisible) {
+      if( navVisible ){
+        this.show();
+      } else {
+        this.hide();
+      }
     }
   }
 

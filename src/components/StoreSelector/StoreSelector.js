@@ -29,9 +29,7 @@ class Page extends React.Component {
   handleConfirm() {
     let stores = this.getData();
     setStoreModel(stores);
-    actions.setStore(stores[0]);
     actions.hideStoreSelector();
-    store.emitter.emit("setSelectedStore", stores);
   }
 
   handleCancel() {
@@ -62,18 +60,16 @@ class Page extends React.Component {
     this.props.onItemClick({storeId: curItem.storeId, name: curItem.name});
   }
 
-  _resetHandler() {
+  reset() {
     this.state.storeList.forEach((store, i) => {
       store.selected = false;
     });
   }
 
-  componentDidMount() {
-    store.emitter.on("storeSelectorReset", this._resetHandler, this);
-  }
-
-  componentWillUnmount() {
-    store.emitter.off("storeSelectorReset", this._resetHandler);
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.storeMultiable !== this.state.storeMultiable) {
+      this.reset();
+    }
   }
 
   render() {

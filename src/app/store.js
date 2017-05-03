@@ -45,20 +45,18 @@ module.exports = Reflux.createStore({
   //隐藏侧边栏导航
   onHideNavigation () {
     this.state.navVisible = false;
-    this.emitter.emit("showNavigation", false);
     this.updateComponent();
   },
 
   //显示侧边栏导航
   onShowNavigation () {
     this.state.navVisible = true;
-    this.emitter.emit("showNavigation", true);
     this.updateComponent();
   },
 
   //显示或隐藏侧边栏导航
   onToggleNavigation () {
-    this.emitter.emit("showNavigation", this.state.navVisible = !this.state.navVisible);
+    this.state.navVisible = !this.state.navVisible;
     this.updateComponent();
   },
 
@@ -84,7 +82,6 @@ module.exports = Reflux.createStore({
   onSetStoreMultiable(isMultiable){
     this.state.storeMultiable = isMultiable;
     this.state.storeSelectorTitle = locale.storeLocale[isMultiable === true ? 'multTitle' : 'singleTitle'];
-    this.emitter.emit("storeSelectorReset");
     this.updateComponent();
   },
 

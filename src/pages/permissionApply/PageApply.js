@@ -58,7 +58,7 @@ class Apply extends React.Component {
 
   handleApply(storeId, index) {
     authorityApply(storeId).then((res) => {
-      if (res.result === 0) {
+      if (res.result === 0 || res.result === undefined) {
         this.state.data[index].disabled = true;
         this.setState({
           data: this.state.data
