@@ -1,11 +1,12 @@
 require('./ScrollNav.styl');
 
-let {Scroller, Context, Icon} = SaltUI;
+let {Scroller, Icon} = SaltUI;
 let {PropTypes} = React;
 let {Link} = ReactRouter;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
+import dom from '../../utils/dom';
 
 class Page extends React.Component {
   constructor(props) {
@@ -27,12 +28,6 @@ class Page extends React.Component {
 
   handleMenuFun() {
     actions.toggleNavigation();
-    this.props.leftBarClick();
-  }
-
-  rightFun() {
-    actions.showStoreSelector();
-    this.props.rightBarClick();
   }
 
   scrollTo(index){
@@ -50,6 +45,10 @@ class Page extends React.Component {
         this.scrollTo(this.activeIndex);
       }, 30);
     }
+
+    dom.on(this.refs.el, "touchmove", (e) => {
+      e.preventDefault();
+    });
   }
 
   componentWillUnmount(){
@@ -96,11 +95,17 @@ class Page extends React.Component {
     let {items} = this.props;
 
     return (
-      <div className="scroll-nav padL" style={{display: scrollNavVisible ? "block" : "none"}}>
+      <div ref="el" className="scroll-nav padL" style={{display: scrollNavVisible ? "block" : "none"}}>
         <div className="scroll-nav-toolbar left" onClick={this.handleMenuFun.bind(this)}>
           <Icon name="menu" width={20} height={20}/>
         </div>
-        <Scroller ref="container" scrollX={true} scrollY={false} momentum={false} className="scroll-nav-contain">
+        <Scroller ref="container"
+                  scrollX={true}
+                  scrollY={false}
+                  momentum={false}
+                  eventPassthrough={true}
+                  className="scroll-nav-contain"
+        >
           <div ref="scroller" className="scroll-nav-scroller">
             {
               items.map((item, index) => {
@@ -125,16 +130,12 @@ class Page extends React.Component {
 }
 
 Page.propTypes = {
-  leftBarClick: PropTypes.func,
-  rightBarClick: PropTypes.func,
   items: PropTypes.arrayOf(
     PropTypes.object
   ).isRequired
 };
 
 Page.defaultProps = {
-  leftBarClick: Context.noop,
-  rightBarClick: Context.noop,
   items: []
 };
 

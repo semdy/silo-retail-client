@@ -73,7 +73,10 @@ reactMixin.onClass(App, Reflux.connect(store));
 
 appReady(() => {
   //移除app启动动画
-  document.body.removeChild(document.getElementById("launcher"));
+  try {
+    document.body.removeChild(document.getElementById("launcher"));
+  } catch (e) {
+  }
 
   // 插入svg
   let symbols = document.createElement('div');

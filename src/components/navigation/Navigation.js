@@ -22,13 +22,14 @@ class Navigation extends React.Component {
     this.refs.navigation.style.display = "block";
     this.docBody.offsetWidth;
     dom.addClass(this.docBody, "show-sidebar");
+    transitionEnd(this.refs.navigation, function () {
+      this.style.display = "block";
+    });
   }
 
   hide() {
-    let self = this;
     dom.removeClass(this.docBody, "show-sidebar");
     transitionEnd(this.refs.navigation, function () {
-      dom.removeClass(self.docBody, "hide-sidebar");
       this.style.display = "";
     });
   }
