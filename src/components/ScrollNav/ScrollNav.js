@@ -45,10 +45,6 @@ class Page extends React.Component {
         this.scrollTo(this.activeIndex);
       }, 30);
     }
-
-    dom.on(this.refs.el, "touchmove", (e) => {
-      e.preventDefault();
-    });
   }
 
   componentWillUnmount(){

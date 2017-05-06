@@ -9,6 +9,7 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this._moveListener = this._moveListener.bind(this);
   }
 
   getPathName(){
@@ -23,10 +24,16 @@ class Header extends React.Component {
     }
   }
 
+  _moveListener(e){
+    e.preventDefault();
+  }
+
   componentDidMount(){
-    dom.on(this.refs.el, "touchmove", (e) => {
-      e.preventDefault();
-    });
+    dom.on(this.refs.el, "touchmove", this._moveListener);
+  }
+
+  componentWillUnmount(){
+    dom.off(this.refs.el, "touchmove", this._moveListener);
   }
 
   render() {
