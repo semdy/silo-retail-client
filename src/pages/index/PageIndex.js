@@ -1,6 +1,6 @@
 require('./PageIndex.styl');
 
-let {Context, Button} = SaltUI;
+let {Button} = SaltUI;
 let {hashHistory} = ReactRouter;
 import dom from '../../utils/dom';
 import Empty from '../../components/empty';
@@ -32,11 +32,11 @@ class Index extends React.Component {
     });
 
     //禁用下拉刷新
-    dom.on(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
+    dom.on(this.refs.el, "touchstart", this.touchStartHandler);
   }
 
   componentWillUnmount() {
-    dom.off(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
+    dom.off(this.refs.el, "touchstart", this.touchStartHandler);
   }
 
   render() {

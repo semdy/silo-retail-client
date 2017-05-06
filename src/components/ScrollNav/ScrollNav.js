@@ -103,7 +103,6 @@ class Page extends React.Component {
                   scrollX={true}
                   scrollY={false}
                   momentum={false}
-                  eventPassthrough={true}
                   className="scroll-nav-contain"
         >
           <div ref="scroller" className="scroll-nav-scroller">

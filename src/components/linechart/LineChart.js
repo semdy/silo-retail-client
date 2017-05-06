@@ -70,6 +70,8 @@ class BarChart extends React.Component {
       },
       grid: {
         top: '20%',
+        left: '3%',
+        right: '3%',
         bottom: '5%',
         containLabel: this.props.showAxis
       },
