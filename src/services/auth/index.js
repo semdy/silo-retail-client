@@ -167,7 +167,7 @@ function signIn() {
     session.set(sessionInfo);
     triggerReady();
   } else {
-    if (isDD) {
+    if (!isDD) {
       httpRequestConfig().then((json) => {
         let config = json.config;
         config.jsApiList = jsApiList;

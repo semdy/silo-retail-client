@@ -27,7 +27,11 @@ export const queryUrlParams = () => {
   return params;
 };
 
-export const isDD = navigator.userAgent.indexOf("DingTalk") > -1;
+let ua = navigator.userAgent;
+
+export const isDD = ua.indexOf("DingTalk") > -1;
+export const isIOS = ua.match(/iPhone|iPod|iPad/);
+export const isAnroid = ua.match(/Android/i);
 
 export const ask = (prompMsg) => {
   return new Promise((resolve, reject) => {

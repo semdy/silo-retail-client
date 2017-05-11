@@ -7,6 +7,8 @@ import locale from '../../locale';
 function makeChartData(data) {
   let series = [
     {
+      color: ['#f39726'],
+      areaColor: ['rgba(243,151,38,.8)', 'rgba(243,151,38,.02)'],
       data: []
     }
   ];

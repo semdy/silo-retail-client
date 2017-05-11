@@ -17,11 +17,22 @@ class Circleloader extends React.Component {
 
   render() {
     let {text, dashOffset} = this.state;
-    let {width, height, strokeColor, borderWidth, strokeDasharray} = this.props;
+    let {width, height, strokeColor, borderWidth, strokeDasharray, bgColor} = this.props;
     return (
       <div className="circle-loader">
         <svg width={width} height={height}>
-          <circle strokeLinecap="round"
+          <circle className="tracker"
+                  strokeLinecap="round"
+                  cx={width/2}
+                  cy={height/2}
+                  fillOpacity="0"
+                  r={width/2-4}
+                  stroke={bgColor}
+                  strokeWidth={borderWidth}
+          >
+          </circle>
+          <circle className="handle"
+                  strokeLinecap="round"
                   cx={width/2}
                   cy={height/2}
                   fillOpacity="0"
@@ -49,7 +60,7 @@ class Circleloader extends React.Component {
 
     function animate() {
       let ratio = (Date.now() - _start)/that.props.duration;
-      ratio = ratio > 1 ? 1: ratio;
+      ratio = ratio >= 1 ? 1 : ratio;
       let percent = (that.props.percent - that.percent)*ratio + that.percent;
       let dashOffset = that.dashOffset - that.dashOffset*percent;
       that.setState({
@@ -83,6 +94,7 @@ Circleloader.defaultProps = {
   width: 70,
   height: 70,
   strokeColor: '#fff',
+  bgColor: "rgba(255,255,255,.3)",
   borderWidth: 3,
   strokeDasharray: ["200px", "200px"],
   percent: 0,
@@ -94,6 +106,7 @@ Circleloader.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   strokeColor: PropTypes.string,
+  bgColor: PropTypes.string,
   borderWidth: PropTypes.number,
   strokeDasharray: PropTypes.arrayOf(
     PropTypes.string.isRequired

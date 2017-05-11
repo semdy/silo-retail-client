@@ -6,6 +6,7 @@ let {Link} = ReactRouter;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
+import {isIOS} from '../../utils/';
 
 class Page extends React.Component {
   constructor(props) {
@@ -98,6 +99,7 @@ class Page extends React.Component {
                   scrollX={true}
                   scrollY={false}
                   momentum={false}
+                  eventPassthrough={isIOS}
                   className="scroll-nav-contain"
         >
           <div ref="scroller" className="scroll-nav-scroller">
