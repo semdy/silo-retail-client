@@ -2,7 +2,7 @@ import './Passflow.styl';
 
 import PassFlowStats from '../../components/passflowstats';
 import DateNavigator from '../../components/datenavigator';
-import PassFlowChargitts from '../../components/passflowcharts';
+import PassFlowCharts from '../../components/passflowcharts';
 
 class Passflow extends React.Component {
 
