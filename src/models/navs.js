@@ -55,5 +55,9 @@ export default {
     {
       text: scrollNavItems.goodsInfo,
       path: "/report.goodsInfo"
+    },
+    {
+      text: scrollNavItems.passflow,
+      path: "/report.passflow"
     }]
 }

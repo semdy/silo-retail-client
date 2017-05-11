@@ -6,7 +6,6 @@ let {Link} = ReactRouter;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import dom from '../../utils/dom';
 
 class Page extends React.Component {
   constructor(props) {

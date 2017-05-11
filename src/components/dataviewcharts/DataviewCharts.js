@@ -11,11 +11,11 @@ import Charts from '../../components/lineBarchart';
 import locale from '../../locale';
 
 //格式化时间, 带上年份方便后续排序
-const formatTime = (time, bytype) => {
+const formatTime = (time, formatType) => {
   let ret = 0;
   let date = new Date(time * 1000);
   let year = date.getFullYear();
-  switch (bytype) {
+  switch (formatType) {
     case 'hour':
       ret = date.getHours();
       break;

@@ -62,12 +62,20 @@ class BarChart extends React.Component {
     let chartData = this.props.chartData;
     this.chartInstance.clear();
 
+    let splitStyle = {
+      lineStyle: {
+        color: ["#ddd"],
+        type: 'dashed'
+      }
+    };
+
     let chartOptions = {
-      color: ['#f39726'],
+      color: this.props.color,
       tooltip: {
         trigger: 'axis',
         confine: true   //http://echarts.baidu.com/option.html#tooltip.confine
       },
+      legend: chartData.legend,
       grid: {
         top: '20%',
         left: '3%',
@@ -76,14 +84,7 @@ class BarChart extends React.Component {
         containLabel: this.props.showAxis
       },
       xAxis: [],
-      yAxis: [
-        {
-          type: 'value',
-          show: this.props.showAxis,
-          max: this.props.yAxisMax,
-          name: this.props.yAxisName
-        }
-      ],
+      yAxis: [],
       series: []
     };
 
@@ -101,18 +102,45 @@ class BarChart extends React.Component {
       );
     });
 
-    chartData.series.forEach((item) => {
+    if( Array.isArray(chartData.yAxis) ) {
+      chartData.yAxis.forEach((item) => {
+        chartOptions.yAxis.push(
+          {
+            type: 'value',
+            max: item.max,
+            name: item.name,
+            splitLine: splitStyle
+          }
+        );
+      });
+    } else {
+      chartOptions.yAxis.push({
+        type: 'value',
+        show: this.props.showAxis,
+        max: this.props.yAxisMax,
+        name: this.props.yAxisName,
+        splitLine: splitStyle
+      });
+    }
+
+    chartData.series.forEach((item, i) => {
       chartOptions.series.push(
         {
-          name: this.props.chartName,
-          type: 'line',
-          areaStyle: this.props.showAreaStyle && {normal: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-              offset: 0, color: 'rgba(243,151,38,.8)' // 0% 处的颜色
-            }, {
-              offset: 1, color: 'rgba(243,151,38,.02)' // 100% 处的颜色
-            }], false)
-          }},
+          name: item.name || this.props.chartName,
+          type: item.type || 'line',
+          barCategoryGap: item.barCategoryGap,
+          smooth: item.smooth || this.props.smooth,
+          yAxisIndex: i,
+          color: item.color || this.props.color,
+          areaStyle: item.areaColor && {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0, color: item.areaColor[0] // 0% 处的颜色
+              }, {
+                offset: 1, color: item.areaColor[1] // 100% 处的颜色
+              }], false)
+            }
+          },
           data: item.data
         }
       );
@@ -126,13 +154,15 @@ class BarChart extends React.Component {
     let {chartName, helpText, showAxis, xAxisName} = this.props;
     return (
       <div className="card">
-        <div className="linechart-title">
-          <span>{chartName}</span>
-          {
-            helpText &&
-            <Helper text={helpText} />
-          }
-        </div>
+        { chartName &&
+          <div className="linechart-title">
+            <span>{chartName}</span>
+            {
+              helpText &&
+              <Helper text={helpText}/>
+            }
+          </div>
+        }
         <div ref="chart"
              className={classnames("linechart", {"chart-plain": !showAxis})}
              style={{
@@ -154,8 +184,12 @@ BarChart.defaultProps = {
   chartName: '',
   responsive: false,
   radius: ['45%', '65%'],
+  color: ['#f39726'],
+  //areaColor: ['rgba(243,151,38,.8)', 'rgba(243,151,38,.02)'],
   visible: true,
   showAxis: true,
+  showAreaStyle: false,
+  smooth: false,
   width: window.innerWidth,
   yAxisName: '',
   xAxisName: '',
@@ -168,6 +202,10 @@ BarChart.propTypes = {
   radius: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ),
+  color: PropTypes.arrayOf(
+    PropTypes.string.isRequired
+  ),
+  smooth: PropTypes.bool,
   visible: PropTypes.bool,
   showAxis: PropTypes.bool,
   width: PropTypes.number,

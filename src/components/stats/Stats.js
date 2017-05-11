@@ -13,14 +13,20 @@ class StatItem extends React.Component {
     let {suffix, name, value, subAmount} = this.props;
     let suffixStr = "";
     if (suffix) {
-      suffixStr = (
-        <em>{suffix}</em>
-      );
+      suffixStr = `<em>${suffix}</em>`;
     }
     return (
       <div className="t-FB1 t-FBAC stats-item">
         <h4 className="stats-name">{name}</h4>
-        <div className="stats-value">{value}{suffixStr}</div>
+        {
+          typeof value === 'object' ?
+            <div className="stats-value">
+              {value}
+            </div>
+          :
+            <div className="stats-value" dangerouslySetInnerHTML={{__html: value + suffixStr}}>
+            </div>
+        }
         {
           subAmount !== undefined &&
           <div className="stats-amout">

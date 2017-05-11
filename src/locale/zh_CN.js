@@ -20,7 +20,8 @@ export default {
     dataview: "销售数据",
     distribution: "订单渠道",
     payment: "支付方式",
-    goodsInfo: "商品信息"
+    goodsInfo: "商品信息",
+    passflow: "客流"
   },
   permission: {
     apply: "申请权限",
@@ -130,5 +131,8 @@ export default {
   dataviewEmpty: '当前周期没有数据',
   envError: '环境参数配置错误',
   noStores: "您未分配任务店铺",
-  loadStoresFail: "加载店铺失败"
+  loadStoresFail: "加载店铺失败",
+  traffic: "进店人数",
+  orderCount: "订单量",
+  convertRatio: "转化率"
 }

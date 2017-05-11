@@ -1,0 +1,26 @@
+@import "../../stylus-lib/var.styl"
+
+.passflow-ratio
+  white-space nowrap
+  height 73px
+  padding-top 10px
+
+  .super
+    position relative
+    font-size 35px
+    &:after
+      content ''
+      position absolute
+      left 100%
+      top 20px
+      width 80px
+      height 1px
+      overflow hidden
+      background-color #fff
+      margin-left -15px
+      transform(rotate(-35deg) translateX(-40%))
+
+  .sub
+    position relative
+    font-size 25px
+    top 23px

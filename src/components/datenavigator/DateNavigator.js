@@ -123,7 +123,7 @@ class DateNavigator extends React.Component {
   }
 
   componentDidMount(){
-    if( location.hash.split("?")[0] === '#/report.sale' ){
+    if( location.hash.split("?")[0].match(/^#\/report\.(sale|passflow)$/) ){
       this.setState({
         showFilter: true,
         calendarTitle: ''
@@ -160,8 +160,11 @@ class DateNavigator extends React.Component {
     this.setState({
       showCalendar: false
     });
-    actions.setFilterType(filterType);
-    actions.setQueryOffset(calculateOffset(date, filterType));
+
+    setTimeout(function () {
+      actions.setFilterType(filterType);
+      actions.setQueryOffset(calculateOffset(date, filterType));
+    }, 500);
   }
 
   handleLeave(){
