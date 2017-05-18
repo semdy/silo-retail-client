@@ -2,14 +2,12 @@ require('./Header.styl');
 
 let {Icon} = SaltUI;
 let {hashHistory} = ReactRouter;
-import dom from '../../utils/dom';
 
 class Header extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {};
-    this._moveListener = this._moveListener.bind(this);
   }
 
   getPathName(){
@@ -17,29 +15,21 @@ class Header extends React.Component {
   }
 
   handleClick() {
-    if (this.getPathName() == "/permission.apply") {
+    if (this.getPathName() === "/permission.apply") {
       hashHistory.replace('/permission.record');
     } else {
       hashHistory.replace('/report.survey');
     }
   }
 
-  _moveListener(e){
+  handleTouchmove(e){
     e.preventDefault();
-  }
-
-  componentDidMount(){
-    dom.on(this.refs.el, "touchmove", this._moveListener);
-  }
-
-  componentWillUnmount(){
-    dom.off(this.refs.el, "touchmove", this._moveListener);
   }
 
   render() {
     let {title, children} = this.props;
     return (
-      <div ref="el" className="header">
+      <div className="header" onTouchMove={this.handleTouchmove}>
         <div className="h-toolbar left">
           <Icon name="angle-left-l" width={20} height={20} onClick={this.handleClick.bind(this)}>
           </Icon>

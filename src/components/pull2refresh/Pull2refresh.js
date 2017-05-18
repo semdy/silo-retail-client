@@ -50,7 +50,6 @@ class Pull2refresh extends React.Component {
     this.startX = 0;
     this.startY = 0;
     this._canRefresh = false;
-    this._touchstart = this._touchstart.bind(this);
     this._touchmove = this._touchmove.bind(this);
     this._touchend = this._touchend.bind(this);
   }
@@ -58,11 +57,6 @@ class Pull2refresh extends React.Component {
   componentDidMount() {
     this.el = this.refs.el;
     this.indict = this.refs.indict;
-    dom.on(this.el, "touchstart", this._touchstart);
-  }
-
-  componentWillUnmount() {
-    dom.off(this.el, "touchstart", this._touchstart);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -91,17 +85,10 @@ class Pull2refresh extends React.Component {
   _touchstart(e) {
     if (!this.props.enabled || this.props.scroller.scrollTop > 0) return;
 
-    e.stopPropagation();
-
     let touch = e.targetTouches ? e.targetTouches[0] : e;
     this.startX = touch.pageX;
     this.startY = touch.pageY;
     this.startPos = getTransform(this.el);
-
-    /*this.setState({
-     status: 'normal'
-     });
-     this.indict.style.display = '';*/
 
     dom.on(document, "touchmove", this._touchmove);
     dom.on(document, "touchend", this._touchend);
@@ -177,7 +164,7 @@ class Pull2refresh extends React.Component {
   render() {
     let {status} = this.state;
     return (
-      <div ref="el" className="p2r-container">
+      <div ref="el" className="p2r-container" onTouchStart={this._touchstart.bind(this)}>
         <div ref="indict"
              className="t-FBH t-FBJC t-FBAC p2r-indicator"
              style={{

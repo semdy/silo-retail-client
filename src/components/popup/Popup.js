@@ -44,23 +44,15 @@ class Popup extends React.Component {
     }
   }
 
-  touchStartHandler(e){
+  hanleTouchStart(e){
     e.stopPropagation();
-  }
-
-  componentDidMount(){
-    dom.on(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
-  }
-
-  componentWillUnmount(){
-    dom.off(this.refs.el, Context.TOUCH_START, this.touchStartHandler);
   }
 
   render() {
     let {visible} = this.state;
     let {className, showBackdrop, onAppear, onEnd, onEnter, onLeave} = this.props;
     return (
-      <div ref="el">
+      <div ref="el" onTouchStart={this.hanleTouchStart}>
         {
           showBackdrop &&
           <Animate

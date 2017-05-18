@@ -35,8 +35,10 @@ let cookie = {
       time.setDate(time.getDate() + days);
     }
 
+    value = typeof value === 'object' ? JSON.stringify(value) : value;
+
     return (document.cookie = [
-      encodeURIComponent(key), '=', encodeURIComponent(String(value)),
+      encodeURIComponent(key), '=', encodeURIComponent(value),
       options.expires ? '; expires=' + options.expires.toUTCString() : '',
       options.path ? '; path=' + options.path : '',
       options.domain ? '; domain=' + options.domain : '',
@@ -77,7 +79,11 @@ let cookie = {
       }
     }
 
-    return result;
+    try {
+      return JSON.parse(result);
+    } catch (e) {
+      return result;
+    }
   },
   remove (key) {
     if (this.get(key) !== null) {
@@ -94,6 +100,9 @@ let cookie = {
       for (var i = keys.length; i--;)
         document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
     }
+  },
+  length(){
+    return document.cookie.length;
   }
 };
 
@@ -139,30 +148,38 @@ let localStorage = {
     } else {
       cookie.clear();
     }
+  },
+  length(){
+    return window.localStorage.length;
   }
 };
 
 let sessionStorage = {
   set (key, value) {
+
+    if (typeof value === 'object') {
+      value = JSON.stringify(value);
+    }
+
     if (isLocalStorageSupported) {
-      window.sessionStorage.setItem(key, value);
+      window.sessionStorage.setItem(key, encodeURIComponent(value));
     } else {
-      if (typeof value === 'object') {
-        value = JSON.stringify(value);
-      }
       cookie.set(key, value);
     }
   },
   get (key) {
+    let val = '';
+
     if (isLocalStorageSupported) {
-      return window.sessionStorage.getItem(key);
+      val = decodeURIComponent(window.sessionStorage.getItem(key));
     } else {
-      let val = cookie.get(key);
-      try {
-        return JSON.parse(val);
-      } catch (e) {
-        return val;
-      }
+      val = cookie.get(key);
+    }
+
+    try {
+      return JSON.parse(val);
+    } catch (e) {
+      return val;
     }
   },
   remove (key){
@@ -178,6 +195,9 @@ let sessionStorage = {
     } else {
       cookie.clear();
     }
+  },
+  length(){
+    return window.sessionStorage.length;
   }
 };
 

@@ -1,21 +1,50 @@
 require('./SurveyBarChart.styl');
 
-import BaseBarChart from '../../components/baseBarChart';
+import BaseChart from '../../components/baseChart';
 import {getStoreStats} from '../../services/store';
 import locale from '../../locale';
 
 function makeChartData(data) {
   let series = [
     {
+      color: ['#4db7cd'],
+      type:'bar',
+      barWidth: '60%',
+      name: locale.orderNum,
       data: []
     }
   ];
 
   let xAxis = [
     {
-      data: []
+      type: 'category',
+      show: false,
+      data: [],
+      axisTick: {
+        alignWithLabel: true
+      }
     }
   ];
+
+  let yAxis = [
+    {
+      type: 'value',
+      show: false
+    }
+  ];
+
+  let grid = {
+    top: '20%',
+    left: '3%',
+    right: '3%',
+    bottom: '5%',
+    containLabel: false
+  };
+
+  let tooltip = {
+    trigger: 'axis',
+    confine: true   //http://echarts.baidu.com/option.html#tooltip.confine
+  };
 
   data.forEach((item) => {
     series[0].data.push(item.value);
@@ -23,19 +52,21 @@ function makeChartData(data) {
   });
 
   return {
+    tooltip: tooltip,
+    grid: grid,
     series: series,
-    xAxis: xAxis
+    xAxis: xAxis,
+    yAxis: yAxis
   };
 }
 
-class SurveyBarChart extends BaseBarChart {
+class SurveyBarChart extends BaseChart {
 
   constructor(props) {
     super(props);
     this.chartProps = {
-      chartName: locale.orderNum,
-      //隐藏坐标轴
-      showAxis: false,
+      title: locale.orderNum,
+      alignCenter: true,
       width: window.innerWidth/2,
       height: 100
     };

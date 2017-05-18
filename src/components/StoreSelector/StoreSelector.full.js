@@ -12,6 +12,7 @@ import classnames from 'classnames';
 import { setStoreModel } from '../../services/store';
 import locale, {storeLocale} from '../../locale';
 
+
 class Page extends React.Component {
 
   constructor(props) {
@@ -72,7 +73,7 @@ class Page extends React.Component {
   }
 
   render() {
-    let {showStore, storeList, storeSelectorTitle} = this.state;
+    let {showStore, storeList, isFullScreen, storeSelectorTitle} = this.state;
     return (
       storeList.length === 0 ? <noscript></noscript> :
       <div className="store-container">
@@ -83,9 +84,15 @@ class Page extends React.Component {
           onClick={actions.hideStoreSelector}
         >
         </Animate>
-        <Animate transitionName="popup" className="store-selector" visible={showStore}>
+        <Animate transitionName={isFullScreen ? "rotate-popup" : "popup"} className="store-selector" visible={showStore}
+                 style={{
+                   width: isFullScreen ? "400px" : undefined,
+                   height: isFullScreen ? window.innerWidth + "px" : undefined,
+                   left: isFullScreen ? "-200px" : undefined,
+                   top: isFullScreen ? window.innerHeight - 400 - window.innerWidth / 2 + "px" : undefined
+                 }}>
           <h4 className="store-header">{storeSelectorTitle}</h4>
-          <ul className="store-list">
+          <ul className="store-list" style={{height: isFullScreen ? window.innerWidth - 94 + "px" : undefined}}>
             {
               storeList.map((item, index) => {
                 return (

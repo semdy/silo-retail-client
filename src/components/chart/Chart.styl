@@ -1,0 +1,25 @@
+@import "../../stylus-lib/var.styl"
+
+.chart
+  height 300px
+
+.chart-xAxisName
+  position absolute
+  left 50%
+  bottom 3px
+  font-size 12px
+  transform(translateX(-50%))
+
+.chart-title
+  margin 10px 0 0 10px
+
+  &.center
+    position absolute
+    left 50%
+    top 50%
+    margin 0
+    transform(translate(-50%, -50%))
+
+  &.alignCenter
+    margin 0
+    text-align center

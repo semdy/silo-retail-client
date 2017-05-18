@@ -1,6 +1,6 @@
 require('./SurveyLineChart.styl');
 
-import BaseLineChart from '../../components/baseLineChart';
+import BaseChart from '../../components/baseChart';
 import {getStoreStats} from '../../services/store';
 import locale from '../../locale';
 
@@ -8,16 +8,51 @@ function makeChartData(data) {
   let series = [
     {
       color: ['#f39726'],
-      areaColor: ['rgba(243,151,38,.8)', 'rgba(243,151,38,.02)'],
-      data: []
+      type: 'line',
+      name: locale.mountNum,
+      data: [],
+      areaStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0, color: 'rgba(243,151,38,.8)' // 0% 处的颜色
+          }, {
+            offset: 1, color: 'rgba(243,151,38,.02)' // 100% 处的颜色
+          }], false)
+        }
+      }
     }
   ];
 
   let xAxis = [
     {
-      data: []
+      type: 'category',
+      show: false,
+      data: [],
+      axisTick: {
+        alignWithLabel: true
+      }
     }
   ];
+
+  let yAxis = [
+    {
+      type: 'value',
+      show: false
+    }
+  ];
+
+  let grid = {
+      top: '20%',
+      left: '3%',
+      right: '3%',
+      bottom: '5%',
+      containLabel: false
+    };
+
+  let tooltip = {
+    trigger: 'axis',
+    confine: true   //http://echarts.baidu.com/option.html#tooltip.confine
+  };
 
   data.forEach((item) => {
     series[0].data.push(item.value);
@@ -25,22 +60,23 @@ function makeChartData(data) {
   });
 
   return {
+    tooltip: tooltip,
+    grid: grid,
     series: series,
-    xAxis: xAxis
+    xAxis: xAxis,
+    yAxis: yAxis
   };
 }
 
-class SurveyLineChart extends BaseLineChart {
+class SurveyLineChart extends BaseChart {
 
   constructor(props) {
     super(props);
     this.chartProps = {
-      chartName: locale.mountNum,
-      //隐藏坐标轴
-      showAxis: false,
+      title: locale.mountNum,
+      alignCenter: true,
       width: window.innerWidth/2,
-      height: 100,
-      showAreaStyle: true
+      height: 100
     };
   }
 

@@ -75,8 +75,7 @@ appReady(() => {
   //移除app启动动画
   try {
     document.body.removeChild(document.getElementById("launcher"));
-  } catch (e) {
-  }
+  } catch (e) {}
 
   // 插入svg
   let symbols = document.createElement('div');

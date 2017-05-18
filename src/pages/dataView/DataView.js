@@ -2,7 +2,7 @@ import './DataView.styl';
 
 import DataviewStats from '../../components/dataviewstats';
 import DateNavigator from '../../components/datenavigator';
-import DataviewCharts from '../../components/dataviewcharts';
+import DataviewChart from '../../components/dataviewchart';
 
 class DataView extends React.Component {
 
@@ -15,7 +15,7 @@ class DataView extends React.Component {
       <div className="responsive">
         <DataviewStats/>
         <DateNavigator/>
-        <DataviewCharts/>
+        <DataviewChart/>
       </div>
     )
   }

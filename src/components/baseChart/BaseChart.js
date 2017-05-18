@@ -1,12 +1,12 @@
-require('./BasePieChart.styl');
+require('./BaseChart.styl');
 
 import reactMixin from 'react-mixin';
 import store from  '../../app/store';
-import PieChart from '../../components/piechart';
+import Chart from '../../components/chart';
 import Base from '../../components/base';
 import {getStoreChartReport} from '../../services/store';
 
-class BasePieChart extends Base {
+class BaseChart extends Base {
 
   constructor(props) {
     super(props);
@@ -15,10 +15,7 @@ class BasePieChart extends Base {
     };
 
     this.queryKey = '';
-    this.chartProps = {
-      chartName: '',
-      responsive: false
-    };
+    this.chartProps = {};
   }
 
   fetch() {
@@ -26,28 +23,30 @@ class BasePieChart extends Base {
     getStoreChartReport(store.storeId, offset, this.queryKey).then((res) => {
       this.setState({
         loaded: true,
-        data: res
+        data: this.fixData(res)
       });
       this.refs.charts.refresh();
     });
+  }
+
+  fixData(data){
+    return data;
   }
 
   render() {
     let {loaded, data} = this.state;
     return (
       loaded &&
-      <PieChart ref="charts"
-                chartData={data}
-                center={['50%', '50%']}
-                showLegend={false}
-                visible={data.series.length > 0}
-                {...this.chartProps}
+      <Chart ref="charts"
+            data={data}
+            visible={data.series.length > 0}
+            {...this.chartProps}
       >
-      </PieChart>
-    );
+      </Chart>
+    )
   }
 }
 
-reactMixin.onClass(BasePieChart, Reflux.connect(store));
+reactMixin.onClass(BaseChart, Reflux.connect(store));
 
-module.exports = BasePieChart;
+module.exports = BaseChart;

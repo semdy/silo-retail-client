@@ -1,6 +1,6 @@
 require('./PassFlowCharts.styl');
 
-import BaseLineChart from '../../components/baseLineChart';
+import BaseChart from '../../components/baseChart';
 import {fetchReportPayment} from '../../services/store';
 import {getWeekNumber} from '../../utils/date';
 import locale from '../../locale';
@@ -53,20 +53,19 @@ function makeChartData(data, filterType) {
 
   let xAxis = [
     {
+      type: 'category',
       data: []
     }
   ];
 
-  series[0] = {
-    name: locale.traffic,
-    smooth: true,
-    color: ["#ffdb73"],
-    type: 'line',
-    //areaColor: ["rgba(255,219,115,.9)", "rgba(255,219,115,.1)"],
-    data: data.axisY.traffic
+  let splitStyle = {
+    lineStyle: {
+      color: ["#ddd"],
+      type: 'dashed'
+    }
   };
 
-  series[1] = {
+  series[0] = {
     name: locale.orderCount,
     smooth: true,
     color: ["#4db7cd"],
@@ -75,33 +74,54 @@ function makeChartData(data, filterType) {
     data: data.axisY.count
   };
 
+  series[1] = {
+    name: locale.traffic,
+    smooth: true,
+    color: ["#ffdb73"],
+    type: 'line',
+    data: data.axisY.traffic
+  };
+
   xAxis[0].data = getXaisData(data.axisX.time, filterType);
 
   return {
+    tooltip: {
+      trigger: 'axis',
+      confine: true   //http://echarts.baidu.com/option.html#tooltip.confine
+    },
     series: series,
+    grid: {
+      left: '3%',
+      right: '3%',
+      bottom: '3%',
+      containLabel: true
+    },
     xAxis: xAxis,
     legend: {
       left: "center",
-      data: [locale.traffic, locale.orderCount]
+      data: [locale.orderCount, locale.traffic]
     },
     yAxis: [
       {
-        name: locale.traffic
+        type: 'value',
+        name: locale.orderCount,
+        splitLine: splitStyle
       },
       {
-        name: locale.orderCount
+        type: 'value',
+        name: locale.traffic,
+        splitLine: splitStyle
       }
     ]
   };
 }
 
-class PassFlowChart extends BaseLineChart {
+class PassFlowChart extends BaseChart {
 
   constructor(props) {
     super(props);
     this.chartProps = {
-      responsive: true,
-      showAreaStyle: true
+      responsive: true
     };
   }
 

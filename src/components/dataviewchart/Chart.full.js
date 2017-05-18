@@ -200,10 +200,10 @@ class Charts extends React.Component {
     let {isFullScreen, width, height} = this.state;
     return (
       <div className={classnames("card charts-container", {"charts-fullscreen": isFullScreen})}>
-       {/* <span className={classnames("tool-fullscreen", {open: isFullScreen})}
-              onClick={this.changeViewMode.bind(this)} style={{display: ""}}>
-          <Icon name={isFullScreen ? 'portrait' : 'fullscreen'} width={24} height={24} />
-        </span>*/}
+        {/* <span className={classnames("tool-fullscreen", {open: isFullScreen})}
+         onClick={this.changeViewMode.bind(this)} style={{display: ""}}>
+         <Icon name={isFullScreen ? 'portrait' : 'fullscreen'} width={24} height={24} />
+         </span>*/}
         <div ref="chart" className="charts-main"
              style={{
                left: isFullScreen ? -parseFloat(height) * 0.5 + "px" : 0,

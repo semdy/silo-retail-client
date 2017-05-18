@@ -1,4 +1,4 @@
-require('./DataviewCharts.styl');
+require('./DataviewChart.styl');
 
 let {Toast} = SaltUI;
 import reactMixin from 'react-mixin';
@@ -7,7 +7,7 @@ import store from  '../../app/store';
 import Base from '../../components/base';
 import {fetchReportPayment} from '../../services/store';
 import {getWeekNumber} from '../../utils/date';
-import Charts from '../../components/lineBarchart';
+import Chart from '../../components/chart';
 import locale from '../../locale';
 
 //格式化时间, 带上年份方便后续排序
@@ -123,7 +123,110 @@ const extractYAxisData = (dataMap) => {
   }
 };
 
-class DataviewCharts extends Base {
+
+const getMax = (group) => {
+  if (!Array.isArray(group)) return 0;
+  return Math.max.apply(Math, group);
+};
+
+//计算订单量Y轴的最大值并放大2倍，以防止柱状图过高
+const getSumMax = (yAxisCounts) => {
+  let yAxisMax = 0;
+  yAxisCounts.forEach((count) => {
+    if (!count.length) {
+      yAxisMax += 0;
+    } else {
+      yAxisMax += getMax(count);
+    }
+  });
+
+  return yAxisMax * 2;
+};
+
+const makeChartData = (data) => {
+  const yAxisCount = data.yAxis.count;
+  const yAxisMax = getSumMax(yAxisCount);
+
+  let splitStyle = {
+    lineStyle: {
+      color: ["#ddd"],
+      type: 'dashed'
+    }
+  };
+
+  let chartOptions = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      width: 250,
+      left: "center",
+      itemGap: 5,
+      data: []
+    },
+    grid: {
+      top: '20%',
+      left: '3%',
+      right: '3%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: data.xAxisData
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        max: yAxisMax - (yAxisMax > 50 ? yAxisMax % 50 : 0), //将最大值设为50的整数倍
+        name: locale.totalOrder,
+        splitLine: splitStyle
+      },
+      {
+        type: 'value',
+        name: locale.totalAmount,
+        splitLine: splitStyle
+      }
+    ],
+    series: []
+  };
+
+  let drawColors = ["#4db7cd", "#ffdb73", "#a191d8"];
+
+  if (yAxisCount.length > 2) {
+    chartOptions.legend.itemHeight = 11;
+    chartOptions.legend.top = -5;
+  }
+
+  yAxisCount.forEach((itemData, index) => {
+    chartOptions.legend.data = data.legendNames;
+    chartOptions.series.push({
+        name: data.legendNames[index * 2],
+        type: 'bar',
+        stack: 'one',
+        smooth: true,
+        yAxisIndex: 0,
+        color: [drawColors[index]],
+        barCategoryGap: '50%',
+        data: itemData
+      },
+      {
+        name: data.legendNames[index * 2 + 1],
+        type: 'line',
+        stack: '',
+        smooth: true,
+        yAxisIndex: 1,
+        color: [drawColors[index]],
+        data: data.yAxis.amount[index]
+      });
+  });
+
+  return chartOptions;
+};
+
+class DataviewChart extends Base {
 
   constructor(props) {
     super(props);
@@ -159,13 +262,14 @@ class DataviewCharts extends Base {
 
   setData(values) {
     let cacheData = [];
-
     //将时间线按小到大排序
     const timelines = Object.keys(genGroupKeyMap(values, cacheData, this.state.filterType)).sort((a, b) => {
       return parseFloat(a) - parseFloat(b)
     });
     //把年份截掉
-    const xAxisData = timelines.map(xdata => xdata.charAt(5) === "0" ? xdata.substr(6) : xdata.substr(5));
+    const xAxisData = timelines.map(xdata => {
+      return xdata.charAt(5) === "0" ? xdata.substr(6) : xdata.substr(5)
+    });
     //提取y轴的数据
     const yAxisData = extractYAxisData(zeroFill(cacheData, timelines));
 
@@ -211,7 +315,7 @@ class DataviewCharts extends Base {
         return Toast.error(locale.dataviewEmpty);
       }
       this.setData(values);
-      this.refs.charts.refresh();
+      this.refs.chart.refresh();
     });
   }
 
@@ -219,14 +323,15 @@ class DataviewCharts extends Base {
     let {loaded, data} = this.state;
     return (
       loaded &&
-      <Charts ref="charts"
-              chartData={data}
+      <Chart ref="chart"
+             data={makeChartData(data)}
+             responsive={true}
       >
-      </Charts>
+      </Chart>
     )
   }
 }
 
-reactMixin.onClass(DataviewCharts, Reflux.connect(store));
+reactMixin.onClass(DataviewChart, Reflux.connect(store));
 
-module.exports = DataviewCharts;
+module.exports = DataviewChart;
