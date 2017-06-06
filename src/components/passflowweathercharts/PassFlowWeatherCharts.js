@@ -115,7 +115,7 @@ function makeChartData(data, weatherData, filterType) {
     name: locale.weatherIcon,
     color: ["#008cee"],
     type: 'scatter',
-    symbolSize: [24, 18],
+    symbolSize: [20, 14],
     data: []
   };
 
