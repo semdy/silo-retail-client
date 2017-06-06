@@ -25,6 +25,15 @@
 
     };
 
+  if( !Array.prototype.repeat )
+    Array.prototype.repeat = function (len, value) {
+      let arr = new Array(len);
+      for(let i = 0; i<arr.length; i++){
+        arr[i] = value;
+      }
+      return arr;
+    };
+
   if (!Object.assign)
     Object.assign = function (target, source) {
       var from;

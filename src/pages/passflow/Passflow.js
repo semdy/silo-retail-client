@@ -3,6 +3,7 @@ import './Passflow.styl';
 import PassFlowStats from '../../components/passflowstats';
 import DateNavigator from '../../components/datenavigator';
 import PassFlowCharts from '../../components/passflowcharts';
+import PassFlowWeatherCharts from '../../components/passflowweathercharts';
 
 class Passflow extends React.Component {
 
@@ -16,6 +17,7 @@ class Passflow extends React.Component {
         <PassFlowStats/>
         <DateNavigator/>
         <PassFlowCharts/>
+        <PassFlowWeatherCharts/>
       </div>
     )
   }

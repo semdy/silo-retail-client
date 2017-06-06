@@ -71,6 +71,7 @@ function makeChartData(data, filterType) {
     color: ["#4db7cd"],
     type: 'bar',
     barCategoryGap: '50%',
+    yAxisIndex: 0,
     data: data.axisY.count
   };
 
@@ -79,6 +80,7 @@ function makeChartData(data, filterType) {
     smooth: true,
     color: ["#ffdb73"],
     type: 'line',
+    yAxisIndex: 1,
     data: data.axisY.traffic
   };
 

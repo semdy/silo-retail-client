@@ -134,5 +134,7 @@ export default {
   loadStoresFail: "加载店铺失败",
   traffic: "进店人数",
   orderCount: "订单量",
-  convertRatio: "转化率"
+  convertRatio: "转化率",
+  temperature: "温度",
+  weatherIcon: "天气图标"
 }
