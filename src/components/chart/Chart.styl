@@ -11,15 +11,20 @@
   transform(translateX(-50%))
 
 .chart-title
-  margin 10px 0 0 10px
+  margin 10px
+  font-size 15px
 
   &.center
     position absolute
     left 50%
     top 50%
-    margin 0
+    margin 0 !important
     transform(translate(-50%, -50%))
 
   &.alignCenter
     margin 0
     text-align center
+
+.card
+  .chart-title
+    margin-top 5px

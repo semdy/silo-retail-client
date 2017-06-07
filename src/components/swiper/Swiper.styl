@@ -1,0 +1,25 @@
+@import "../../stylus-lib/var.styl"
+
+.swiper-container
+  position relative
+  width 100%
+  overflow hidden
+  background-color #fff
+
+  .swiper-navs
+    position absolute
+    left 0
+    right 0
+    bottom 10px
+    text-align center
+
+    .swiper-dot
+      display inline-block
+      width 8px
+      height 8px
+      radius(100%)
+      background-color #bbb
+      margin 0 5px
+
+      &.actived
+        background-color gblue

@@ -136,5 +136,9 @@ export default {
   orderCount: "订单量",
   convertRatio: "转化率",
   temperature: "温度",
-  weatherIcon: "天气图标"
+  weather: "天气",
+  weatherIcon: "天气图标",
+  passflowWeather: "客流与气候",
+  ageDistribution: "年龄分布",
+  sexDistribution: "性别分布"
 }

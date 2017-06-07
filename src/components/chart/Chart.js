@@ -74,7 +74,7 @@ class Chart extends React.Component {
     let {width, height} = this.state;
     let {title, titleCenter, alignCenter, helpText, data} = this.props;
     return (
-      <div className="card">
+      <div className="t-FB1 card">
         { title &&
           <div className={classnames("chart-title", {center: titleCenter, alignCenter: alignCenter})}>
             <span>{title}</span>
