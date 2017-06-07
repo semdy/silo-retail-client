@@ -493,7 +493,7 @@ function makeChartData(data, weatherData, filterType) {
       formatter: function(params){
         let tip = params[0].axisValue;
         params.forEach((param) => {
-          tip += ("<br />" + param.marker + param.seriesName + ": " + (typeof param.data === "object" ? param.data.name + "<br />" + param.data.key : param.data));
+          tip += ("<br />" + param.marker + param.seriesName + ": " + (typeof param.data === "object" ? param.data.name/* + "<br />" + param.data.key*/ : param.data));
         });
         return tip;
       }
