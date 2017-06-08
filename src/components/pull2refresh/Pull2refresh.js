@@ -164,7 +164,11 @@ class Pull2refresh extends React.Component {
   render() {
     let {status} = this.state;
     return (
-      <div ref="el" className="p2r-container" onTouchStart={this._touchstart.bind(this)}>
+      <div ref="el"
+           className="p2r-container"
+           onTouchStart={this._touchstart.bind(this)}
+           onMouseDown={this._touchstart.bind(this)}
+      >
         <div ref="indict"
              className="t-FBH t-FBJC t-FBAC p2r-indicator"
              style={{
