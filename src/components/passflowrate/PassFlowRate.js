@@ -1,4 +1,4 @@
-require('./PassFlowCharts.styl');
+require('./PassFlowRate.styl');
 
 import BaseChart from '../../components/baseChart';
 import {fetchReportPayment} from '../../services/store';
@@ -48,6 +48,13 @@ const getXaisData = (times, formatType) => {
   });
 };
 
+const calcSeriesRate = (countStack, trafficStack) => {
+  return countStack.map((count, i) => {
+    let percent = trafficStack[i] === 0 ? 0 : Math.min(1, count/trafficStack[i]);
+    return Math.round(percent * 100);
+  });
+};
+
 function makeChartData(data, filterType) {
   let series = [];
 
@@ -66,25 +73,11 @@ function makeChartData(data, filterType) {
   };
 
   series[0] = {
-    name: locale.orderCount,
+    name: locale.convertRate,
     color: ["#4db7cd"],
     type: 'line',
-    areaStyle: {normal: {
-      color: "#4db7cd"
-    }},
     yAxisIndex: 0,
-    data: data.axisY.count
-  };
-
-  series[1] = {
-    name: locale.traffic,
-    color: ["#ffdb73"],
-    type: 'line',
-    areaStyle: {normal: {
-      color: "#ffdb73"
-    }},
-    yAxisIndex: 1,
-    data: data.axisY.traffic
+    data: calcSeriesRate(data.axisY.count, data.axisY.traffic)
   };
 
   xAxis[0].data = getXaisData(data.axisX.time, filterType);
@@ -92,7 +85,14 @@ function makeChartData(data, filterType) {
   return {
     tooltip: {
       trigger: 'axis',
-      confine: true   //http://echarts.baidu.com/option.html#tooltip.confine
+      confine: true,   //http://echarts.baidu.com/option.html#tooltip.confine
+      formatter: function(params){
+        let tip = params[0].axisValue;
+        params.forEach((param) => {
+          tip += ("<br />" + param.marker + param.seriesName + ": " + param.value + "%");
+        });
+        return tip;
+      }
     },
     series: series,
     grid: {
@@ -101,32 +101,32 @@ function makeChartData(data, filterType) {
       bottom: '3%',
       containLabel: true
     },
-    xAxis: xAxis,
     legend: {
       left: "center",
-      data: [locale.orderCount, locale.traffic]
+      data: [locale.convertRate]
     },
+    xAxis: xAxis,
     yAxis: [
       {
         type: 'value',
-        name: locale.orderCount,
-        splitLine: splitStyle
-      },
-      {
-        type: 'value',
-        name: locale.traffic,
-        splitLine: splitStyle
+        name: locale.convertRate,
+        max: 100,
+        splitLine: splitStyle,
+        axisLabel: {
+          formatter: '{value}%'
+        }
       }
     ]
   };
 }
 
-class PassFlowChart extends BaseChart {
+class PassFlowRate extends BaseChart {
 
   constructor(props) {
     super(props);
     this.chartProps = {
-      responsive: true
+      responsive: true,
+      title: "订单转化率"
     };
   }
 
@@ -147,4 +147,4 @@ class PassFlowChart extends BaseChart {
 
 }
 
-module.exports = PassFlowChart;
+module.exports = PassFlowRate;

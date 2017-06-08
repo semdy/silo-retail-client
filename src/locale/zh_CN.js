@@ -140,5 +140,6 @@ export default {
   weatherIcon: "天气图标",
   passflowWeather: "客流与气候",
   ageDistribution: "年龄分布",
-  sexDistribution: "性别分布"
+  sexDistribution: "性别分布",
+  convertRate: "转化率"
 }
