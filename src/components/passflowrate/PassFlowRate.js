@@ -96,6 +96,7 @@ function makeChartData(data, filterType) {
     },
     series: series,
     grid: {
+      top: '10%',
       left: '3%',
       right: '3%',
       bottom: '3%',
