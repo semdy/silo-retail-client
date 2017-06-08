@@ -101,10 +101,10 @@ function makeChartData(data, filterType) {
       bottom: '3%',
       containLabel: true
     },
-    legend: {
+/*    legend: {
       left: "center",
       data: [locale.convertRate]
-    },
+    },*/
     xAxis: xAxis,
     yAxis: [
       {

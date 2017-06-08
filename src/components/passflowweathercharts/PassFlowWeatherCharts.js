@@ -461,13 +461,13 @@ function makeChartData(data, weatherData, filterType) {
     name: locale.weather,
     color: ["#008cee"],
     type: 'scatter',
-    symbolSize: [24, 18],
+    symbolSize: [22, 16],
     data: []
   };
 
   let tempMap = weatherData.series[0].params;
   let iconMap = weatherData.series[1].params;
-  let symbolCoordY = Math.max(0.9, yTrafficMax - 5);
+  let symbolCoordY = Math.max(0.9, yTrafficMax - yTrafficMax/10);
 
   let isLargeSeries = times.length > 8;
 
