@@ -461,13 +461,15 @@ function makeChartData(data, weatherData, filterType) {
     name: locale.weather,
     color: ["#008cee"],
     type: 'scatter',
-    symbolSize: [20, 14],
+    symbolSize: [24, 18],
     data: []
   };
 
   let tempMap = weatherData.series[0].params;
   let iconMap = weatherData.series[1].params;
   let symbolCoordY = Math.max(0.9, yTrafficMax - 5);
+
+  let isLargeSeries = times.length > 8;
 
   /**
    * 生成x轴坐标点对应的温度和天气
@@ -482,7 +484,7 @@ function makeChartData(data, weatherData, filterType) {
       name: skyItem.name || "-",
       key: iconMap[time],
       value: symbolCoordY,
-      symbol: "path://" + skyItem.path
+      symbol: "path://" + (isLargeSeries ? ( i%2 === 0 ? skyItem.path : undefined ) : skyItem.path)
     };
   });
 

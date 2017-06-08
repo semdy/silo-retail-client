@@ -83,7 +83,7 @@ function makeChartData(data, filterType) {
     areaStyle: {normal: {
       color: "#ffdb73"
     }},
-    yAxisIndex: 1,
+    yAxisIndex: 0,
     data: data.axisY.traffic
   };
 
@@ -111,12 +111,12 @@ function makeChartData(data, filterType) {
         type: 'value',
         name: locale.orderCount,
         splitLine: splitStyle
-      },
+      }/*,
       {
         type: 'value',
         name: locale.traffic,
         splitLine: splitStyle
-      }
+      }*/
     ]
   };
 }
