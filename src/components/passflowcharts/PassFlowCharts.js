@@ -78,10 +78,10 @@ function makeChartData(data, filterType) {
 
   series[1] = {
     name: locale.traffic,
-    color: ["#ffdb73"],
+    color: ["#dbdbdb"],
     type: 'line',
     areaStyle: {normal: {
-      color: "#ffdb73"
+      color: "#dbdbdb"
     }},
     yAxisIndex: 0,
     data: data.axisY.traffic

@@ -523,7 +523,8 @@ function makeChartData(data, weatherData, filterType) {
         type: 'value',
         name: locale.temperature,
         splitLine: splitStyle,
-        max: getYmax(series[1].data),
+        //max: getYmax(series[1].data),
+        scale: true,
         axisLabel: {
           formatter: '{value}℃'
         }
