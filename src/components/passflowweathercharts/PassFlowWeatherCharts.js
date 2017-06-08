@@ -494,8 +494,8 @@ function makeChartData(data, weatherData, filterType) {
       confine: true,  //http://echarts.baidu.com/option.html#tooltip.confine
       formatter: function(params){
         let tip = params[0].axisValue;
-        params.forEach((param) => {
-          tip += ("<br />" + param.marker + param.seriesName + ": " + (typeof param.data === "object" ? param.data.name/* + "<br />" + param.data.key*/ : param.data));
+        params.forEach((param, i) => {
+          tip += ("<br />" + param.marker + param.seriesName + ": " + (typeof param.data === "object" ? param.data.name/* + "<br />" + param.data.key*/ : param.data) + (i === 1 ? "℃" : ""));
         });
         return tip;
       }
