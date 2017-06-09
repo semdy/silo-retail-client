@@ -145,5 +145,22 @@ export default {
   sexDistribution: "性别分布",
   convertRate: "转化率",
   orderConvertRate: "订单转化率",
-  passflowHeatMap: "客流热力图"
+  passflowHeatMap: "客流热力图",
+  CLEAR_NIGHT: "夜间晴朗",
+  SHOWER: "阵雨",
+  NIGHT_RAIN: "夜间阵雨",
+  NIGHT_CLOUDY: "夜间多云",
+  MODERATE_RAIN: "中雨",
+  SHOWERS_HAIL: "阵雨伴冰雹",
+  LIGHT_SNOW: "小雪",
+  FOG: "雾",
+  THUNDER: "雷电",
+  HEAVY_RAIN: "大雨",
+  HEAVY_SNOW: "大雪",
+  SUNRISE: "日出",
+  SUNSET: "日落",
+  OVERCAST: "阴天",
+  CLOUDY: "多云",
+  SLEET: "雨夹雪",
+  LIGHT_RAIN: "小雨"
 }
