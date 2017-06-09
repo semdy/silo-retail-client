@@ -1,7 +1,7 @@
 require('./PassflowStats.styl');
 
 import BaseStatus from '../../components/baseStats';
-import {fetchReportPayment} from '../../services/store';
+import {getReportPayment} from '../../services/store';
 import Circleloader from '../../components/circleloader';
 import locale from '../../locale';
 
@@ -16,7 +16,7 @@ class PassFlowStats extends BaseStatus {
    */
   fetch() {
     let {store, offset, filterType} = this.state;
-    fetchReportPayment(`retail.payment.report.${filterType}`, store.storeId, offset).then((res) => {
+    getReportPayment(store.storeId, offset, `retail.payment.report.${filterType}`).then((res) => {
       let count = res.data.sum.count;
       let traffic = res.data.sum.traffic;
       let percent = traffic === 0 ? 0 : Math.min(1, count/traffic);

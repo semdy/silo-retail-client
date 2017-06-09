@@ -1,7 +1,7 @@
 require('./DataviewStats.styl');
 
 import BaseStatus from '../../components/baseStats';
-import {fetchReportPayment} from '../../services/store';
+import {getReportPayment} from '../../services/store';
 import {genStatsDataByMoney} from '../../utils';
 
 class DataviewStats extends BaseStatus {
@@ -16,7 +16,7 @@ class DataviewStats extends BaseStatus {
    */
   fetch() {
     let {store, offset, filterType} = this.state;
-    fetchReportPayment(`retail.payment.report.${filterType}`, store.storeId, offset).then((res) => {
+    getReportPayment(store.storeId, offset, `retail.payment.report.${filterType}`).then((res) => {
       let data = [{
         field: this.fieldList[0],
         value: res.data.sum.count

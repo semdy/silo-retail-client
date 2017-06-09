@@ -7,7 +7,7 @@ import Charts from './Charts';
 import DateNavigator from './DateNavigator';
 import actions from '../../app/actions';
 import store from '../../app/store';
-import {fetchReportPayment, getStoreList} from '../../services/store';
+import {getReportPayment, getStoreList} from '../../services/store';
 
 //默认时间间隔(单位：小时|天|月|年)
 const defaultOffset = 0;
@@ -219,7 +219,7 @@ class Page extends React.Component {
 
   fetchData(storeId, offset) {
     return new Promise((resolve, reject) => {
-      fetchReportPayment(`retail.payment.report.${this.filterType}`, storeId, offset).then((res) => {
+      getReportPayment(storeId, offset, `retail.payment.report.${this.filterType}`).then((res) => {
         resolve(res.data);
       }, (err) => {
         reject(err);

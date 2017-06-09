@@ -15,7 +15,7 @@ const AUTH_TYPE = 17001;
  * @param {number} 时间间隔, 根据query里指定数据单元，0取当前单元数据，-1取上一单元数据，-2取上上单元数据 e.g.
  * @return http promise
  * */
-export const fetchReportPayment = (query, storeId, offset) => {
+export const getReportPayment = (storeId, offset, query) => {
   let params = {
     query,
     storeId,

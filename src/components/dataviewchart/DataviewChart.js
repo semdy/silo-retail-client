@@ -5,7 +5,7 @@ import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
 import Base from '../../components/base';
-import {fetchReportPayment} from '../../services/store';
+import {getReportPayment} from '../../services/store';
 import {getWeekNumber} from '../../utils/date';
 import Chart from '../../components/chart';
 import locale from '../../locale';
@@ -243,7 +243,7 @@ class DataviewChart extends Base {
 
   fetchData(storeId, offset) {
     return new Promise((resolve, reject) => {
-      fetchReportPayment(`retail.payment.report.${this.state.filterType}`, storeId, offset).then((res) => {
+      getReportPayment(storeId, offset, `retail.payment.report.${this.state.filterType}`).then((res) => {
         resolve(res.data);
       }, (err) => {
         reject(err);

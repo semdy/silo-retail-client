@@ -1,7 +1,7 @@
 require('./PassFlowWeatherCharts.styl');
 
 import BaseChart from '../../components/baseChart';
-import {getStoreChartReport, fetchReportPayment} from '../../services/store';
+import {getStoreChartReport, getReportPayment} from '../../services/store';
 import {getWeekNumber} from '../../utils/date';
 import locale from '../../locale';
 
@@ -549,7 +549,7 @@ class PassFlowWeatherCharts extends BaseChart {
   getOrderAndCount(){
     let {store, offset, filterType} = this.state;
     return new Promise((resolve, reject) => {
-      fetchReportPayment(`retail.payment.report.${filterType}`, store.storeId, offset).then(
+      getReportPayment(store.storeId, offset, `retail.payment.report.${filterType}`).then(
         res => resolve(res.data),
         err => reject(err)
       );

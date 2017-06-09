@@ -1,7 +1,7 @@
 require('./PassFlowRate.styl');
 
 import BaseChart from '../../components/baseChart';
-import {fetchReportPayment} from '../../services/store';
+import {getReportPayment} from '../../services/store';
 import {getWeekNumber} from '../../utils/date';
 import locale from '../../locale';
 
@@ -136,7 +136,7 @@ class PassFlowRate extends BaseChart {
    */
   fetch() {
     let {store, offset, filterType} = this.state;
-    fetchReportPayment(`retail.payment.report.${filterType}`, store.storeId, offset).then((res) => {
+    getReportPayment(store.storeId, offset, `retail.payment.report.${filterType}`).then((res) => {
       this.setState({
         loaded: true,
         data: makeChartData(res.data, filterType)
