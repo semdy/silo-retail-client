@@ -92,10 +92,7 @@ class Chart extends React.Component {
              }}
         >
         </div>
-        {
-          data.xAxis && data.xAxis[0].name &&
-          <div className="chart-xAxisName">{data.xAxis[0].name}</div>
-        }
+
       </div>
     );
   }

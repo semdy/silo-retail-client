@@ -63,6 +63,7 @@ export default {
     release: '刷新中...'
   },
   dayNames: ["日", "一", "二", "三", "四", "五", "六"],
+  dayList: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
   loginTimeout: '登录超时！',
   deliveries: "配送类型",
   payments: '支付方式',
@@ -114,6 +115,7 @@ export default {
   week: '星期',
   weekly: '周',
   hour: '时',
+  timeslot: '时间段',
   quarterString: '第%a季度',
   chooseStore: '选择对比门店',
   searchStorePlaceholder: '请输入要查询的门店',
@@ -141,5 +143,7 @@ export default {
   passflowWeather: "客流与气候",
   ageDistribution: "年龄分布",
   sexDistribution: "性别分布",
-  convertRate: "转化率"
+  convertRate: "转化率",
+  orderConvertRate: "订单转化率",
+  passflowHeatMap: "客流热力图"
 }

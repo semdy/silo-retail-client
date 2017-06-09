@@ -127,7 +127,7 @@ class PassFlowRate extends BaseChart {
     super(props);
     this.chartProps = {
       responsive: true,
-      title: "订单转化率"
+      title: locale.orderConvertRate
     };
   }
 

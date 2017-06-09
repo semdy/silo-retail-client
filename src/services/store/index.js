@@ -288,7 +288,7 @@ export const authorityRemove = (userId) => {
  *  retail.trade.payment.mode  支付方式
  * @return {Promise}
  */
-export const getStoreChartReport = (storeId, offset = 0, query = 'retail.dashboard.gist') => {
+export const getStoreChartReport = (storeId, offset = 0, query) => {
   let params = {
     storeId,
     query,

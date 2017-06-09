@@ -20,7 +20,7 @@ class Survey extends Base {
 
   fetch() {
     let {store, offset} = this.state;
-    getStoreChartReport(store.storeId, offset).then((data) => {
+    getStoreChartReport(store.storeId, offset, 'retail.dashboard.gist').then((data) => {
       data.series = this._setDataGroup(data.series);
       this.setState({
         data: data,
