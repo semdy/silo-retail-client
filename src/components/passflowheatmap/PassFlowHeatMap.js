@@ -27,7 +27,7 @@ function makeChartData(res) {
    * 以week*hour为索引填充真实数据
    */
   weeks.forEach((week, i) => {
-    data[week*hours[i]][2] = Math.round(traffics[i]) || "-";
+    data[week*24 + hours[i]][2] = Math.round(traffics[i]) || "-";
   });
 
   return {
@@ -51,6 +51,7 @@ function makeChartData(res) {
     },
     yAxis: {
       type: 'category',
+      inverse: true,
       data: hourlines,
       name: locale.timeslot,
       splitArea: {
