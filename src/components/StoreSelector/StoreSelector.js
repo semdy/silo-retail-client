@@ -59,6 +59,11 @@ class Page extends React.Component {
     this.props.onItemClick({storeId: curItem.storeId, name: curItem.name});
   }
 
+  handleTouch(e){
+    //e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+  }
+
   reset() {
     this.state.storeList.forEach((store, i) => {
       store.selected = false;
@@ -75,7 +80,10 @@ class Page extends React.Component {
     let {showStore, storeList, storeSelectorTitle} = this.state;
     return (
       storeList.length === 0 ? <noscript></noscript> :
-      <div className="store-container">
+      <div className="store-container"
+           onTouchMove={this.handleTouch}
+           onTouchEnd={this.handleTouch}
+      >
         <Animate
           className="backdrop"
           transitionName="fade"

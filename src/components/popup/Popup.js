@@ -3,7 +3,6 @@ require('./Popup.styl');
 let {Context} = SaltUI;
 let {PropTypes} = React;
 import Animate from '../../components/Animation';
-import dom from '../../utils/dom';
 
 class Popup extends React.Component {
 
@@ -37,29 +36,33 @@ class Popup extends React.Component {
     }
   }
 
-  handleTouch(e) {
+  handleClick(e) {
     e.preventDefault();
     if (this.props.touchHide) {
       this.hide();
     }
   }
 
-  hanleTouchStart(e){
-    e.stopPropagation();
+  handleTouch(e){
+    //e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
   }
 
   render() {
     let {visible} = this.state;
     let {className, showBackdrop, onAppear, onEnd, onEnter, onLeave} = this.props;
     return (
-      <div ref="el" onTouchStart={this.hanleTouchStart}>
+      <div ref="el"
+           onTouchMove={this.handleTouch}
+           onTouchEnd={this.handleTouch}
+      >
         {
           showBackdrop &&
           <Animate
             className="backdrop"
             transitionName="fade"
             visible={visible}
-            onClick={this.handleTouch.bind(this)}
+            onClick={this.handleClick.bind(this)}
           >
           </Animate>
         }
