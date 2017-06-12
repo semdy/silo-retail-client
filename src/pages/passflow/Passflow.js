@@ -27,4 +27,4 @@ class Passflow extends React.Component {
   }
 }
 
-module.exports = Passflow;
+export default Passflow;
