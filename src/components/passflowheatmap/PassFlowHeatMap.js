@@ -33,6 +33,7 @@ function makeChartData(res) {
   return {
     tooltip: {
       position: 'top',
+      confine: true,
       formatter: function (params) {
         return params.name + params.data[1] + "点: " + params.data[2] + "人";
       }
