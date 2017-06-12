@@ -57,6 +57,7 @@ function makeChartData(res) {
       inverse: true,
       data: hourlines,
       name: locale.timeslot,
+      nameLocation: 'start',
       splitArea: {
         show: true
       }
