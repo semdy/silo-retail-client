@@ -1,7 +1,6 @@
 require('./PassFlowHeatMap.styl');
 
 import BaseChart from '../../components/baseChart';
-import {getStoreChartReport} from '../../services/store';
 import locale from '../../locale';
 
 function makeChartData(res) {
@@ -24,7 +23,7 @@ function makeChartData(res) {
   });
 
   /**
-   * 以week*hour为索引填充真实数据
+   * 以week*24+hour为索引填充真实数据
    */
   weeks.forEach((week, i) => {
     data[week*24 + hours[i]][2] = Math.round(traffics[i]) || "-";
@@ -98,24 +97,11 @@ class PassFlowHeatMap extends BaseChart {
       height: 500,
       title: locale.passflowHeatMap
     };
+    this.queryKey = "retail.guest.heat.map";
   }
 
-  /**
-   * @override
-   */
-  fetch() {
-    let {store, offset} = this.state;
-    getStoreChartReport(store.storeId, offset, "retail.guest.heat.map").then((res) => {
-      let data = makeChartData(res);
-
-      this.setState({
-        loaded: true,
-        data: data
-      });
-
-      this.refs.charts.refresh();
-    });
-
+  fixData(data) {
+    return makeChartData(data);
   }
 
 }
