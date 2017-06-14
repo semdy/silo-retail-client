@@ -11,8 +11,12 @@ config.isRPC = true;
 
 const urlParams = queryUrlParams();
 const envConfigs = {
-  release: {
+  aliyun: {
     urlAppRoot: 'http://silo.mcake.org:8082/retail/',
+    keyApp: 1049
+  },
+  release: {
+    urlAppRoot: 'http://it.zaofans.com/silo/app/retail/',
     keyApp: 1050
   },
   test: {
