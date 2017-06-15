@@ -22,7 +22,7 @@ class DataviewStats extends BaseStatus {
         value: res.data.sum.count
       }, {
         field: this.fieldList[1],
-        value: res.data.sum.rmb
+        value: (res.data.sum.rmb).toFixed(2)
       }];
 
       this.setState({
