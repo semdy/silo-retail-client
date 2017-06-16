@@ -33,9 +33,17 @@ let envKey = urlParams['env'];
 if (!envKey) {
   envKey = 'release';
 }
+
 const env = envConfigs[envKey];
+
 if (!env) {
-  Toast.error(locale.envError + envKey);
+  Toast.show({
+    type: 'error',
+    content: locale.envError + ": " + envKey,
+    autoHide: false
+  });
+
+  throw new Error(locale.envError + ": " + envKey);
 }
 
 

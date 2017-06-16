@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
+import {localDate} from '../../utils/date';
 import locale from '../../locale';
 
 const formatDate = (dateUTC, timelines, filterType) => {
@@ -26,7 +27,7 @@ const formatDate = (dateUTC, timelines, filterType) => {
 
 //获取距离今天指定日期对象
 export const getDateBefore = (offset, filterType) => {
-  let date = new Date();
+  let date = localDate(store.state.store.tzStamp); //new Date();
   switch ( filterType ){
     case 'hour':
       date.setDate(date.getDate() - offset);
@@ -48,7 +49,7 @@ export const getDateBefore = (offset, filterType) => {
 };
 
 const calculateOffset = (dateObj, filterType) => {
-  let nowDateObj = new Date();
+  let nowDateObj = localDate(store.state.store.tzStamp); //new Date();
   let nowYear = nowDateObj.getFullYear();
   let nowMonth = nowDateObj.getMonth();
   let nowDate = nowDateObj.getDate();
@@ -93,8 +94,8 @@ const calculateOffset = (dateObj, filterType) => {
   }
 };
 
-const getDay = (dateUTC) => {
-  return locale.dayNames[dateUTC.getDay()];
+const getDay = (date) => {
+  return locale.dayNames[date.getDay()];
 };
 
 class DateNavigator extends React.Component {
@@ -173,27 +174,24 @@ class DateNavigator extends React.Component {
       <div>
         <div className="date-navigator normal">
           <div className="t-FBH t-FBAC t-FBJ">
-            <div className="store-name"
-                 onClick={this.showStore}
-            >
+            <div className="store-name" onClick={this.showStore}>
               <Icon name="store" className="store-icon" width={20} height={20}/>
               <span className="store-text">
                 {store.name}
               </span>
             </div>
             <div className="t-FBH t-FBAC t-FBJC store-indict">
-              <div className="date-arrow left t-FBH t-FBJC t-FBAC"
-                   onClick={actions.queryPrev}>
+              <div className="date-arrow left t-FBH t-FBJC t-FBAC" onClick={actions.queryPrev}>
                 <Icon name="angle-left-l" width={18} height={18}/>
               </div>
               <div className="store-date" onClick={this.showCalendar.bind(this)}>
                 <Icon name="calendar" className="date-cld" width={15} height={15}/>
                 <span className="date">
-              {formatDate(date, timelines, filterType)}
-            </span>
+                  {formatDate(date, timelines, filterType)}
+                </span>
                 <span className="day">
-              {filterType !== 'hour' ? "" : `${locale.week}${getDay(date)}`}
-            </span>
+                  {filterType !== 'hour' ? "" : `${locale.week}${getDay(date)}`}
+                </span>
               </div>
               <div className={classnames("date-arrow right t-FBH t-FBJC t-FBAC", {disabled: offset === 0})}
                    onClick={actions.queryNext}>
@@ -208,7 +206,7 @@ class DateNavigator extends React.Component {
                   onConfirm={this.handleConfirm.bind(this)}
                   onLeave={this.handleLeave.bind(this)}
                   value={date}
-                  max={new Date()}
+                  max={localDate(store.tzStamp)}
         />
       </div>
     )

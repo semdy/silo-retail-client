@@ -2,18 +2,6 @@
 
 let {Toast} = SaltUI;
 
-//改写Toast
-["success", "error", "fail", "loading"].forEach((type) => {
-  Toast[type] = (msg, options) => {
-    return Toast.show({
-      type: type,
-      content: typeof msg === 'object' ? JSON.stringify(msg) : String(msg),
-      autoHide: type !== 'loading',
-      ...options
-    });
-  };
-});
-
 import {env, urlParams} from '../config';
 import {isDD} from '../../utils';
 import locale from '../../locale';
@@ -221,5 +209,6 @@ signIn.ready = ready;
 
 module.exports = {
   session,
-  signIn
+  signIn,
+  doLogin: httpRequestSignInByUserPass
 };

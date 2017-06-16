@@ -4,8 +4,9 @@ let {PropTypes} = React;
 let {Icon, Button, Context} = SaltUI;
 import classnames from 'classnames';
 import ButtonGroup from '../ButtonGroup';
-import {getWeekNumber} from '../../utils/date';
+import {getWeekNumber, localDate} from '../../utils/date';
 import Popup from '../popup';
+import store from  '../../app/store';
 import locale from '../../locale';
 
 //世纪年份间隔
@@ -115,13 +116,14 @@ function getFloat(year, week) {
 
 //生成天数据
 function getDayItem(date, currentDate, defaultDate, minDate, maxDate) {
-  let nowDate = defaultDate || new Date();
+  let lcDate = localDate(store.state.store.tzStamp);
+  let nowDate = defaultDate || lcDate;
   let dateTime = getDateTimeByDay(date);
   return {
     text: date.getDate(),
     value: new Date(date),
     selected: dateTime === getDateTimeByDay(nowDate),
-    current: dateTime === getDateTimeByDay(new Date()),
+    current: dateTime === getDateTimeByDay(lcDate),
     outside: date.getMonth() !== currentDate.getMonth(),
     disabled: (minDate && dateTime < prevDay(minDate).getTime()) || (maxDate && dateTime > maxDate.getTime())
   }
@@ -129,7 +131,8 @@ function getDayItem(date, currentDate, defaultDate, minDate, maxDate) {
 
 //生成周数据
 function getWeekItem(date, defaultDate, minDate, maxDate) {
-  let nowDate = defaultDate || new Date();
+  let lcDate = localDate(store.state.store.tzStamp);
+  let nowDate = defaultDate || lcDate;
   let dateYear = date.getFullYear();
   let dateTime = getDateTimeByDay(date);
 
@@ -141,7 +144,7 @@ function getWeekItem(date, defaultDate, minDate, maxDate) {
 
   let lastWeekCycle = weekNumber >= 52;
   let defWeekNumber = getFloat(nowDate.getFullYear(), getRealWeekNumber(nowDate));
-  let nowWeekNumber = getFloat(new Date().getFullYear(), getRealWeekNumber(new Date()));
+  let nowWeekNumber = getFloat(new Date().getFullYear(), getRealWeekNumber(lcDate));
 
   return {
     text: dateYear + "." + weekNumber + locale.weekly + "~" + (lastWeekCycle ? dateYear + 1 :  dateYear) + "." + ((lastWeekCycle ? 0 : weekNumber) + 12) + locale.weekly,
@@ -154,20 +157,21 @@ function getWeekItem(date, defaultDate, minDate, maxDate) {
 
 //生成月数据
 function getMonthItem(date, defaultDate, minDate, maxDate) {
-  let nowDate = defaultDate || new Date();
+  let lcDate = localDate(store.state.store.tzStamp);
+  let nowDate = defaultDate || lcDate;
   let dateMonth = getDateTimeByMonth(date);
   return {
     text: (date.getMonth() + 1) + locale.month,
     value: new Date(date),
     selected: dateMonth === getDateTimeByMonth(nowDate),
-    current: dateMonth === getDateTimeByMonth(new Date()),
+    current: dateMonth === getDateTimeByMonth(lcDate),
     disabled: (minDate && dateMonth < getDateTimeByMonth(minDate)) || (maxDate && dateMonth > getDateTimeByMonth(maxDate))
   }
 }
 
 //生成季数据
 function getQuarterItem(date, defaultDate, minDate, maxDate) {
-  let nowDate = defaultDate || new Date();
+  let nowDate = defaultDate || localDate(store.state.store.tzStamp);
   let dateYear = date.getFullYear();
 
   return {
@@ -181,7 +185,7 @@ function getQuarterItem(date, defaultDate, minDate, maxDate) {
 
 //生成年数据
 function getYearItem(date, defaultDate, minDate, maxDate) {
-  let nowDate = defaultDate || new Date();
+  let nowDate = defaultDate || localDate(store.state.store.tzStamp);
   let dateYear = date.getFullYear();
   return {
     text: dateYear + locale.year,
@@ -194,7 +198,7 @@ function getYearItem(date, defaultDate, minDate, maxDate) {
 
 //生成世纪数据
 function getDecadeItem(date, defaultDate, minDate, maxDate) {
-  let nowDate = defaultDate || new Date();
+  let nowDate = defaultDate || localDate(store.state.store.tzStamp);
   let dateYear = date.getFullYear();
 
   return {
@@ -395,7 +399,7 @@ class Calendar extends React.Component {
   }
 
   reset() {
-    this.date = this.defaultDate ? new Date(this.defaultDate) : new Date();
+    this.date = this.defaultDate ? new Date(this.defaultDate) : localDate(store.state.store.tzStamp);
     this._setDateGrid();
   }
 

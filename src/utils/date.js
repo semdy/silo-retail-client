@@ -61,3 +61,48 @@ export const getDayNumber = (dateObject) => {
 
   return days;
 };
+
+/**
+ * 根据offset计算本地时间与UTC时间差值的时间戳
+ * @param {String} offset 时区, 格式如："+08:00"(北京时间的时区)
+ * @return {number}
+ */
+
+export const getTimezoneStamp = (offset) => {
+  if( typeof offset !== 'string' && offset.length < 2 ){
+    return 0;
+  }
+  let timeStack = offset.split(":");
+  if( timeStack.length !== 2 ){
+    return 0;
+  }
+  let sign = 1;
+  let firstChar = offset.charAt(0);
+  if( firstChar === "-" ){
+    sign = -1;
+  }
+  let hour = timeStack[0];
+  let minute = timeStack[1];
+  if( firstChar === "+" || firstChar === "-" ){
+    hour = hour.substr(1);
+  }
+
+  return (parseInt(hour, 10) * 60 + parseInt(minute, 10)) * 60000 * sign;
+};
+
+//计算指定时区偏移量的时间
+export const localDate = (timezoneStamp, time) => {
+  //得到本地时间
+  let d = time ? new Date(time) : new Date();
+
+  //得到1970年一月一日到现在的毫秒数
+  let local = d.getTime();
+
+  //本地时间与GMT时间的时间偏移差
+  let offset = d.getTimezoneOffset() * 60000;
+
+  //得到现在的格林尼治时间
+  let utcTime = local + offset;
+
+  return new Date(utcTime + timezoneStamp);
+};

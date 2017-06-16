@@ -85,3 +85,18 @@ var cancelAnimationFrame =
   function (id) {
     return clearTimeout(id);
   };
+
+
+let {Toast} = SaltUI;
+
+//改写Toast
+["success", "error", "fail", "loading"].forEach((type) => {
+  Toast[type] = (msg, options) => {
+    return Toast.show({
+      type: type,
+      content: typeof msg === 'object' ? JSON.stringify(msg) : String(msg),
+      autoHide: type !== 'loading',
+      ...options
+    });
+  };
+});

@@ -1,14 +1,15 @@
 require('./PassFlowWeatherCharts.styl');
 
 import BaseChart from '../../components/baseChart';
+import store from  '../../app/store';
 import {getStoreChartReport, getReportPayment} from '../../services/store';
-import {getWeekNumber} from '../../utils/date';
+import {getWeekNumber, localDate} from '../../utils/date';
 import locale from '../../locale';
 
 //格式化时间, 带上年份方便后续排序
 const formatTime = (time, formatType) => {
   let ret = 0;
-  let date = new Date(time * 1000);
+  let date = localDate(store.state.store.tzStamp, time * 1000);
   switch (formatType) {
     case 'hour':
       ret = date.getHours();

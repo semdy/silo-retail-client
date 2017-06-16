@@ -2,6 +2,7 @@ let {Toast} = SaltUI;
 let {hashHistory} = ReactRouter;
 import {fetch} from '../fetch';
 import {signIn} from '../auth';
+import {getTimezoneStamp} from '../../utils/date';
 import actions from '../../app/actions';
 import locale from '../../locale';
 
@@ -78,6 +79,10 @@ export const fetchStoreList = () => {
       actions.showScrollNav(false);
       hashHistory.replace('/report.index');
     } else {
+      //往storeList添加tzStamp属性
+      storeList.forEach((store) => {
+        store.tzStamp = getTimezoneStamp(store.tzOffset);
+      });
       //设置显示店铺名称
       actions.setStore(storeList[0]);
       //默认把第一家店铺选中

@@ -33,7 +33,9 @@ module.exports = Reflux.createStore({
     //门店数据时间间隔
     offset: 0,
     //选中的门店object
-    store: {},
+    store: {
+      tzStamp: 0
+    },
     //下拉刷新标记
     refreshFlag: false,
     //数据筛选类型

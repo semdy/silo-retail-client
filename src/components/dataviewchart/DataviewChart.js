@@ -6,14 +6,14 @@ import actions from '../../app/actions';
 import store from  '../../app/store';
 import Base from '../../components/base';
 import {getReportPayment} from '../../services/store';
-import {getWeekNumber} from '../../utils/date';
+import {getWeekNumber, localDate} from '../../utils/date';
 import Chart from '../../components/chart';
 import locale from '../../locale';
 
 //格式化时间, 带上年份方便后续排序
 const formatTime = (time, formatType) => {
   let ret = 0;
-  let date = new Date(time * 1000);
+  let date = localDate(store.state.store.tzStamp, time * 1000);
   let year = date.getFullYear();
   switch (formatType) {
     case 'hour':
