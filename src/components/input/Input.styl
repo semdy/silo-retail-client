@@ -2,9 +2,6 @@
 
 .input-wrap
   position relative
-  display inline-block
-  border:1px solid #ddd
-  background-color #fff
 
   .input-text
     display block
@@ -12,11 +9,19 @@
     background none
     outline none
     width 100%
-    padding 6px 28px 6px 12px
+    padding 6px 12px
 
-  .input-clear
+  &.has-clear
+    .input-text
+      padding-right 30px
+
+  .input-actions
     position absolute
-    right 5px
+    right 10px
     top 50%
     transform(translateY(-50%))
     color #666
+    white-space nowrap
+
+    > .input-action
+      margin-left 5px

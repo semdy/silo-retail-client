@@ -27,6 +27,10 @@ html, body
   word-wrap break-word
   max-width 150px
 
+button, input, select, textarea{
+  outline none
+}
+
 .caret
   display inline-block
   width 0
@@ -118,3 +122,10 @@ ins
   &.active
     color lighten(gblue, 30%)
     border-bottom-color lighten(gblue, 30%)
+
+.t-button
+  &.half
+    radius(20px)
+  &.t-button-large
+    &.half
+      radius(22px)

@@ -2,6 +2,7 @@ require('./Input.styl');
 
 let {Icon, Context} = SaltUI;
 let {PropTypes} = React;
+import classnames from 'classnames';
 
 class Input extends React.Component {
 
@@ -16,16 +17,29 @@ class Input extends React.Component {
   handleChange(e){
     let value = e.target.value;
     this.setState({
-      value: value
+      value: value,
+      showPassWord: false
     });
-    this.props.onChange(value);
+    this.props.onChange(e);
+  }
+
+  handleVisible(){
+    this.setState({
+      showPassWord: !this.state.showPassWord
+    }, () => {
+      this.refs.input.type = this.state.showPassWord ? "text" : "password"
+    });
   }
 
   handleClear(){
+    let input = this.refs.input;
     this.setState({
       value: ''
     });
+    input.value = "";
+    input.focus();
     this.props.onClear();
+    this.props.onChange({target: input});
   }
 
   componentDidUpdate() {
@@ -33,45 +47,77 @@ class Input extends React.Component {
   }
 
   render() {
-    let {value} = this.state;
-    let {placeholder, type, className} = this.props;
+    let {value, showPassWord} = this.state;
+    let {placeholder, type, name, className, showEye, showClear, autoComplete, onFocus, onBlur} = this.props;
     return (
-      <div className={["input-wrap", className].join(" ")}>
-        <input type={type} ref="input"
+      <div className={classnames("input-wrap", {[className]: !!className, "has-clear": showClear})}>
+        <input type={type}
+               ref="input"
+               name={name}
                className="input-text"
                placeholder={placeholder}
+               autoComplete={type === 'password' ? 'off' : autoComplete}
                value={value}
                onChange={this.handleChange.bind(this)}
+               onFocus={onFocus}
+               onBlur={onBlur}
         />
-        <span className="input-clear"
-              onClick={this.handleClear.bind(this)}
-              style={{
-                display: value === '' ? 'none' : 'block'
-              }}
-        >
-          <Icon name="x-circle" width={20} height={20}/>
-        </span>
+        {
+          <div className="input-actions">
+            {
+              showEye &&
+              <span className="input-action"
+                    onClick={this.handleVisible.bind(this)}
+              >
+                <Icon name={showPassWord ? 'eye-opened' : 'eye-closed'} width={20} height={20}/>
+              </span>
+            }
+            {
+              showClear &&
+              <span className="input-action"
+                    onClick={this.handleClear.bind(this)}
+                    style={{
+                      display: value === '' ? 'none' : 'inline-block'
+                    }}
+              >
+                <Icon name="x-circle" width={20} height={20}/>
+              </span>
+            }
+          </div>
+        }
       </div>
     );
   }
 }
 
 Input.propTypes = {
+  showEye: PropTypes.bool,
+  showClear: PropTypes.bool,
   value: PropTypes.string,
+  name: PropTypes.string,
   placeholder: PropTypes.string,
+  autoComplete: PropTypes.string,
   type: PropTypes.string,
   className: PropTypes.string,
   onChange: PropTypes.func,
-  onClear: PropTypes.func
+  onClear: PropTypes.func,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func
 };
 
 Input.defaultProps = {
+  showEye: false,
+  showClear: false,
   value: '',
+  name: '',
   placeholder: '',
-  string: 'text',
+  autoComplete: 'on',
+  type: 'text',
   className: '',
   onChange: Context.noop,
-  onClear: Context.noop
+  onClear: Context.noop,
+  onFocus: Context.noop,
+  onBlur: Context.noop
 };
 
 module.exports = Input;

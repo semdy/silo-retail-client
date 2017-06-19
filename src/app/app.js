@@ -9,6 +9,7 @@ const {Router, Route, IndexRedirect, hashHistory} = ReactRouter;
 import reactMixin from 'react-mixin';
 import store from  './store';
 import actions from './actions';
+import classnames from 'classnames';
 import ScrollNav from '../components/ScrollNav';
 import Navigation from '../components/navigation';
 import Navgationmask from '../components/navgationmask';
@@ -30,6 +31,7 @@ import Distribution from '../pages/distribution';
 import Payment from '../pages/payment';
 import GoodsInfo from '../pages/goodsinfo';
 import Passflow from '../pages/passflow';
+import Login from '../pages/login';
 import NoMatch from '../pages/nomatch';
 
 class App extends React.Component {
@@ -38,12 +40,12 @@ class App extends React.Component {
   }
 
   render() {
-    let {showHeader, headerTitle, shownP2r, isP2rEnabled} = this.state;
+    let {showHeader, headerTitle, shownP2r, isP2rEnabled, scrollNavVisible} = this.state;
 
     return (
       <div className="app-body">
         <Navigation items={navItems}/>
-        <div className="page-container page-scrollNav">
+        <div className={classnames("page-container", {"page-scrollNav": scrollNavVisible})}>
           <ScrollNav items={scrollNavItems}/>
           {
             showHeader &&
@@ -108,6 +110,7 @@ appReady(() => {
         <Route path="permission.record" component={PageRcord}/>
         <Route path="permission.approval" component={PageApproval}/>
         <Route path="permission.members" component={PageMembers}/>
+        <Route path="user.login" component={Login}/>
         <Route path="*" component={NoMatch}/>
       </Route>
     </Router>, document.getElementById('App')

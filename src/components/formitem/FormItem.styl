@@ -1,0 +1,55 @@
+@import "../../stylus-lib/var.styl"
+
+.form-item
+  margin-bottom 15px
+
+.form-item-bd
+  position relative
+  border 1px solid #008cee
+  padding-left 6px
+  padding-right 6px
+
+  radius(17px)
+
+  &.left-pad
+    padding-left 35px
+
+  &.right-pad
+    padding-right 35px
+
+  .input-icon
+    position absolute
+    top 50%
+    transform(translateY(-50%))
+    color #bbb
+
+    &.left
+      left 17px
+
+    &.right
+      right 17px
+
+  .input-item
+    width 100%
+
+  &.large
+    radius(23px)
+
+    .input-text
+      padding-top 12px
+      padding-bottom 12px
+      font-size 16px
+
+      &::-webkit-input-placeholder
+        color #bbb
+
+.form-item-explain
+  display block
+  margin-top 5px
+  margin-left 12px
+  color #f04134
+
+.form-item-icon
+  position relative
+  top -2px
+  margin-right 3px

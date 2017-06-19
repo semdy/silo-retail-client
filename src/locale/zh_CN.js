@@ -162,5 +162,11 @@ export default {
   OVERCAST: "阴天",
   CLOUDY: "多云",
   SLEET: "雨夹雪",
-  LIGHT_RAIN: "小雨"
+  LIGHT_RAIN: "小雨",
+
+  TYPE_USERNAME: "请输入账号",
+  TYPE_PASSWORD: "请输入密码",
+  USER_EMPTY: "账号不能为空",
+  PASS_EMPTY: "密码不能为空",
+  LOGIN: "登录"
 }

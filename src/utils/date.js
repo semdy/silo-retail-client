@@ -69,7 +69,10 @@ export const getDayNumber = (dateObject) => {
  */
 
 export const getTimezoneStamp = (offset) => {
-  if( typeof offset !== 'string' && offset.length < 2 ){
+  if( typeof offset !== 'string' ){
+    return 0;
+  }
+  if( offset.length < 2 ){
     return 0;
   }
   let timeStack = offset.split(":");

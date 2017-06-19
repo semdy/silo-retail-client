@@ -29,6 +29,7 @@ class Searchbar extends React.Component {
           <div className="searchbar-filed">
             <Input ref="input" placeholder={placeholder}
                    className="searchbar-input"
+                   showClear={true}
                    onClear={this.handleClear.bind(this)}
             />
             <div className="searchbar-button"
