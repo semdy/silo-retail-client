@@ -16,6 +16,8 @@ class FormItem extends React.Component {
     this.value = this.props.value || "";
   }
 
+  displayName = 'FormItem';
+
   handleChange(e){
     this.value = e.target.value;
     this.props.onChange(e);
@@ -38,8 +40,8 @@ class FormItem extends React.Component {
     let {errMsg} = this.state;
     let {leftIcon, rightIcon, className, size, ...inputProps} = this.props;
     return (
-      <div className={classnames("form-item", {"has-error": !!errMsg})}>
-        <div className={classnames("form-item-bd t-FBH t-FBJC", {[className]: !!className, [size]: !!size, "left-pad": !!leftIcon, "right-pad": !!rightIcon})}>
+      <div className={classnames("form-item", {[className]: !!className, "has-error": !!errMsg})}>
+        <div className={classnames("form-item-bd t-FBH t-FBJC", {[size]: !!size, "left-pad": !!leftIcon, "right-pad": !!rightIcon})}>
           {
             leftIcon &&
             <Icon name={leftIcon}

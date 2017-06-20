@@ -1,6 +1,7 @@
 'use strict';
 
 let {Toast} = SaltUI;
+let {hashHistory} = ReactRouter;
 
 //改写Toast
 ["success", "error", "fail", "loading"].forEach((type) => {
@@ -26,18 +27,27 @@ const jsApiList = ['runtime.info', 'biz.contact.choose',
 
 let readyQueue = [];
 let isReady = false;
+let STORAGE_Key = "__silo";
+let SESSION_KEY = STORAGE_Key + ".session";
+let USER_KEY = STORAGE_Key + ".user";
+
+let username = urlParams.user;
+let password = urlParams.pass;
 
 const session = {
 
-  set(info) {
+  set(info, username) {
     if (info === null) {
       return;
     }
-    localStorage.setItem('session', JSON.stringify(info));
+    localStorage.setItem(SESSION_KEY, JSON.stringify(info));
+    if( username ){
+      this.setUsername(username);
+    }
   },
 
   get(){
-    let sessionStr = localStorage.getItem('session');
+    let sessionStr = localStorage.getItem(SESSION_KEY);
     if (sessionStr) {
       return JSON.parse(sessionStr);
     } else {
@@ -45,8 +55,17 @@ const session = {
     }
   },
 
+  setUsername(username){
+    localStorage.setItem(USER_KEY, username);
+  },
+
+  getUsername(){
+    return localStorage.getItem(USER_KEY);
+  },
+
   clear() {
-    localStorage.removeItem('session');
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(USER_KEY);
   }
 
 };
@@ -106,7 +125,7 @@ function httpRequestSignIn(code, corpId) {
   return new Promise((resolve, reject) => {
     request({url: '7003.json', body: {corpId, code}}).then((json) => {
       if (json.session) {
-        session.set(json.session);
+        session.set(json.session, username);
         resolve(json.session);
       } else {
         error(locale.getUserInfoError);
@@ -125,7 +144,7 @@ function httpRequestSignInByUserPass(username, password) {
   return new Promise((resolve, reject) => {
     request({url: '1003.json', body: {username, password}}).then((json) => {
       if (json.session) {
-        session.set(json.session);
+        session.set(json.session, username);
         resolve(json.session);
         triggerReady();
       } else {
@@ -163,10 +182,11 @@ function onDingTalkYes(corpId) {
 
 function signIn() {
   let sessionInfo = session.get();
-  if (sessionInfo) {
-    session.set(sessionInfo);
+  if (sessionInfo && session.getUsername() === username) {
+    session.set(sessionInfo, username);
     triggerReady();
   } else {
+    session.clear();
     if (isDD) {
       httpRequestConfig().then((json) => {
         let config = json.config;
@@ -180,12 +200,12 @@ function signIn() {
         })
       });
     } else {
-      let username = urlParams.user;
-      let password = urlParams.pass;
       if (username && password) {
         httpRequestSignInByUserPass(username, password);
       } else {
-        alert(locale.noPermission);
+        //alert(locale.noPermission);
+        hashHistory.replace('/user.login');
+        triggerReady();
       }
     }
   }
