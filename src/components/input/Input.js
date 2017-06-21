@@ -65,7 +65,7 @@ class Input extends React.Component {
           <div className="input-actions">
             {
               showEye &&
-              <Icon name={showPassWord ? 'eye-closed' : 'eye-opened'}
+              <Icon name={showPassWord ? 'eye-opened' : 'eye-closed'}
                     width={20}
                     height={20}
                     className="input-action"
