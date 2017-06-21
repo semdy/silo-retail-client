@@ -47,7 +47,7 @@ class Login extends React.Component {
     this.setLoginStatus(true);
     auth.doLogin(username, password).then(() =>{
       fetchStoreList().then(() => {
-        hashHistory.replace('/report.survey');
+        hashHistory.replace('/');
       });
     }, () => {
       this.setLoginStatus(false);
