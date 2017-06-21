@@ -103,7 +103,7 @@ class Login extends React.Component {
                 effect={true}
               >
                 {
-                  isLogining ? locale.LOGINING : locale.LOGIN
+                  isLogining ? locale.user.LOGINING : locale.user.LOGIN
                 }
               </FormButton>
             </div>

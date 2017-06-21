@@ -41,6 +41,10 @@ function CircEaseInOut(p) {
   return ((p*=2) < 1) ? -0.5 * (Math.sqrt(1 - p * p) - 1) : 0.5 * (Math.sqrt(1 - (p -= 2) * p) + 1);
 }
 
+function Linear(t) {
+  return t;
+}
+
 var movePoint = function(point, w, h) {
   var x = point.originX-50+Math.random()*100;
   var y = point.originY-50+Math.random()*100;
@@ -50,7 +54,7 @@ var movePoint = function(point, w, h) {
     y: y < 5 ? 5 : (y > h - 5 ? h - 5 : y)
   };
 
-  Tween(point, toPos, (1+1*random())*1000, CircEaseInOut, function(){
+  Tween(point, toPos, (1.2+1.2*random())*1000, Linear, function(){
     if( !isDestroy ) {
       movePoint(point, w, h);
     }
@@ -111,10 +115,10 @@ var Polygon = function(target, w, h) {
   isDestroy = false;
 
   //根据屏幕尺寸初始化圆点
-  for (var x = 0; x < w; x = x + 50) {
-    for (var y = 0; y < h; y = y + 50) {
-      var px = x + Math.random() * 50;
-      var py = y + Math.random() * 50;
+  for (var x = 0; x < w; x = x + 60) {
+    for (var y = 0; y < h; y = y + 60) {
+      var px = x + Math.random() * 60;
+      var py = y + Math.random() * 60;
       this.vertices.push(
         new Point(
           px,

@@ -201,10 +201,19 @@ function signIn() {
         httpRequestSignInByUserPass(username, password);
       } else {*/
         //alert(locale.noPermission);
-        hashHistory.replace('/user.login');
+        gotoLogin();
         triggerReady();
       //}
     }
+  }
+}
+
+function gotoLogin(){
+  if( isDD ){
+    session.clear();
+    location.reload();
+  } else {
+    hashHistory.replace('/user.login');
   }
 }
 
@@ -239,5 +248,7 @@ signIn.ready = ready;
 module.exports = {
   session,
   signIn,
+  gotoLogin,
+  gotoLogout: gotoLogin,
   doLogin: httpRequestSignInByUserPass
 };

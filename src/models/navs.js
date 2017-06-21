@@ -2,7 +2,7 @@
  * Created by mcake on 2017/3/14.
  */
 
-import {permission, scrollNavItems} from '../locale';
+import {permission, scrollNavItems, user} from '../locale';
 
 export default {
   navItems: [
@@ -33,6 +33,13 @@ export default {
       visible: false,
       admin: true,
       path: '/permission.members'
+    },
+    {
+      text: user.LOGOUT,
+      icon: 'logout',
+      visible: true,
+      admin: false,
+      path: '/user.logout'
     }],
 
   scrollNavItems: [

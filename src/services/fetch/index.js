@@ -1,10 +1,9 @@
 import {isRPC, env} from '../config'
-import {session} from '../auth';
+import {session, gotoLogin} from '../auth';
 import actions from '../../app/actions';
 import locale from '../../locale';
 import config from '../../config';
 
-let {hashHistory} = ReactRouter;
 let {Toast} = SaltUI;
 
 let requestCount = 0;
@@ -34,8 +33,6 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
         if (info) {
           //xhr.withCredentials = true
           xhr.setRequestHeader("Authorization", "silo " + btoa(info.sessionId))
-        } else {
-          return false;
         }
       },
       success: (recv) => {
@@ -54,7 +51,7 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
           reject(code);
           //alert(locale.loginTimeout);
           //location.reload();
-          hashHistory.replace('/user.login');
+          gotoLogin();
         } else {
           requestError = true;
           rejectMsg = `protocError ${code}`; //${locale.serverError}
@@ -66,9 +63,7 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
         requestError = true;
         rejectMsg = `${err}, status ${status}`; //${locale.disconnect}
         reject(rejectMsg);
-        if( status.toLowerCase() !== 'abort' ) {
-          Toast.error(rejectMsg);
-        }
+        Toast.error(rejectMsg);
       },
       complete: () => {
         if (--requestCount === 0) {
