@@ -39,7 +39,7 @@ export default {
       icon: 'logout',
       visible: true,
       admin: false,
-      path: '/user.logout'
+      path: '/user.login'
     }],
 
   scrollNavItems: [

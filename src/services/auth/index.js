@@ -209,12 +209,7 @@ function signIn() {
 }
 
 function gotoLogin(){
-  if( isDD ){
-    session.clear();
-    location.reload();
-  } else {
-    hashHistory.replace('/user.login');
-  }
+  hashHistory.replace('/user.login');
 }
 
 function onDingTalkErr(err) {

@@ -6,7 +6,6 @@ let {Icon} = SaltUI;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
-import {gotoLogin} from '../../services/auth';
 import dom, {transitionEnd} from '../../utils/dom';
 
 class Navigation extends React.Component {
@@ -66,14 +65,6 @@ class Navigation extends React.Component {
     }
   }
 
-  handleClick(path, e){
-    if( path === '/user.logout' ){
-      e.preventDefault();
-      gotoLogin();
-    }
-    actions.hideNavigation();
-  }
-
   render() {
     let {items} = this.state;
     return (
@@ -87,7 +78,7 @@ class Navigation extends React.Component {
                       key={i}
                       className="navigation-item"
                       activeClassName="active"
-                      onClick={this.handleClick.bind(this, menu.path)}
+                      onClick={actions.hideNavigation}
                 >
                   {
                     !menu.icon ? "" :

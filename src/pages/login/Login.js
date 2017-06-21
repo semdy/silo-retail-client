@@ -9,7 +9,8 @@ import FormItem from '../../components/formitem';
 import FormButton from '../../components/formbutton';
 import AnimateGridBg from '../../components/animategridbg'
 import Wave from '../../components/wave';
-import auth from '../../services/auth';
+import {isDD} from '../../utils';
+import {session, doLogin} from '../../services/auth';
 import {fetchStoreList} from '../../services/store';
 import locale from '../../locale';
 
@@ -23,9 +24,16 @@ class Login extends React.Component {
   }
 
   componentDidMount(){
-    auth.session.clear();
-    actions.showScrollNav(false);
-    actions.setP2rEnabled(false);
+    session.clear();
+    if (isDD) {
+      hashHistory.replace('/');
+      setTimeout(function () {
+        location.reload();
+      });
+    } else {
+      actions.showScrollNav(false);
+      actions.setP2rEnabled(false);
+    }
   }
 
   componentWillUnmount(){
@@ -45,7 +53,7 @@ class Login extends React.Component {
     let username = this.refs.user.value;
     let password = this.refs.pass.value;
     this.setLoginStatus(true);
-    auth.doLogin(username, password).then(() =>{
+    doLogin(username, password).then(() =>{
       fetchStoreList().then(() => {
         hashHistory.replace('/');
       });
@@ -63,6 +71,7 @@ class Login extends React.Component {
   render() {
     let {isLogining} = this.state;
     return (
+      isDD ? <noscript/> :
       <div className="page-login">
         <div className="login-wrapper">
           <SiteLogo/>
