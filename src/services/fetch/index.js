@@ -3,6 +3,8 @@ import {session} from '../auth';
 import actions from '../../app/actions';
 import locale from '../../locale';
 import config from '../../config';
+
+let {hashHistory} = ReactRouter;
 let {Toast} = SaltUI;
 
 let requestCount = 0;
@@ -50,8 +52,9 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
         } else if (code === 403) {
           session.clear();
           reject(code);
-          alert(locale.loginTimeout);
-          location.reload();
+          //alert(locale.loginTimeout);
+          //location.reload();
+          hashHistory.replace('/user.login');
         } else {
           requestError = true;
           rejectMsg = `protocError ${code}`; //${locale.serverError}
