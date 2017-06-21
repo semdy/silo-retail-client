@@ -31,9 +31,6 @@ let STORAGE_Key = "__silo";
 let SESSION_KEY = STORAGE_Key + ".session";
 let USER_KEY = STORAGE_Key + ".user";
 
-let username = urlParams.user;
-let password = urlParams.pass;
-
 const session = {
 
   set(info, username) {
@@ -125,7 +122,7 @@ function httpRequestSignIn(code, corpId) {
   return new Promise((resolve, reject) => {
     request({url: '7003.json', body: {corpId, code}}).then((json) => {
       if (json.session) {
-        session.set(json.session, username);
+        session.set(json.session);
         resolve(json.session);
       } else {
         error(locale.getUserInfoError);
@@ -146,8 +143,9 @@ function httpRequestSignInByUserPass(username, password) {
       if (json.session) {
         session.set(json.session, username);
         resolve(json.session);
-        triggerReady();
+        //triggerReady();
       } else {
+        reject(locale.userPassError);
         error(locale.userPassError);
       }
     }, (err) => {
@@ -182,11 +180,10 @@ function onDingTalkYes(corpId) {
 
 function signIn() {
   let sessionInfo = session.get();
-  if (sessionInfo && session.getUsername() === username) {
-    session.set(sessionInfo, username);
+  if (sessionInfo) {
+    session.set(sessionInfo);
     triggerReady();
   } else {
-    session.clear();
     if (isDD) {
       httpRequestConfig().then((json) => {
         let config = json.config;
@@ -200,13 +197,13 @@ function signIn() {
         })
       });
     } else {
-      if (username && password) {
+      /*if (username && password) {
         httpRequestSignInByUserPass(username, password);
-      } else {
+      } else {*/
         //alert(locale.noPermission);
         hashHistory.replace('/user.login');
         triggerReady();
-      }
+      //}
     }
   }
 }

@@ -157,28 +157,27 @@ var Polygon = function(target, w, h) {
       }
     }
 
+    // detect points in range
+    if(Math.abs(getDistance(this.target, p1)) < 4000) {
+      p1.lineAlpha = 0.2;
+      p1.circleAlpha = 0.5;
+    } else if(Math.abs(getDistance(this.target, p1)) < 20000) {
+      p1.lineAlpha = 0.1;
+      p1.circleAlpha = 0.3;
+    } else if(Math.abs(getDistance(this.target, p1)) < 40000) {
+      p1.lineAlpha = 0.02;
+      p1.circleAlpha = 0.1;
+    } else {
+      p1.lineAlpha = 0;
+      p1.circleAlpha = 0;
+    }
+
     p1.closest = closest;
   }
 
   this.draw = function(ctx) {
     for (var i = 0; i < this.vertices.length; i++) {
-      var point = this.vertices[i];
-      // detect points in range
-      if(Math.abs(getDistance(this.target, point)) < 4000) {
-        point.lineAlpha = 0.2;
-        point.circleAlpha = 0.5;
-      } else if(Math.abs(getDistance(this.target, point)) < 20000) {
-        point.lineAlpha = 0.1;
-        point.circleAlpha = 0.3;
-      } else if(Math.abs(getDistance(this.target, point)) < 40000) {
-        point.lineAlpha = 0.02;
-        point.circleAlpha = 0.1;
-      } else {
-        point.lineAlpha = 0;
-        point.circleAlpha = 0;
-      }
-
-      point.draw(ctx).drawLines(ctx);
+      this.vertices[i].draw(ctx).drawLines(ctx);
     }
   };
 

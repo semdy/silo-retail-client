@@ -40,5 +40,15 @@ methods.transitionEnd = function (el, callback) {
   el.addEventListener("transitionend", listener, false);
 };
 
+methods.animationEnd = function (el, callback) {
+  function listener() {
+    callback.call(this);
+    el.removeEventListener("webkitAnimationEnd", listener, false);
+    el.removeEventListener("animationend", listener, false);
+  }
+  el.addEventListener("webkitAnimationEnd", listener, false);
+  el.addEventListener("animationend", listener, false);
+};
+
 module.exports = methods;
 

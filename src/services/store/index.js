@@ -62,7 +62,7 @@ function triggerReady() {
 export const fetchStoreList = () => {
   isReady = false;
   storeErrMsg = "";
-  fetch.post('7103.json', {}, false).then((res) => {
+  return fetch.post('7103.json', {}, false).then((res) => {
     storeList = res.data;
     manager.storeId = res.idAsManager;
     manager.userId = res.managerUserId;

@@ -1,0 +1,20 @@
+
+@import "../../stylus-lib/var.styl";
+
+.t-button
+  position relative
+
+.button-effect
+  position absolute
+  width 25px
+  height 25px
+  background-color rgba(255,255,255,.2)
+  radius(50%)
+  animation(button-wave .6s ease backwards)
+
+
+@keyframes button-wave
+  0%
+    transform(scale(0))
+  100%
+    transform(scale(25))

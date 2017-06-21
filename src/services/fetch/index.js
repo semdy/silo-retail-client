@@ -28,10 +28,12 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
       data: isRPC ? JSON.stringify(body) : body,
       dataType: dataType,
       beforeSend: function (xhr) {
-        let sessionId = session.get().sessionId;
-        if (sessionId) {
+        let info = session.get();
+        if (info) {
           //xhr.withCredentials = true
-          xhr.setRequestHeader("Authorization", "silo " + btoa(sessionId))
+          xhr.setRequestHeader("Authorization", "silo " + btoa(info.sessionId))
+        } else {
+          return false;
         }
       },
       success: (recv) => {
@@ -61,7 +63,9 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
         requestError = true;
         rejectMsg = `${err}, status ${status}`; //${locale.disconnect}
         reject(rejectMsg);
-        Toast.error(rejectMsg);
+        if( status.toLowerCase() !== 'abort' ) {
+          Toast.error(rejectMsg);
+        }
       },
       complete: () => {
         if (--requestCount === 0) {

@@ -9,16 +9,15 @@ class Input extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.props.value
+      value: this.props.value,
+      showPassWord: false
     };
     this.value = this.state.value;
   }
 
   handleChange(e){
-    let value = e.target.value;
     this.setState({
-      value: value,
-      showPassWord: false
+      value: e.target.value
     });
     this.props.onChange(e);
   }
@@ -27,7 +26,7 @@ class Input extends React.Component {
     this.setState({
       showPassWord: !this.state.showPassWord
     }, () => {
-      this.refs.input.type = this.state.showPassWord ? "text" : "password"
+      this.refs.input.type = this.state.showPassWord ? "text" : "password";
     });
   }
 
@@ -66,22 +65,24 @@ class Input extends React.Component {
           <div className="input-actions">
             {
               showEye &&
-              <span className="input-action"
+              <Icon name={showPassWord ? 'eye-closed' : 'eye-opened'}
+                    width={20}
+                    height={20}
+                    className="input-action"
                     onClick={this.handleVisible.bind(this)}
-              >
-                <Icon name={showPassWord ? 'eye-opened' : 'eye-closed'} width={20} height={20}/>
-              </span>
+              />
             }
             {
               showClear &&
-              <span className="input-action"
+              <Icon name="x-circle"
+                    width={20}
+                    height={20}
+                    className="input-action"
                     onClick={this.handleClear.bind(this)}
                     style={{
-                      display: value === '' ? 'none' : 'inline-block'
+                      display: value === '' ? 'none' : ''
                     }}
-              >
-                <Icon name="x-circle" width={20} height={20}/>
-              </span>
+              />
             }
           </div>
         }

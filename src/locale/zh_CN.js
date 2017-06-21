@@ -168,5 +168,6 @@ export default {
   TYPE_PASSWORD: "请输入密码",
   USER_EMPTY: "账号不能为空",
   PASS_EMPTY: "密码不能为空",
-  LOGIN: "登录"
+  LOGIN: "登录",
+  LOGINING: "登录中..."
 }

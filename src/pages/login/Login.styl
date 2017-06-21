@@ -8,6 +8,9 @@
   padding 60px 0 20px
   overflow hidden
 
+  .form-item
+    background-color #fff
+
 .login-wrapper
   position relative
   width 80%
@@ -18,53 +21,8 @@
 .form-action
   margin-top 30px
 
-.login-footer
-  position absolute
-  left 0
-  width 100%
-  bottom 0
-  height 18%
-  overflow hidden
-  pointer-events none
-
-  > div
-    position absolute
-    left 0
-    top 0
-    width 200%
-    height 100%
-    background url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHdpZHRoPSIxMjE0cHgiIGhlaWdodD0iMjMwcHgiIHZpZXdCb3g9IjAgMCAxMjI0IDIzMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTIyNCAyMzAiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8xXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSI2MTIuODIxMyIgeTE9IjIzMSIgeDI9IjYxMi44MjEzIiB5Mj0iMS4wMDA1Ij4NCgk8c3RvcCAgb2Zmc2V0PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjojMDA4Q0VFIi8+DQoJPHN0b3AgIG9mZnNldD0iMSIgc3R5bGU9InN0b3AtY29sb3I6I0JCRTNGRiIvPg0KPC9saW5lYXJHcmFkaWVudD4NCjxwYXRoIG9wYWNpdHk9IjAuNiIgZmlsbD0idXJsKCNTVkdJRF8xXykiIGQ9Ik0xMTU5LjMwOCw4Mi43OTRDMTA5My45OSw2NS4xMDYsMTAxNS44ODYsMSw5MzUuNDY3LDFDNzczLjMxNCwxLDc0Ni4xNDYsOTMuMjg3LDYxMi41OTgsOTMuMjg3DQoJdjAuMTE2Yy01LjA4My0wLjE1Mi0zMi4xMTctMS4zNjgtNjYuMjQ0LTEwLjYwOUM0ODEuMDM1LDY1LjEwNiw0MDIuOTMxLDEsMzIyLjUxNCwxQzE2MC4zNTksMSwxMzQuMTkzLDkzLjI4NywwLjY0NCw5My4yODd2MTM2Ljk1MQ0KCVYyMzFoNjExLjk1NGgwLjg3MkgxMjI1VjkzLjQyNUMxMjI1LDkzLjQyNSwxMTk3LjIzNyw5My4wNjYsMTE1OS4zMDgsODIuNzk0eiIvPg0KPC9zdmc+DQo=") repeat-x
-    background-size 100% auto
-    animation(wave 4s linear both infinite)
-
-
-  .login-wave1
-    -webkit-animation-delay -3s
-    animation-delay -3s
-    -webkit-animation-duration 10s
-    animation-duration 10s
-
-  .login-wave2
-    -webkit-animation-delay -2s
-    animation-delay -2s
-    -webkit-animation-duration 8s
-    animation-duration 8s
-
-  .login-wave3
-    margin-top 10%
-    -webkit-animation-delay -1s
-    animation-delay -1s
-    -webkit-animation-duration 6s
-    animation-duration 6s
-
 .animate-bg
   position fixed
   left 0
   top 0
   pointer-events none
-
-@keyframes wave
-  0%
-    transform(translate3d(-50%, 0, 0))
-  100%
-    transform(translate3d(0%, 0, 0))

@@ -11,7 +11,7 @@ class AnimateGridBg extends React.Component {
 
   _createInstance() {
     this.ctx = this.refs.canvas.getContext('2d');
-    let target = {x: this.w/2, y: this.h/3};
+    let target = {x: this.w/2, y: this.h/5};
     this.poly = new Polygon(target, this.w, this.h);
   }
 
@@ -39,12 +39,14 @@ class AnimateGridBg extends React.Component {
 
   render(){
     return (
-      <canvas ref="canvas"
-              width={this.w}
-              height={this.h}
-              className={this.props.className}
-              style={{width: this.w + "px", height: this.h + "px"}}
-      />
+      <div className={this.props.className}>
+        <canvas ref="canvas"
+                width={this.w}
+                height={this.h}
+
+                style={{width: this.w + "px", height: this.h + "px"}}
+        />
+      </div>
     )
   }
 }

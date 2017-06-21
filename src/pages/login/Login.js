@@ -8,16 +8,22 @@ import Form from '../../components/form';
 import FormItem from '../../components/formitem';
 import FormButton from '../../components/formbutton';
 import AnimateGridBg from '../../components/animategridbg'
+import Wave from '../../components/wave';
 import auth from '../../services/auth';
+import {fetchStoreList} from '../../services/store';
 import locale from '../../locale';
 
 class Login extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      isLogining: false
+    };
   }
 
   componentDidMount(){
+    auth.session.clear();
     actions.showScrollNav(false);
     actions.setP2rEnabled(false);
   }
@@ -38,15 +44,24 @@ class Login extends React.Component {
   handleLogin(){
     let username = this.refs.user.value;
     let password = this.refs.pass.value;
-    auth.doLogin(username, password).then((res) =>{
-      auth.session.set(res, username);
-      hashHistory.replace('/report.survey');
-    }, (err) => {
-      console.error(err)
+    this.setLoginStatus(true);
+    auth.doLogin(username, password).then(() =>{
+      fetchStoreList().then(() => {
+        hashHistory.replace('/report.survey');
+      });
+    }, () => {
+      this.setLoginStatus(false);
+    });
+  }
+
+  setLoginStatus(bool){
+    this.setState({
+      isLogining: bool
     });
   }
 
   render() {
+    let {isLogining} = this.state;
     return (
       <div className="page-login">
         <div className="login-wrapper">
@@ -80,25 +95,22 @@ class Login extends React.Component {
             />
             <div className="form-action">
               <FormButton
+                disabled={isLogining}
                 funcType="submit"
                 type="primary"
                 size="large"
                 className="half"
+                effect={true}
               >
                 {
-                  locale.LOGIN
+                  isLogining ? locale.LOGINING : locale.LOGIN
                 }
               </FormButton>
             </div>
           </Form>
         </div>
         <AnimateGridBg className="animate-bg"/>
-        <div className="login-footer">
-          <div className="login-wave1"/>
-          <div className="login-wave2"/>
-          <div className="login-wave3"/>
-          <div className="login-wave4"/>
-        </div>
+        <Wave/>
       </div>
     );
   }
