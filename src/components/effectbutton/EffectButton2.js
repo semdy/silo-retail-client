@@ -12,30 +12,49 @@ import dom from '../../utils/dom';
 class EffectButton extends Button {
   constructor(props){
     super(props);
+    this.state = {
+      left: 0,
+      top: 0
+    };
   }
   componentDidMount(){
     this.button = ReactDOM.findDOMNode(this.refs.button);
+    this.effect = this.refs.effect;
   }
 
   handleClick(e){
-    let span = document.createElement('span');
-    span.className = "button-effect";
     let bound = this.button.getBoundingClientRect();
     let left = e.pageX - bound.left - 12.5;
     let top = e.pageY - bound.top - 12.5;
-    span.style.left = left + "px";
-    span.style.top = top + "px";
-    this.button.appendChild(span);
-    dom.animationEnd(span, function(){
-      this.parentNode.removeChild(this);
+    this.setState({
+      left,
+      top
+    }, () => {
+      this.effect.style.display = "none";
+      setTimeout(() => {
+        this.effect.style.display = "block";
+      });
+      dom.animationEnd(this.effect, function(){
+        this.style.display = 'none';
+      });
     });
     this.props.onClick(e);
   }
 
   render(){
+    let {left, top} = this.state;
     return (
       <Button ref="button" {...this.props} onClick={this.handleClick.bind(this)}>
         {this.props.children}
+        <span ref="effect"
+              className="button-effect"
+              style={{
+                left: left + "px",
+                top: top + "px",
+                display: "none"
+              }}
+        >
+        </span>
       </Button>
     )
   }

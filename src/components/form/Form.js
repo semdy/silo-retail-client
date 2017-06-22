@@ -15,7 +15,7 @@ class Form extends React.Component {
 
   _parseChildrenValidator(){
     React.Children.forEach(this.props.children, (child) => {
-      let vNode = child._owner._instance.refs[child.props.name];
+      let vNode = child._owner._instance.refs[child.ref];
       if( vNode && vNode.displayName === 'FormItem' ){
         this.validator.add(vNode, child.props.rules);
       }

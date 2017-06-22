@@ -81,7 +81,6 @@ class Login extends React.Component {
           >
             <FormItem
               ref="user"
-              name="user"
               leftIcon="user-c"
               size="large"
               showClear={true}
@@ -92,7 +91,6 @@ class Login extends React.Component {
             />
             <FormItem
               ref="pass"
-              name="pass"
               type="password"
               leftIcon="lock"
               size="large"
