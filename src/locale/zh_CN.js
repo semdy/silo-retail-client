@@ -13,7 +13,7 @@ export default {
   userPassError: '用户名或密码错误',
   loginError: '登录出错',
   noPermission: "没有权限访问",
-  notFound: '404页面未找到',
+  notFound: "404页面未找到",
   back2index: '返回首页',
   scrollNavItems: {
     survey: "概况",

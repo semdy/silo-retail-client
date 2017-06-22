@@ -1,7 +1,7 @@
 let {Toast} = SaltUI;
 let {hashHistory} = ReactRouter;
 import {fetch} from '../fetch';
-import {signIn} from '../auth';
+import {signIn, session} from '../auth';
 import {getTimezoneStamp} from '../../utils/date';
 import actions from '../../app/actions';
 import locale from '../../locale';
@@ -109,7 +109,9 @@ export const getStoreList = () => {
       return resolve(selectedStoreList);
     }
     if( storeErrMsg ) {
-      Toast.error(storeErrMsg);
+      if( !!session.get() ) {
+        Toast.error(storeErrMsg);
+      }
       return reject(storeErrMsg);
     }
     if( storeList.length === 0 ){

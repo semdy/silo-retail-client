@@ -113,6 +113,6 @@ appReady(() => {
         <Route path="user.login" component={Login}/>
         <Route path="*" component={NoMatch}/>
       </Route>
-    </Router>, document.getElementById('App')
+    </Router>, document.getElementById('app')
   );
 });

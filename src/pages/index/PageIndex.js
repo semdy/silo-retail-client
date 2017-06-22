@@ -3,6 +3,7 @@ require('./PageIndex.styl');
 let {Button} = SaltUI;
 let {hashHistory} = ReactRouter;
 import dom from '../../utils/dom';
+import {gotoLogin} from '../../services/auth';
 import Empty from '../../components/empty';
 import {getStoreList} from '../../services/store';
 import locale from '../../locale';
@@ -29,7 +30,7 @@ class Index extends React.Component {
           show: true
         });
       }
-    });
+    }, gotoLogin);
 
     //禁用下拉刷新
     dom.on(this.refs.el, "touchstart", this.touchStartHandler);
