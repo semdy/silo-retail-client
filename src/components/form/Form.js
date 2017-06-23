@@ -23,7 +23,7 @@ class Form extends React.Component {
   }
 
   validate(){
-    this.validator = new Validator(this.refs.form);
+    this.validator = new Validator();
     this._parseChildrenValidator();
     return this.validator.validate();
   }

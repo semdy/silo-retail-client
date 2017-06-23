@@ -23,7 +23,7 @@ class Login extends React.Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     session.clear();
     if (isDD) {
       hashHistory.replace('/');
@@ -36,24 +36,24 @@ class Login extends React.Component {
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     actions.showScrollNav(true);
     actions.setP2rEnabled(true);
   }
 
-  handleSubmit(e){
+  handleSubmit(e) {
     e.preventDefault();
     let inValid = this.refs.form.validate();
-    if(!inValid){
+    if (!inValid) {
       this.handleLogin();
     }
   }
 
-  handleLogin(){
+  handleLogin() {
     let username = this.refs.user.value;
     let password = this.refs.pass.value;
     this.setLoginStatus(true);
-    doLogin(username, password).then(() =>{
+    doLogin(username, password).then(() => {
       fetchStoreList().then(() => {
         hashHistory.replace('/');
       });
@@ -62,7 +62,7 @@ class Login extends React.Component {
     });
   }
 
-  setLoginStatus(bool){
+  setLoginStatus(bool) {
     this.setState({
       isLogining: bool
     });
@@ -72,53 +72,53 @@ class Login extends React.Component {
     let {isLogining} = this.state;
     return (
       isDD ? <noscript/> :
-      <div className="page-login">
-        <div className="login-wrapper">
-          <SiteLogo/>
-          <Form ref="form"
-                className="login-form"
-                onSubmit={this.handleSubmit.bind(this)}
-          >
-            <FormItem
-              ref="user"
-              leftIcon="user-c"
-              size="large"
-              showClear={true}
-              placeholder={locale.TYPE_USERNAME}
-              rules={[
-                {method: 'required', errorMsg: locale.USER_EMPTY}
-              ]}
-            />
-            <FormItem
-              ref="pass"
-              type="password"
-              leftIcon="lock"
-              size="large"
-              showEye={true}
-              placeholder={locale.TYPE_PASSWORD}
-              rules={[
-                {method:'required', errorMsg: locale.PASS_EMPTY}
-              ]}
-            />
-            <div className="form-action">
-              <FormButton
-                disabled={isLogining}
-                funcType="submit"
-                type="primary"
+        <div className="page-login">
+          <div className="login-wrapper">
+            <SiteLogo/>
+            <Form ref="form"
+                  className="login-form"
+                  onSubmit={this.handleSubmit.bind(this)}
+            >
+              <FormItem
+                ref="user"
+                leftIcon="user-c"
                 size="large"
-                className="half"
-                effect={true}
-              >
-                {
-                  isLogining ? locale.user.LOGINING : locale.user.LOGIN
-                }
-              </FormButton>
-            </div>
-          </Form>
+                showClear={true}
+                placeholder={locale.TYPE_USERNAME}
+                rules={[
+                  {method: 'required', errorMsg: locale.USER_EMPTY}
+                ]}
+              />
+              <FormItem
+                ref="pass"
+                type="password"
+                leftIcon="lock"
+                size="large"
+                showEye={true}
+                placeholder={locale.TYPE_PASSWORD}
+                rules={[
+                  {method: 'required', errorMsg: locale.PASS_EMPTY}
+                ]}
+              />
+              <div className="form-action">
+                <FormButton
+                  disabled={isLogining}
+                  funcType="submit"
+                  type="primary"
+                  size="large"
+                  className="half"
+                  effect={true}
+                >
+                  {
+                    isLogining ? locale.user.LOGINING : locale.user.LOGIN
+                  }
+                </FormButton>
+              </div>
+            </Form>
+          </div>
+          <AnimateGridBg className="animate-bg"/>
+          <Wave/>
         </div>
-        <AnimateGridBg className="animate-bg"/>
-        <Wave/>
-      </div>
     );
   }
 }

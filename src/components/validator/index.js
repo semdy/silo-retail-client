@@ -28,16 +28,15 @@ let strategies = {
       return errorMsg;
     }
   },
-  equalTo: function(value, equalName, errorMsg){  //等值验证
-    if( value !== this.form[equalName].value ){
+  equalTo: function(value, targetVNode, errorMsg){  //等值验证
+    if( value !== targetVNode.value ){
       return errorMsg;
     }
   }
 };
 
 class Validator {
-  constructor(form){
-    this.form = form;
+  constructor(){
     this.cache = []; //保存校验规则
   }
 

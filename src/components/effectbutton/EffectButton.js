@@ -10,14 +10,15 @@ let {PropTypes} = React;
 import dom from '../../utils/dom';
 
 class EffectButton extends Button {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
-  componentDidMount(){
+
+  componentDidMount() {
     this.button = ReactDOM.findDOMNode(this.refs.button);
   }
 
-  handleClick(e){
+  handleClick(e) {
     let span = document.createElement('span');
     span.className = "button-effect";
     let bound = this.button.getBoundingClientRect();
@@ -26,13 +27,13 @@ class EffectButton extends Button {
     span.style.left = left + "px";
     span.style.top = top + "px";
     this.button.appendChild(span);
-    dom.animationEnd(span, function(){
+    dom.animationEnd(span, function () {
       this.parentNode.removeChild(this);
     });
     this.props.onClick(e);
   }
 
-  render(){
+  render() {
     return (
       <Button ref="button" {...this.props} onClick={this.handleClick.bind(this)}>
         {this.props.children}
