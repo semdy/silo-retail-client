@@ -165,7 +165,7 @@ const makeChartData = (data) => {
       data: []
     },
     grid: {
-      top: '20%',
+      top: '25%',
       left: '3%',
       right: '3%',
       bottom: '3%',
