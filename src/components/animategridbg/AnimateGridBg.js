@@ -12,7 +12,7 @@ class AnimateGridBg extends React.Component {
   _createInstance() {
     this.ctx = this.refs.canvas.getContext('2d');
     let target = {x: this.w/2, y: this.h/5};
-    this.poly = new Polygon(target, this.w, this.h/3);
+    this.poly = new Polygon(target, this.w, this.h/2);
   }
 
   draw() {
