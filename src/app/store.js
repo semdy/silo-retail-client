@@ -7,7 +7,7 @@ module.exports = Reflux.createStore({
     //是否侧边栏导航
     navVisible: false,
     //是否显示顶部滚动导航
-    scrollNavVisible: true,
+    scrollNavVisible: false,
     //是否显示店铺
     showStore: false,
     //是否全屏
