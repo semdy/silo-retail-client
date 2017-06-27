@@ -25,13 +25,12 @@
 
     };
 
-  if( !Array.prototype.repeat )
+  if (!Array.prototype.repeat)
     Array.prototype.repeat = function (len, value) {
-      let arr = new Array(len);
-      for(let i = 0; i<arr.length; i++){
-        arr[i] = value;
-      }
-      return arr;
+      return Array.apply(null, {length: len})
+        .map(() => {
+          return value;
+        });
     };
 
   if (!Object.assign)
@@ -71,17 +70,17 @@
 }();
 
 var requestAnimationFrame =
-  window.requestAnimationFrame        ||
-  window.webkitRequestAnimationFrame  ||
-  window.mozRequestAnimationFrame     ||
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
   function (callback) {
     return setTimeout(callback, 1000 / 60);
   };
 
 var cancelAnimationFrame =
-  window.cancelAnimationFrame        ||
-  window.webkitCancelAnimationFrame  ||
-  window.mozCancelAnimationFrame     ||
+  window.cancelAnimationFrame ||
+  window.webkitCancelAnimationFrame ||
+  window.mozCancelAnimationFrame ||
   function (id) {
     return clearTimeout(id);
   };
