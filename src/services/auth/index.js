@@ -179,6 +179,7 @@ function onDingTalkYes(corpId) {
 }
 
 function signIn() {
+  isReady = false;
   let sessionInfo = session.get();
   if (sessionInfo) {
     session.set(sessionInfo);
