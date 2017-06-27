@@ -27,7 +27,9 @@ class Login extends React.Component {
     session.clear();
     if (isDD) {
       signIn().ready(() => {
-        hashHistory.replace('/');
+        fetchStoreList().then(() => {
+          hashHistory.replace('/');
+        });
       });
     } else {
       actions.showScrollNav(false);
