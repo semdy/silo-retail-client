@@ -10,7 +10,7 @@ import FormButton from '../../components/formbutton';
 import AnimateGridBg from '../../components/animategridbg'
 import Wave from '../../components/wave';
 import {isDD} from '../../utils';
-import {session, doLogin} from '../../services/auth';
+import {signIn, session, doLogin} from '../../services/auth';
 import {fetchStoreList} from '../../services/store';
 import locale from '../../locale';
 
@@ -26,9 +26,8 @@ class Login extends React.Component {
   componentDidMount() {
     session.clear();
     if (isDD) {
-      hashHistory.replace('/');
-      setTimeout(function () {
-        location.reload();
+      signIn().ready(() => {
+        hashHistory.replace('/');
       });
     } else {
       actions.showScrollNav(false);

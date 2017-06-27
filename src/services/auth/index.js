@@ -206,6 +206,10 @@ function signIn() {
       //}
     }
   }
+
+  return {
+    ready: ready
+  }
 }
 
 function gotoLogin(){
