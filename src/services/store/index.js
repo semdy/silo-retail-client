@@ -77,7 +77,7 @@ export const fetchStoreList = () => {
     if (storeList.length === 0) {
       //隐藏顶部导航
       actions.showScrollNav(false);
-      hashHistory.replace('/report.index');
+      hashHistory.replace('/');
     } else {
       //往storeList添加tzStamp属性
       storeList.forEach((store) => {

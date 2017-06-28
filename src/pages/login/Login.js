@@ -25,15 +25,15 @@ class Login extends React.Component {
 
   componentDidMount() {
     session.clear();
+    actions.showScrollNav(false);
+    actions.setP2rEnabled(false);
+
     if (isDD) {
       signIn().ready(() => {
         fetchStoreList().then(() => {
           hashHistory.replace('/');
         });
       });
-    } else {
-      actions.showScrollNav(false);
-      actions.setP2rEnabled(false);
     }
   }
 
@@ -72,7 +72,13 @@ class Login extends React.Component {
   render() {
     let {isLogining} = this.state;
     return (
-      isDD ? <noscript/> :
+      isDD ?
+        <div className="logining-indict">
+          {
+            locale.user.LOGINING
+          }
+        </div>
+        :
         <div className="page-login">
           <div className="login-wrapper">
             <SiteLogo/>
