@@ -6,7 +6,7 @@ class Base extends React.Component {
     this.state = {};
   }
 
-  componentDidMount(){
+  componentWillMount(){
     if( this.state.store.storeId ) {
       this.fetch();
     }
