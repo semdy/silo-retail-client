@@ -525,10 +525,21 @@ class PassFlowWeatherCharts extends BaseChart {
   getWeather() {
     let {store, offset, filterType} = this.state;
     return new Promise((resolve, reject) => {
-      getStoreChartReport(store.storeId, offset, `retail.weather.${filterType}`).then(
-        res => resolve(res),
-        err => reject(err)
-      );
+      if( filterType === 'hour' || filterType === 'day' ) {
+        getStoreChartReport(store.storeId, offset, `retail.weather.${filterType}`).then(
+          res => resolve(res),
+          err => reject(err)
+        );
+      } else {
+        resolve({
+          series: [{
+            params: {}
+          },
+          {
+            params: {}
+          }]
+        });
+      }
     });
   }
 
