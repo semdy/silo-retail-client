@@ -427,8 +427,8 @@ function makeChartData(data, weatherData, filterType) {
     data: []
   };
 
-  let tempMap = weatherData.series[0].params;
-  let iconMap = weatherData.series[1].params;
+  let tempMap = (weatherData.series[0]||{}).params || {};
+  let iconMap = (weatherData.series[1]||{}).params || {};
   let symbolCoordY = Math.max(0.9, yTrafficMax - yTrafficMax/10);
 
   let isLargeSeries = times.length > 8;
@@ -532,12 +532,7 @@ class PassFlowWeatherCharts extends BaseChart {
         );
       } else {
         resolve({
-          series: [{
-            params: {}
-          },
-          {
-            params: {}
-          }]
+          series: []
         });
       }
     });
