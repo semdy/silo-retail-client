@@ -66,5 +66,13 @@ export default {
     {
       text: scrollNavItems.passflow,
       path: "/report.passflow"
+    },
+    {
+      text: scrollNavItems.passflow,
+      path: "/report.passflow.simple"
+    },
+    {
+      text: scrollNavItems.heatmap,
+      path: "/report.heatmap.simple"
     }]
 }

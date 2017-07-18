@@ -4,7 +4,7 @@ let {Button, Toast} = SaltUI;
 let {hashHistory} = ReactRouter;
 import dom from '../../utils/dom';
 import Empty from '../../components/empty';
-import {getStoreList} from '../../services/store';
+import {getStoreList, getAvailableNavs} from '../../services/store';
 import locale from '../../locale';
 
 class Index extends React.Component {
@@ -23,7 +23,8 @@ class Index extends React.Component {
   componentDidMount() {
     getStoreList().then((storeList) => {
       if (storeList.length > 0) {
-        hashHistory.replace('/report.survey');
+        //hashHistory.replace('/report.survey');
+        hashHistory.replace(getAvailableNavs()[0]);
       } else {
         this.setState({
           show: true

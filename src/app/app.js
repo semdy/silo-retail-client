@@ -17,7 +17,7 @@ import StoreSelector from '../components/StoreSelector';
 import Pull2refresh from '../components/pull2refresh';
 import {scrollNavItems, navItems} from '../models/navs';
 import Header from '../components/header';
-import {appReady} from '../services/store';
+import {appReady, getAvailableNavs} from '../services/store';
 
 
 import Index from '../pages/index';
@@ -39,17 +39,9 @@ import NoMatch from '../pages/nomatch';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.navs = [];
-  }
-
-  getNavs(){
-    if( this.navs.length > 0 ) return this.navs;
-
-    this.navs = scrollNavItems.filter(item => {
-      return this.state.availableNavs.indexOf(item.path) > -1;
+    this.navs = getAvailableNavs().map(nav => {
+      return scrollNavItems.find(item => item.path === nav);
     });
-
-    return this.navs;
   }
 
   render() {
@@ -58,7 +50,7 @@ class App extends React.Component {
       <div className="app-body">
         <Navigation items={navItems}/>
         <div className={classnames("page-container", {"page-scrollNav": scrollNavVisible})}>
-          <ScrollNav items={this.getNavs()}/>
+          <ScrollNav items={this.navs}/>
           {
             showHeader &&
             <Header>

@@ -36,6 +36,8 @@ let manager = {
   userId: null
 };
 
+let availableNavs = [];
+
 export const appReady = (fun) => {
   if (typeof fun === 'function') {
     if (!isReady) {
@@ -67,6 +69,9 @@ export const fetchStoreList = () => {
     manager.storeId = res.idAsManager;
     manager.userId = res.managerUserId;
 
+    //配置可用的导航列表
+    availableNavs = res.merchantPages;
+
     //区分普通会员与店长身份
     if (!res.idAsManager) {
       actions.setAdmin(false);
@@ -89,8 +94,6 @@ export const fetchStoreList = () => {
       storeList[0].selected = true;
       //填充店铺列表数据
       actions.setStoreList(storeList);
-      //配置可用的导航列表
-      actions.setAvailableNavs(res.merchantPages);
       //显示顶部导航
       actions.showScrollNav(true);
     }
@@ -143,6 +146,14 @@ export const setStoreModel = (stores) => {
  * */
 export const getManager = () => {
   return manager;
+};
+
+/**
+ * 获取当前用户可见的导航列表
+ * @return {Array}
+ */
+export const getAvailableNavs = () => {
+  return availableNavs;
 };
 
 /**

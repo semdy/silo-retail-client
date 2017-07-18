@@ -30,14 +30,15 @@ class Page extends React.Component {
   }
 
   scrollTo(index){
-    this.scroller.scrollTo(this._getScrollValue(index), 0, 600);
+    //this.scroller.scrollTo(this._getScrollValue(index), 0, 600);
+    this.scroller.scroller.style.transform = 'translate('+ this._getScrollValue(index) +'px, 0px) scale(1) translateZ(0px)';
   }
 
   componentDidMount() {
     this.scroller = this.refs.container.scroller;
     this.navElements = [].slice.call(this.refs.scroller.children);
-
     let curPath = location.hash.substr(1).split("?")[0];
+
     if (curPath !== "/") {
       this.activeIndex = this._getNavIndex(curPath);
       setTimeout(() => {
@@ -109,7 +110,7 @@ class Page extends React.Component {
                         className="scroll-nav-item"
                         activeClassName="active"
                         onClick={this.handleRoute.bind(this, index)}
-                        /*onDoubleClick={this.handleDblClick.bind(this)}*/
+                        onDoubleClick={this.handleDblClick.bind(this)}
                   >
                     <span>{item.text}</span>
                   </Link>

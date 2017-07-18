@@ -21,7 +21,8 @@ export default {
     distribution: "订单渠道",
     payment: "支付方式",
     goodsInfo: "商品信息",
-    passflow: "客流"
+    passflow: "客流",
+    heatmap: "热力图"
   },
   permission: {
     apply: "申请权限",
