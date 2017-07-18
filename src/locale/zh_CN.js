@@ -62,6 +62,8 @@ export default {
     reverse: '松开刷新',
     release: '刷新中...'
   },
+  today: '今日',
+  yesterday: '昨日',
   dayNames: ["日", "一", "二", "三", "四", "五", "六"],
   dayList: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
   loginTimeout: '登录超时！',

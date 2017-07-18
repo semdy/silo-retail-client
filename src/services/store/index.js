@@ -89,6 +89,8 @@ export const fetchStoreList = () => {
       storeList[0].selected = true;
       //填充店铺列表数据
       actions.setStoreList(storeList);
+      //配置可用的导航列表
+      actions.setAvailableNavs(res.merchantPages);
       //显示顶部导航
       actions.showScrollNav(true);
     }

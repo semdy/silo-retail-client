@@ -91,10 +91,19 @@ function makeChartData(res) {
 
 class PassFlowHeatMap extends BaseChart {
 
+  static defaultProps = {
+    responsive: false
+  };
+
+  static propTypes = {
+    responsive: React.PropTypes.bool
+  };
+
   constructor(props) {
     super(props);
     this.chartProps = {
       height: 500,
+      responsive: this.props.responsive,
       title: locale.passflowHeatMap
     };
     this.queryKey = "retail.guest.heat.map";

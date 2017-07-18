@@ -28,14 +28,14 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
       url: /^https?:\/\//.test(url) ? url : env.urlAppRoot + url,
       data: isRPC ? JSON.stringify(body) : body,
       dataType: dataType,
-      beforeSend: function (xhr) {
+      beforeSend(xhr) {
         let info = session.get();
         if (info) {
           //xhr.withCredentials = true
           xhr.setRequestHeader("Authorization", "silo " + btoa(info.sessionId))
         }
       },
-      success: (recv) => {
+      success(recv) {
         let code = recv.protocError;
         if (code === 0) {
           if (recv.result === 0 || recv.result === undefined) {
@@ -59,13 +59,13 @@ let fetch = ({url, body = {}, method = 'post', dataType = 'json'}, showLoading =
           Toast.error(rejectMsg);
         }
       },
-      error: (xhr, status, err) => {
+      error(xhr, status, err) {
         requestError = true;
         rejectMsg = `${err}, status ${status}`; //${locale.disconnect}
         reject(rejectMsg);
         Toast.error(rejectMsg);
       },
-      complete: () => {
+      complete() {
         if (--requestCount === 0) {
           if (!requestError) {
             Toast.hide();

@@ -100,6 +100,16 @@ const getDay = (date) => {
 
 class DateNavigator extends React.Component {
 
+  static defaultProps = {
+    className: "",
+    dateSwitchable: true
+  };
+
+  static propTypes = {
+    className: React.PropTypes.string,
+    dateSwitchable: React.PropTypes.bool
+  };
+
   constructor(props) {
     super(props);
 
@@ -169,10 +179,10 @@ class DateNavigator extends React.Component {
     let {offset, store, timelines, filterType,
       showCalendar, showFilter, calendarTitle} = this.state;
     let date = getDateBefore(offset, filterType);
-
+    let {dateSwitchable} = this.props;
     return (
       <div>
-        <div className="date-navigator normal">
+        <div className={classnames("date-navigator normal", this.props.className)}>
           <div className="t-FBH t-FBAC t-FBJ">
             <div className="store-name" onClick={this.showStore}>
               <Icon name="store" className="store-icon" width={20} height={20}/>
@@ -180,34 +190,40 @@ class DateNavigator extends React.Component {
                 {store.name}
               </span>
             </div>
-            <div className="t-FBH t-FBAC t-FBJC store-indict">
-              <div className="date-arrow left t-FBH t-FBJC t-FBAC" onClick={actions.queryPrev}>
-                <Icon name="angle-left-l" width={18} height={18}/>
-              </div>
-              <div className="store-date" onClick={this.showCalendar.bind(this)}>
-                <Icon name="calendar" className="date-cld" width={15} height={15}/>
-                <span className="date">
+            {
+              dateSwitchable &&
+              <div className="t-FBH t-FBAC t-FBJC store-indict">
+                <div className="date-arrow left t-FBH t-FBJC t-FBAC" onClick={actions.queryPrev}>
+                  <Icon name="angle-left-l" width={18} height={18}/>
+                </div>
+                <div className="store-date" onClick={this.showCalendar.bind(this)}>
+                  <Icon name="calendar" className="date-cld" width={15} height={15}/>
+                  <span className="date">
                   {formatDate(date, timelines, filterType)}
                 </span>
-                <span className="day">
+                  <span className="day">
                   {filterType !== 'hour' ? "" : `${locale.week}${getDay(date)}`}
                 </span>
+                </div>
+                <div className={classnames("date-arrow right t-FBH t-FBJC t-FBAC", {disabled: offset === 0})}
+                     onClick={actions.queryNext}>
+                  <Icon name="angle-right-l" width={18} height={18}/>
+                </div>
               </div>
-              <div className={classnames("date-arrow right t-FBH t-FBJC t-FBAC", {disabled: offset === 0})}
-                   onClick={actions.queryNext}>
-                <Icon name="angle-right-l" width={18} height={18}/>
-              </div>
-            </div>
+            }
           </div>
         </div>
-        <Calendar visible={showCalendar}
-                  showFilter={showFilter}
-                  title={calendarTitle}
-                  onConfirm={this.handleConfirm.bind(this)}
-                  onLeave={this.handleLeave.bind(this)}
-                  value={date}
-                  max={localDate(store.tzStamp)}
-        />
+        {
+          dateSwitchable &&
+          <Calendar visible={showCalendar}
+                    showFilter={showFilter}
+                    title={calendarTitle}
+                    onConfirm={this.handleConfirm.bind(this)}
+                    onLeave={this.handleLeave.bind(this)}
+                    value={date}
+                    max={localDate(store.tzStamp)}
+          />
+        }
       </div>
     )
   }

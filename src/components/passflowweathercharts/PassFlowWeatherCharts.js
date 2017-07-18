@@ -498,10 +498,19 @@ function makeChartData(data, weatherData, filterType) {
 
 class PassFlowWeatherCharts extends BaseChart {
 
+  static defaultProps = {
+    responsive: false
+  };
+
+  static propTypes = {
+    responsive: React.PropTypes.bool
+  };
+
   constructor(props) {
     super(props);
     this.chartProps = {
       height: 350,
+      responsive: this.props.responsive,
       title: locale.passflowWeather
     };
   }

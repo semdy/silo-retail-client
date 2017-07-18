@@ -109,7 +109,7 @@ class Page extends React.Component {
                         className="scroll-nav-item"
                         activeClassName="active"
                         onClick={this.handleRoute.bind(this, index)}
-                        onDoubleClick={this.handleDblClick.bind(this)}
+                        /*onDoubleClick={this.handleDblClick.bind(this)}*/
                   >
                     <span>{item.text}</span>
                   </Link>

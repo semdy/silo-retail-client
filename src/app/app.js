@@ -31,22 +31,34 @@ import Distribution from '../pages/distribution';
 import Payment from '../pages/payment';
 import GoodsInfo from '../pages/goodsinfo';
 import Passflow from '../pages/passflow';
+import PassflowSimple from '../pages/passflowSimple';
+import HeatMap from '../pages/heatmap';
 import Login from '../pages/login';
 import NoMatch from '../pages/nomatch';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.navs = [];
+  }
+
+  getNavs(){
+    if( this.navs.length > 0 ) return this.navs;
+
+    this.navs = scrollNavItems.filter(item => {
+      return this.state.availableNavs.indexOf(item.path) > -1;
+    });
+
+    return this.navs;
   }
 
   render() {
     let {showHeader, headerTitle, shownP2r, isP2rEnabled, scrollNavVisible} = this.state;
-
     return (
       <div className="app-body">
         <Navigation items={navItems}/>
         <div className={classnames("page-container", {"page-scrollNav": scrollNavVisible})}>
-          <ScrollNav items={scrollNavItems}/>
+          <ScrollNav items={this.getNavs()}/>
           {
             showHeader &&
             <Header>
@@ -106,6 +118,8 @@ appReady(() => {
         <Route path="report.payment" component={Payment}/>
         <Route path="report.goodsinfo" component={GoodsInfo}/>
         <Route path="report.passflow" component={Passflow}/>
+        <Route path="report.passflow.simple" component={PassflowSimple}/>
+        <Route path="report.heatmap.simple" component={HeatMap}/>
         <Route path="permission.apply" component={PageApply}/>
         <Route path="permission.record" component={PageRcord}/>
         <Route path="permission.approval" component={PageApproval}/>

@@ -49,5 +49,6 @@ if (!env) {
 
 config.env = env || {};
 config.urlParams = urlParams;
+config.keyCrop = 1000;
 
 module.exports = config;

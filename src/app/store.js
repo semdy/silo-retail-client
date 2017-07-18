@@ -14,6 +14,8 @@ module.exports = Reflux.createStore({
     isFullScreen: false,
     //店铺列表数据
     storeList: [],
+    //导航列表
+    availableNavs: [],
     //店铺列表是否多选
     storeMultiable: false,
     //店铺弹层标题
@@ -89,6 +91,11 @@ module.exports = Reflux.createStore({
 
   onSetStoreList(storeList){
     this.state.storeList = storeList;
+    this.updateComponent();
+  },
+
+  onSetAvailableNavs(navs){
+    this.state.availableNavs = navs;
     this.updateComponent();
   },
 

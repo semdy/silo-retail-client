@@ -15,7 +15,7 @@ let {hashHistory} = ReactRouter;
   };
 });
 
-import {env, urlParams} from '../config';
+import {env, urlParams, keyCrop} from '../config';
 import {isDD} from '../../utils';
 import locale from '../../locale';
 let error = Toast.error;
@@ -67,13 +67,7 @@ const session = {
 
 };
 
-let requestCount = 0;
-
 const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
-
-  if (++requestCount === 1) {
-    //Toast.loading(locale.appLoading);
-  }
 
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -81,7 +75,7 @@ const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
       url: /^https?:\/\//.test(url) ? url : env.urlAppRoot + url,
       data: JSON.stringify(body),
       dataType: dataType,
-      success: (recv) => {
+      success(recv) {
         let code = recv.protocError;
         if (code === 0) {
           resolve(recv);
@@ -89,14 +83,9 @@ const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
           reject(code);
         }
       },
-      error: (xhr, status, err) => {
+      error(xhr, status, err) {
         reject(xhr, status, err);
         error(`${locale.disconnect}, code: ${status}`);
-      },
-      complete: () => {
-        if (--requestCount === 0) {
-          //Toast.hide();
-        }
       }
     });
   });
@@ -104,7 +93,7 @@ const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
 
 /* 请求钉钉的JS-API签名信息 */
 function httpRequestConfig() {
-  let req = {keyCorp: 1000, keyApp: env.keyApp};
+  let req = {keyCorp: keyCrop, keyApp: env.keyApp};
   return new Promise((resolve, reject) => {
     request({url: '7001.json', body: req}).then((data) => {
       resolve(data);
@@ -154,6 +143,24 @@ function httpRequestSignInByUserPass(username, password) {
         error(`${locale.loginError}, code: ${err}`);
       }
     });
+  });
+}
+
+function postError(errObject){
+  let params = {
+    keyCorp: keyCrop,
+    keyApp: env.keyApp,
+    error: errObject.errorCode,
+    detail: errObject.message
+  };
+  request({url: '7005.json', body: params}).then(res => {
+    if ( res.result === 0 ) {
+      setTimeout(function(){
+        location.reload();
+      }, 1000);
+    } else {
+      alert("Request auth error, result: " + res.result);
+    }
   });
 }
 
@@ -218,7 +225,8 @@ function gotoLogin(){
 }
 
 function onDingTalkErr(err) {
-  error(`${locale.ddError}\n` + JSON.stringify(err));
+  //error(`${locale.ddError}\n` + JSON.stringify(err));
+  postError(err);
 }
 
 function onDingTalkApiFail(err, api) {
