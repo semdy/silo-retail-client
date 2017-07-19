@@ -13,7 +13,7 @@ class HeatMap extends React.Component {
   render() {
     return (
       <div className="responsive">
-        <PassFlowStatsSimple/>
+        <PassFlowStatsSimple decolate={true}/>
         <DateNavigator dateSwitchable={false} className="heatmap-navigator"/>
         <PassFlowHeatMap/>
       </div>

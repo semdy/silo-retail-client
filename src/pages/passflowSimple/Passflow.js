@@ -14,7 +14,7 @@ class Passflow extends React.Component {
   render() {
     return (
       <div className="responsive">
-        <PassFlowStatsSimple/>
+        <PassFlowStatsSimple decolate={true}/>
         <DateNavigator/>
         <PassFlowDiffer/>
         <PassFlowWeatherCharts/>

@@ -33,7 +33,7 @@ class BaseStatus extends Base {
     let {loaded, data} = this.state;
     return (
       //loaded &&
-      <Stats data={data}/>
+      <Stats {...this.props} data={data}/>
     );
   }
 }

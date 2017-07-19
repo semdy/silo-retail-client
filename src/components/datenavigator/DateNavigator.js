@@ -197,7 +197,7 @@ class DateNavigator extends React.Component {
                   <Icon name="angle-left-l" width={18} height={18}/>
                 </div>
                 <div className="store-date" onClick={this.showCalendar.bind(this)}>
-                  <Icon name="calendar" className="date-cld" width={15} height={15}/>
+                  <Icon name="calendar" className="date-cld" width={22} height={22}/>
                   <span className="date">
                   {formatDate(date, timelines, filterType)}
                 </span>

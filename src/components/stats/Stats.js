@@ -41,15 +41,25 @@ class StatItem extends React.Component {
 
 class Stats extends React.Component {
 
+  static defaultProps = {
+    data: [],
+    decolate: false
+  };
+
+  static propTypes = {
+    data: React.PropTypes.array,
+    decolate: React.PropTypes.bool
+  };
+
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
-    let {data} = this.props;
+    let {data, decolate} = this.props;
     return (
-      <div className={classnames("stats-container", {double: data.length > 1})}>
+      <div className={classnames("stats-container", {double: data.length > 1, decolate: decolate})}>
         <div className="t-FBH t-FBAC stats-bd">
           {
             data.map((item, index) => {
