@@ -66,8 +66,8 @@ function makeChartData(values, filterType) {
     }
   };
 
-  let yesterdayData = values[1].data.axisY.count;
-  let todayData = values[0].data.axisY.count;
+  let yesterdayData = values[1].data.axisY.traffic;
+  let todayData = values[0].data.axisY.traffic;
 
   yesterdayData.forEach((item, i) => {
     if( todayData[i] === undefined ){
@@ -76,17 +76,6 @@ function makeChartData(values, filterType) {
   });
 
   series[0] = {
-    name: locale.today,
-    color: ["#4db7cd"],
-    type: 'line',
-    areaStyle: {normal: {
-      color: "#4db7cd"
-    }},
-    yAxisIndex: 0,
-    data: todayData
-  };
-
-  series[1] = {
     name: locale.yesterday,
     color: ["#dbdbdb"],
     type: 'line',
@@ -95,6 +84,17 @@ function makeChartData(values, filterType) {
     }},
     yAxisIndex: 0,
     data: yesterdayData
+  };
+
+  series[1] = {
+    name: locale.today,
+    color: ["#4db7cd"],
+    type: 'line',
+    areaStyle: {normal: {
+      color: "#4db7cd"
+    }},
+    yAxisIndex: 0,
+    data: todayData
   };
 
   xAxis[0].data = getXaisData(values[1].data.axisX.time, filterType);

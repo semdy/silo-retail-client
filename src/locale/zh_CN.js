@@ -148,7 +148,7 @@ export default {
   sexDistribution: "性别分布",
   convertRate: "转化率",
   orderConvertRate: "订单转化率",
-  passflowHeatMap: "客流热力图",
+  passflowHeatMap: "客流热力图(近90天均值)",
   CLEAR_NIGHT: "夜间晴朗",
   SHOWER: "阵雨",
   NIGHT_RAIN: "夜间阵雨",
