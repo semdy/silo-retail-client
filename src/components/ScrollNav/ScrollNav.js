@@ -6,11 +6,15 @@ let {Link} = ReactRouter;
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
+import {getAvailableNavs} from '../../services/store';
+import {isIOS} from '../../utils';
 
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      items: []
+    };
     this.activeIndex = 0;
     this.navElements = [];
   }
@@ -30,8 +34,29 @@ class Page extends React.Component {
   }
 
   scrollTo(index){
-    //this.scroller.scrollTo(this._getScrollValue(index), 0, 600);
-    this.scroller.scroller.style.transform = 'translate('+ this._getScrollValue(index) +'px, 0px) scale(1) translateZ(0px)';
+    this.scroller.scrollTo(this._getScrollValue(index), 0, 600);
+    //this.scroller.scroller.style.transform = 'translate('+ this._getScrollValue(index) +'px, 0px) scale(1) translateZ(0px)';
+  }
+
+  setNavList(cb){
+    this.setState({
+      items: getAvailableNavs().map(nav => {
+        return this.props.items.find(item => item.path === nav);
+      })
+    }, cb);
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    let {scrollNavVisible} = this.state;
+    if(prevState.scrollNavVisible !== scrollNavVisible) {
+      this.setNavList(() => {
+        this.navElements = [].slice.call(this.refs.scroller.children);
+      });
+    }
+  }
+
+  componentWillMount(){
+    this.setNavList();
   }
 
   componentDidMount() {
@@ -87,9 +112,7 @@ class Page extends React.Component {
   }
 
   render() {
-    let {scrollNavVisible} = this.state;
-    let {items} = this.props;
-
+    let {scrollNavVisible, items} = this.state;
     return (
       <div ref="el" className="scroll-nav padL" style={{display: scrollNavVisible ? "block" : "none"}}>
         <div className="scroll-nav-toolbar left" onClick={this.handleMenuFun.bind(this)}>
@@ -98,7 +121,7 @@ class Page extends React.Component {
         <Scroller ref="container"
                   scrollX={true}
                   scrollY={false}
-                  eventPassthrough={true}
+                  eventPassthrough={isIOS}
                   className="scroll-nav-contain"
         >
           <div ref="scroller" className="scroll-nav-scroller">

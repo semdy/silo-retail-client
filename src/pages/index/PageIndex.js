@@ -24,7 +24,10 @@ class Index extends React.Component {
     getStoreList().then((storeList) => {
       if (storeList.length > 0) {
         //hashHistory.replace('/report.survey');
-        hashHistory.replace(getAvailableNavs()[0]);
+        let firstNav = getAvailableNavs()[0];
+        if( firstNav ) {
+          hashHistory.replace(firstNav);
+        }
       } else {
         this.setState({
           show: true

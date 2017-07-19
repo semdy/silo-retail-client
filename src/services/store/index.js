@@ -68,8 +68,6 @@ export const fetchStoreList = () => {
     storeList = res.data;
     manager.storeId = res.idAsManager;
     manager.userId = res.managerUserId;
-
-    //配置可用的导航列表
     availableNavs = res.merchantPages;
 
     //区分普通会员与店长身份
