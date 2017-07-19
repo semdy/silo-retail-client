@@ -35,7 +35,6 @@ class Page extends React.Component {
 
   scrollTo(index){
     this.scroller.scrollTo(this._getScrollValue(index), 0, 600);
-    //this.scroller.scroller.style.transform = 'translate('+ this._getScrollValue(index) +'px, 0px) scale(1) translateZ(0px)';
   }
 
   setNavList(cb){
