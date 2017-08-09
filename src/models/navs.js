@@ -1,6 +1,3 @@
-/**
- * Created by mcake on 2017/3/14.
- */
 
 import {permission, scrollNavItems, user} from '../locale';
 

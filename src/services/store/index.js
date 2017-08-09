@@ -5,6 +5,7 @@ import {signIn, session} from '../auth';
 import {getTimezoneStamp} from '../../utils/date';
 import actions from '../../app/actions';
 import locale from '../../locale';
+import {scrollNavItems} from '../../models/navs';
 
 //常量
 const AUTH_TYPE = 17001;
@@ -68,7 +69,7 @@ export const fetchStoreList = () => {
     storeList = res.data;
     manager.storeId = res.idAsManager;
     manager.userId = res.managerUserId;
-    availableNavs = res.merchantPages;
+    availableNavs = res.merchantPages || scrollNavItems.filter(item => !/\.simple$/.test(item.path)).map(item => item.path);
 
     //区分普通会员与店长身份
     if (!res.idAsManager) {
