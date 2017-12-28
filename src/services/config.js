@@ -16,7 +16,7 @@ const envConfigs = {
     keyApp: 1049
   },
   release: {
-    urlAppRoot: 'http://it.zaofans.com/silo/app/retail/',
+    urlAppRoot: 'http://siloretail.withwheat.com:8080/h5/retail/',
     keyApp: 1050
   },
   test: {
