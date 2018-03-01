@@ -6,11 +6,12 @@ build:
   stage: build
   script:
     - npm install
-    - nowa build
+    - nowa build --mangle
 
 deploy:
   stage: deploy
   script:
+    - npm install
     - nowa build --mangle
   environment:
     name: $CI_COMMIT_REF_NAME
