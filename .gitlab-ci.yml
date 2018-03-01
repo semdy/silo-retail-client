@@ -1,16 +1,17 @@
-
 stages:
   - build
   - deploy
 
 build:
   stage: build
-  script: echo 'hello'
+  script:
+    - npm install
+    - nowa build
 
 deploy:
   stage: deploy
   script:
-    - echo 'hello'
+    - nowa build --mangle
   environment:
     name: $CI_COMMIT_REF_NAME
     url: http://dev.withwheat.wang:8082/version
