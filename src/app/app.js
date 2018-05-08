@@ -53,10 +53,11 @@ class App extends React.Component {
               {headerTitle}
             </Header>
           }
-          <Pull2refresh enabled={isP2rEnabled}
-                        show={shownP2r}
-                        scroller={this.refs.content}
-                        onRelease={actions.doRefresh}
+          <Pull2refresh
+            enabled={isP2rEnabled}
+            show={shownP2r}
+            scroller={this.refs.content}
+            onRelease={actions.doRefresh}
           >
             <div ref="content" className="page-content">
               {this.props.children}
