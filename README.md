@@ -7,7 +7,7 @@ An awesome project
 **如果你刚拿到这个项目，请先在项目目录下执行 `npm install`！**
 
 #### 外链的模块
-`
+`javascript
 externals: {
     'react': 'window.React',
     'react-dom': 'window.ReactDOM || window.React',
