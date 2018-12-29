@@ -1,8 +1,9 @@
-require('./ScrollNav.styl');
+import './ScrollNav.styl';
 
-let {Scroller, Icon} = SaltUI;
-let {PropTypes} = React;
-let {Link} = ReactRouter;
+import React, {PropTypes} from 'react';
+import {Scroller, Icon} from 'saltui';
+import {Link} from 'react-router';
+import Reflux from 'reflux';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';
@@ -61,7 +62,7 @@ class Page extends React.Component {
   componentDidMount() {
     this.scroller = this.refs.container.scroller;
     this.navElements = [].slice.call(this.refs.scroller.children);
-    let curPath = location.hash.substr(1).split("?")[0];
+    let curPath = window.location.hash.substr(1).split("?")[0];
 
     if (curPath !== "/") {
       this.activeIndex = this._getNavIndex(curPath);

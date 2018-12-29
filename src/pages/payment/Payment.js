@@ -1,5 +1,6 @@
 import './Payment.styl';
 
+import React from 'react';
 import PaymentStats from '../../components/paymentstats';
 import DateNavigator from '../../components/datenavigator';
 import PaymentPieChart from '../../components/paymentPieChart';

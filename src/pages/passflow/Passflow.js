@@ -1,5 +1,5 @@
 import './Passflow.styl';
-
+import React from 'react';
 import PassFlowStats from '../../components/passflowstats';
 import DateNavigator from '../../components/datenavigator';
 import PassFlowCharts from '../../components/passflowcharts';

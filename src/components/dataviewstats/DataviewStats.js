@@ -1,4 +1,4 @@
-require('./DataviewStats.styl');
+import './DataviewStats.styl';
 
 import BaseStatus from '../../components/baseStats';
 import {getReportPayment} from '../../services/store';

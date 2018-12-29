@@ -1,6 +1,6 @@
-require('./TableItem.styl');
+import './TableItem.styl';
 
-let {PropTypes} = React;
+import React, {PropTypes} from 'react';
 import classnames from 'classnames';
 
 function formatter(value) {

@@ -1,4 +1,4 @@
-require('./SexPieChart.styl');
+import './SexPieChart.styl';
 
 import BaseChart from '../baseChart';
 import locale from '../../locale';

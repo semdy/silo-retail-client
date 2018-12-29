@@ -1,5 +1,6 @@
 
-import {permission, scrollNavItems, user} from '../locale';
+import lang from '../locale/zh_CN';
+const {permission, scrollNavItems, user} = lang
 
 export default {
   navItems: [

@@ -1,6 +1,8 @@
-require('./DateNavigator.styl');
+import './DateNavigator.styl';
 
-let {Icon, Button} = SaltUI;
+import React from 'react';
+import Reflux from 'reflux';
+import {Icon, Button} from 'saltui';
 import ButtonGroup from '../../components/ButtonGroup';
 import Calendar from '../../components/calendar';
 import classnames from 'classnames';

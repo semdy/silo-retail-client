@@ -4,8 +4,9 @@
 
 import './EffectButton.styl';
 
-let {Button, Context} = SaltUI;
-let {PropTypes} = React;
+import {Button, Context} from 'saltui';
+import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 
 import dom from '../../utils/dom';
 

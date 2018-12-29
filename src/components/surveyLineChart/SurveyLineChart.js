@@ -1,5 +1,6 @@
-require('./SurveyLineChart.styl');
+import './SurveyLineChart.styl';
 
+import echarts from 'echarts';
 import BaseChart from '../../components/baseChart';
 import {getStoreStats} from '../../services/store';
 import locale from '../../locale';
@@ -95,4 +96,4 @@ class SurveyLineChart extends BaseChart {
   }
 }
 
-module.exports = SurveyLineChart;
+export default SurveyLineChart;

@@ -1,7 +1,7 @@
-require('./Calendar.styl');
+import './Calendar.styl';
 
-let {PropTypes} = React;
-let {Icon, Button, Context} = SaltUI;
+import React, {PropTypes} from 'react';
+import {Icon, Button, Context} from 'saltui';
 import classnames from 'classnames';
 import ButtonGroup from '../ButtonGroup';
 import {getWeekNumber} from '../../utils/date';

@@ -1,5 +1,5 @@
 
-let {Toast} = SaltUI;
+import { Toast } from 'saltui';
 import { queryUrlParams } from '../utils';
 import locale from '../locale';
 

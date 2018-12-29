@@ -1,6 +1,7 @@
 import './DataView.styl';
 
-let {Toast} = SaltUI;
+import React from 'react';
+import {Toast} from 'saltui';
 import {getWeekNumber} from '../../utils/date';
 import Stats from './Stats';
 import Charts from './Charts';

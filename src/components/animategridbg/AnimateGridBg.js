@@ -1,4 +1,4 @@
-
+import React from 'react';
 import Polygon from './Polygon';
 
 class AnimateGridBg extends React.Component {

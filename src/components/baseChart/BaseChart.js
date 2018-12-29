@@ -1,5 +1,7 @@
-require('./BaseChart.styl');
+import './BaseChart.styl';
 
+import React from 'react';
+import Reflux from 'reflux';
 import reactMixin from 'react-mixin';
 import store from  '../../app/store';
 import Chart from '../../components/chart';

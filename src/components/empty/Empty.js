@@ -1,6 +1,7 @@
-require('./Empty.styl');
+import './Empty.styl';
 
-let {Icon} = SaltUI;
+import React from 'react';
+import {Icon} from 'saltui';
 
 class Empty extends React.Component {
 

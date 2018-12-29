@@ -1,7 +1,13 @@
 'use strict';
 
-let {Toast} = SaltUI;
-let {hashHistory} = ReactRouter;
+import $ from 'jquery'
+import dd from 'dd'
+import {Toast} from 'saltui';
+import {hashHistory} from 'react-router';
+
+import {env, urlParams, keyCrop} from '../config';
+import {isDD} from '../../utils';
+import locale from '../../locale';
 
 //改写Toast
 ["success", "error", "fail", "loading"].forEach((type) => {
@@ -15,9 +21,6 @@ let {hashHistory} = ReactRouter;
   };
 });
 
-import {env, urlParams, keyCrop} from '../config';
-import {isDD} from '../../utils';
-import locale from '../../locale';
 let error = Toast.error;
 
 const jsApiList = ['runtime.info', 'biz.contact.choose',
@@ -156,7 +159,7 @@ function postError(errObject){
   request({url: '7005.json', body: params}).then(res => {
     if ( res.result === 0 ) {
       setTimeout(function(){
-        location.reload();
+        window.location.reload();
       }, 1000);
     } else {
       alert("Request auth error, result: " + res.result);

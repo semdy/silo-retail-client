@@ -1,6 +1,6 @@
-require('./Table.styl');
+import './Table.styl';
 
-let {PropTypes} = React;
+import React, {PropTypes} from 'react';
 import TableHeader from './TableHeader';
 import TableItem from './TableItem';
 import locale from '../../locale';

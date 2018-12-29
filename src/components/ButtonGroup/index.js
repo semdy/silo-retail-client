@@ -1,7 +1,7 @@
 import './style.styl';
 
-let { PropTypes } = React;
-let { Button } = SaltUI;
+import React, { PropTypes } from 'react';
+import { Button } from 'saltui';
 import classnames from 'classnames';
 
 class ButtonGroup extends React.Component {

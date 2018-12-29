@@ -1,6 +1,7 @@
-require('./Chart.styl');
+import './Chart.styl';
 
-let {PropTypes} = React;
+import React, {PropTypes} from 'react';
+import echarts from 'echarts'
 import classnames from 'classnames';
 import Helper from '../helper';
 import dom from '../../utils/dom';

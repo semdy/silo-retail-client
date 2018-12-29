@@ -1,5 +1,6 @@
 import './Distribution.styl';
 
+import React from 'react';
 import DateNavigator from '../../components/datenavigator';
 import DistributionStats from '../../components/DistributionStats';
 import DistributionPieChart from '../../components/distributionPieChart';

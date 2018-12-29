@@ -1,6 +1,9 @@
-require('./Charts.styl');
+import './Charts.styl';
 
-let {Icon} = SaltUI;
+import React from 'react';
+import Reflux from 'reflux';
+import {Icon} from 'saltui';
+import echarts from 'echarts';
 import classnames from 'classnames';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';

@@ -1,5 +1,6 @@
 import './SurveyChart.styl';
 
+import React from 'react';
 import SurveyLineChart from '../../components/surveyLinechart';
 import SurveyBarChart from '../../components/surveyBarchart';
 

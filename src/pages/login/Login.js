@@ -1,7 +1,6 @@
 import './Login.styl';
 
-let {hashHistory} = ReactRouter;
-
+import React, {hashHistory} from 'react-router';
 import actions from '../../app/actions';
 import SiteLogo from '../../components/sitelogo';
 import Form from '../../components/form';

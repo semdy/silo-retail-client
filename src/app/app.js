@@ -1,12 +1,15 @@
-require('../pollyfill/');
-require('../services/auth').signIn();
-require('./app.styl');
+import '../pollyfill/';
+import './app.styl';
+import auth from '../services/auth';
 
-let TingleIconSymbolsDemo = require('./../images/tingle-icon-symbols.svg');
-
-const {Router, Route, IndexRedirect, hashHistory} = ReactRouter;
-
+import React from 'react';
+import Reflux from 'reflux';
+import ReactDOM from 'react-dom';
 import reactMixin from 'react-mixin';
+
+import TingleIconSymbolsDemo from './../images/tingle-icon-symbols.svg';
+import {Router, Route, IndexRedirect, hashHistory} from 'react-router';
+
 import store from  './store';
 import actions from './actions';
 import classnames from 'classnames';
@@ -34,6 +37,8 @@ import PassflowSimple from '../pages/passflowSimple';
 import HeatMap from '../pages/heatmap';
 import Login from '../pages/login';
 import NoMatch from '../pages/nomatch';
+
+auth.signIn();
 
 class App extends React.Component {
   constructor(props) {
@@ -87,9 +92,9 @@ appReady(() => {
   document.body.appendChild(symbols);
 
   // bind fastclick
-  window.FastClick && FastClick.attach(document.body);
+  window.FastClick && window.FastClick.attach(document.body);
 
-  if (__LOCAL__ && window.chrome && window.chrome.webstore) { // This is a Chrome only hack
+  if (window.__LOCAL__ && window.chrome && window.chrome.webstore) { // This is a Chrome only hack
     // see https://github.com/livereload/livereload-extensions/issues/26
     setInterval(function () {
       document.body.focus();

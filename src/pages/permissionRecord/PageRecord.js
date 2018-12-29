@@ -1,7 +1,8 @@
-require('./PageRecord.styl');
+import './PageRecord.styl';
 
-let {Toast, Button} = SaltUI;
-
+import {Toast, Button} from 'saltui';
+import React from 'react';
+import Reflux from 'reflux';
 import reactMixin from 'react-mixin';
 import store from  '../../app/store';
 import actions from '../../app/actions';
