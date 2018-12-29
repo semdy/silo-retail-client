@@ -6,6 +6,21 @@ An awesome project
 
 **如果你刚拿到这个项目，请先在项目目录下执行 `npm install`！**
 
+### 外链的模块
+```
+externals: {
+    'react': 'window.React',
+    'react-dom': 'window.ReactDOM || window.React',
+    'reflux': 'window.Reflux',
+    'saltui': 'window.SaltUI',
+    'react-router': 'window.ReactRouter',
+    'jquery': 'window.jQuery || window.Zepto',
+    'dd': 'window.dd',
+    'echarts': 'window.echarts'
+}
+
+```
+
 ## 项目相关链接
 
 - PRD：
