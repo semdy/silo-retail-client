@@ -1,0 +1,20 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - npm install
+    - nowa build --mangle
+
+deploy:
+  stage: deploy
+  script:
+    - npm install
+    - nowa build --mangle
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    url: http://dev.withwheat.wang:8082/version
+  only:
+    - /^master$/
