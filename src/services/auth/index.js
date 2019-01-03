@@ -15,7 +15,7 @@ let {hashHistory} = ReactRouter;
   };
 });
 
-import {env, urlParams, keyCrop} from '../config';
+import {env, urlParams, keyCorp} from '../config';
 import {isDD} from '../../utils';
 import locale from '../../locale';
 let error = Toast.error;
@@ -93,7 +93,7 @@ const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
 
 /* 请求钉钉的JS-API签名信息 */
 function httpRequestConfig() {
-  let req = {keyCorp: keyCrop, keyApp: env.keyApp};
+  let req = {keyCorp: keyCorp, keyApp: env.keyApp};
   return new Promise((resolve, reject) => {
     request({url: '7001.json', body: req}).then((data) => {
       resolve(data);
@@ -148,7 +148,7 @@ function httpRequestSignInByUserPass(username, password) {
 
 function postError(errObject){
   let params = {
-    keyCorp: keyCrop,
+    keyCorp: keyCorp,
     keyApp: env.keyApp,
     error: errObject.errorCode,
     detail: errObject.message
