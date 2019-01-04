@@ -5,13 +5,14 @@ stages:
 build:
   stage: build
   script:
-    - npm install
-    - npm run build:client
+    - node -v
+    - npm -v
 
 deploy:
   stage: deploy
   script:
-    - npm run build:client
+    - node -v
+    - npm -v
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://dev.withwheat.wang/report
