@@ -1,7 +1,7 @@
-require('./Calendar.styl');
+import './Calendar.styl';
 
-let {PropTypes} = React;
-let {Icon, Context} = SaltUI;
+import React, {PropTypes} from 'react';
+import {Icon, Context} from 'saltui';
 import classnames from 'classnames';
 import Popup from '../popup';
 import locale from '../../locale';

@@ -1,4 +1,4 @@
-require('./PaymentStats.styl');
+import './PaymentStats.styl';
 
 import BaseStatus from '../../components/baseStats';
 

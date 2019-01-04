@@ -1,5 +1,6 @@
-require('./PassFlowHeatMap.styl');
+import './PassFlowHeatMap.styl';
 
+import React from 'react';
 import BaseChart from '../../components/baseChart';
 import locale from '../../locale';
 

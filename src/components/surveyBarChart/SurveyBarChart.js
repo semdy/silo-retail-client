@@ -1,4 +1,4 @@
-require('./SurveyBarChart.styl');
+import './SurveyBarChart.styl';
 
 import BaseChart from '../../components/baseChart';
 import {getStoreStats} from '../../services/store';

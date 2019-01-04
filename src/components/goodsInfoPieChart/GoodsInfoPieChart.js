@@ -1,4 +1,4 @@
-require('./GoodsInfoPieChart.styl');
+import './GoodsInfoPieChart.styl';
 
 import BaseChart from '../baseChart';
 import locale from '../../locale';

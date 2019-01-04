@@ -1,5 +1,5 @@
-let {Toast} = SaltUI;
-let {hashHistory} = ReactRouter;
+import { Toast } from 'saltui';
+import { hashHistory } from 'react-router';
 import {fetch} from '../fetch';
 import {signIn, session} from '../auth';
 import {getTimezoneStamp} from '../../utils/date';

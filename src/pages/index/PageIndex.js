@@ -1,7 +1,8 @@
-require('./PageIndex.styl');
+import './PageIndex.styl';
 
-let {Button, Toast} = SaltUI;
-let {hashHistory} = ReactRouter;
+import React from 'react';
+import {Button, Toast} from 'saltui';
+import {hashHistory} from 'react-router';
 import dom from '../../utils/dom';
 import Empty from '../../components/empty';
 import {getStoreList, getAvailableNavs} from '../../services/store';

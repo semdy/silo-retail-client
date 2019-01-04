@@ -1,4 +1,5 @@
-const actions = require('./actions');
+import Reflux from 'reflux';
+import actions from './actions';
 import locale from '../locale';
 
 module.exports = Reflux.createStore({

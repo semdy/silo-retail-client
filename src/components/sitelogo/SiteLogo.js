@@ -1,7 +1,7 @@
-require('./SiteLogo.styl');
+import './SiteLogo.styl';
 
-let {Icon} = SaltUI;
-let {PropTypes} = React;
+import {Icon} from 'saltui';
+import React, {PropTypes} from 'react';
 
 class SiteLogo extends React.Component {
 

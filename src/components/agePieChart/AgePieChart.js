@@ -1,4 +1,4 @@
-require('./AgePieChart.styl');
+import './AgePieChart.styl';
 
 import BaseChart from '../baseChart';
 import locale from '../../locale';

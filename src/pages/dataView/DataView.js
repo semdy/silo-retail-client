@@ -1,5 +1,6 @@
 import './DataView.styl';
 
+import React from 'react';
 import DataviewStats from '../../components/dataviewstats';
 import DateNavigator from '../../components/datenavigator';
 import DataviewChart from '../../components/dataviewchart';

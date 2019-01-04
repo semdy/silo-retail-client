@@ -1,7 +1,7 @@
-require('./FormItem.styl');
+import './FormItem.styl';
 
-let {Icon, Context} = SaltUI;
-let {PropTypes} = React;
+import {Icon, Context} from 'saltui';
+import React, {PropTypes} from 'react';
 
 import classnames from 'classnames';
 import Input from '../input';

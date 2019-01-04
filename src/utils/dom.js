@@ -6,7 +6,9 @@
  * dom处理常规方法pollyfill, 先直接使用jquery/zepto的方法
  * */
 
-let {Context} = SaltUI;
+import {Context} from 'saltui';
+import $ from 'jquery';
+
 let methods = {};
 
 const EVENTS = {

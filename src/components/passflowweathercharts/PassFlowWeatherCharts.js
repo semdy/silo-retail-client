@@ -1,5 +1,6 @@
-require('./PassFlowWeatherCharts.styl');
+import './PassFlowWeatherCharts.styl';
 
+import React from 'react';
 import BaseChart from '../../components/baseChart';
 import store from  '../../app/store';
 import {getStoreChartReport, getReportPayment} from '../../services/store';

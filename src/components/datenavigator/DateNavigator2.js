@@ -1,7 +1,7 @@
-require('./DateNavigator.styl');
+import './DateNavigator.styl';
 
-let {Icon, Context} = SaltUI;
-let { PropTypes } = React;
+import {Icon, Context} from 'saltui';
+import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 
 const formatDate = (dateUTC) => {

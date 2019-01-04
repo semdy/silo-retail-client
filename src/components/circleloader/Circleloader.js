@@ -1,7 +1,7 @@
-require('./Circleloader.styl');
+import './Circleloader.styl';
 
-let {PropTypes} = React;
-let {Context} = SaltUI;
+import React, {PropTypes} from 'react';
+import {Context} from 'saltui';
 
 class Circleloader extends React.Component {
 
