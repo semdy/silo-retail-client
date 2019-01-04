@@ -108,8 +108,12 @@ function httpRequestConfig() {
 
 /* 请求使用钉钉返回的验证码登录 */
 function httpRequestSignIn(code, corpId) {
+  let params = {
+    corpId, code,
+    hotfix: {keyCorp: keyCorp, keyApp: env.keyApp}
+  };
   return new Promise((resolve, reject) => {
-    request({url: '7003.json', body: {corpId, code}}).then((json) => {
+    request({url: '7003.json', body: params}).then((json) => {
       if (json.session) {
         session.set(json.session);
         resolve(json.session);
@@ -206,11 +210,11 @@ function signIn() {
       });
     } else {
       /*if (username && password) {
-        httpRequestSignInByUserPass(username, password);
-      } else {*/
-        //alert(locale.noPermission);
-        gotoLogin();
-        triggerReady();
+       httpRequestSignInByUserPass(username, password);
+       } else {*/
+      //alert(locale.noPermission);
+      gotoLogin();
+      triggerReady();
       //}
     }
   }
