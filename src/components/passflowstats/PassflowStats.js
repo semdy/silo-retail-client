@@ -1,5 +1,6 @@
-require('./PassflowStats.styl');
+import './PassflowStats.styl';
 
+import React from 'react';
 import BaseStatus from '../../components/baseStats';
 import {getReportPayment} from '../../services/store';
 import Circleloader from '../../components/circleloader';

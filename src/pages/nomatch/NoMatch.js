@@ -1,7 +1,8 @@
-require('./NoMatch.styl');
+import './NoMatch.styl';
 
-let {Button} = SaltUI;
-let {hashHistory} = ReactRouter;
+import {Button} from 'saltui';
+import React from 'react';
+import {hashHistory} from 'react-router';
 import actions from '../../app/actions';
 import {session} from '../../services/auth';
 import Empty from '../../components/empty';

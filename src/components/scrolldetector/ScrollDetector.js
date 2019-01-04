@@ -3,11 +3,10 @@
  */
 
 import dom from '../../utils/dom';
+import {Context} from 'saltui';
 
-let {Context} = SaltUI;
 let BOD = document.body;
 let DOC = document.documentElement;
-
 let TIME = Date.now();
 
 function isWindow(obj) {

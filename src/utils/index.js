@@ -1,4 +1,4 @@
-let {Dialog} = SaltUI;
+import { Dialog } from 'saltui';
 import config from '../config';
 import locale from '../locale';
 

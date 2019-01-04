@@ -1,7 +1,8 @@
-require('./Header.styl');
+import './Header.styl';
 
-let {Icon} = SaltUI;
-let {hashHistory} = ReactRouter;
+import React from 'react'
+import {Icon} from 'saltui';
+import {hashHistory} from 'react-router';
 
 class Header extends React.Component {
 
@@ -11,7 +12,7 @@ class Header extends React.Component {
   }
 
   getPathName(){
-    return location.hash.split("?")[0].slice(1);
+    return window.location.hash.split("?")[0].slice(1);
   }
 
   handleClick() {

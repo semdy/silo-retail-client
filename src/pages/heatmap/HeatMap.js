@@ -1,5 +1,6 @@
 import './HeatMap.styl';
 
+import React from 'react';
 import PassFlowStatsSimple from '../../components/passflowstatsSimple';
 import DateNavigator from '../../components/datenavigator';
 import PassFlowHeatMap from "../../components/passflowheatmap";

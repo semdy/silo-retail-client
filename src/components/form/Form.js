@@ -2,6 +2,7 @@
  * Created by mcake on 2017/6/19.
  */
 
+import React from 'react';
 import Validator from '../../components/validator';
 
 class Form extends React.Component {

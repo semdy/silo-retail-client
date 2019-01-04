@@ -1,8 +1,10 @@
-require('./Navigation.styl');
+import './Navigation.styl';
 
-let {PropTypes} = React;
-let {Link} = ReactRouter;
-let {Icon} = SaltUI;
+import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
+import Reflux from 'reflux';
+import { Icon } from 'saltui';
+
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';

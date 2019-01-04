@@ -1,5 +1,7 @@
-require('./BaseStats.styl');
+import './BaseStats.styl';
 
+import React from 'react';
+import Reflux from 'reflux';
 import Base from '../../components/base';
 import Stats from '../../components/stats';
 import reactMixin from 'react-mixin';

@@ -1,6 +1,6 @@
 import './animation.styl';
 
-let {PropTypes} = React;
+import React, {PropTypes} from 'react';
 import RcAnimate from 'rc-animate';
 
 const AnimateEl = (props) => {

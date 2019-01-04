@@ -1,6 +1,8 @@
-require('./DateNavigator.styl');
+import './DateNavigator.styl';
 
-let {Icon} = SaltUI;
+import React from 'react';
+import Reflux from 'reflux';
+import {Icon} from 'saltui';
 import Calendar from '../../components/calendar';
 import classnames from 'classnames';
 import reactMixin from 'react-mixin';
@@ -125,7 +127,7 @@ class DateNavigator extends React.Component {
   }
 
   componentDidMount(){
-    if( location.hash.split("?")[0].match(/^#\/report\.(sale|passflow)$/) ){
+    if( window.location.hash.split("?")[0].match(/^#\/report\.(sale|passflow)$/) ){
       this.setState({
         showFilter: true,
         calendarTitle: ''

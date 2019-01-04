@@ -1,4 +1,4 @@
-require('./PassFlowRate.styl');
+import './PassFlowRate.styl';
 
 import BaseChart from '../../components/baseChart';
 import store from  '../../app/store';

@@ -1,6 +1,8 @@
-require('./Top10Tab.styl');
+import './Top10Tab.styl';
 
-let {Tab} = SaltUI;
+import React from 'react';
+import Reflux from 'reflux';
+import {Tab} from 'saltui';
 import reactMixin from 'react-mixin';
 import store from  '../../app/store';
 import Base from '../../components/base';

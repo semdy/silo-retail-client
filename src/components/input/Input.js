@@ -1,7 +1,7 @@
-require('./Input.styl');
+import './Input.styl';
 
-let {Icon, Context} = SaltUI;
-let {PropTypes} = React;
+import {Icon, Context} from 'saltui';
+import React, {PropTypes} from 'react';
 import classnames from 'classnames';
 
 class Input extends React.Component {

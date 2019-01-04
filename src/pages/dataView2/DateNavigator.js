@@ -1,6 +1,8 @@
-require('./DateNavigator.styl');
+import './DateNavigator.styl';
 
-let { Icon, Button } = SaltUI;
+import React, {PropTypes} from 'react';
+import Reflux from 'reflux';
+import { Icon, Button, Context } from 'saltui';
 import ButtonGroup from '../../components/ButtonGroup';
 import DropDown from '../../components/DropDown';
 import classnames from 'classnames';
@@ -16,7 +18,7 @@ const formatDate = (dateUTC, timelines, filterType) => {
     var date = filterType === 'hour' ? dateUTC.getDate() + "日" : "";
     return `${year}${month}${date}`;
   } else {
-    if( filterType == 'year' ){
+    if( filterType === 'year' ){
       return [timelines[0].substr(5), timelines[timelines.length - 1].substr(5)].join("~");
     } else {
       return [timelines[0], timelines[timelines.length - 1]].join("~");

@@ -1,7 +1,7 @@
-require('./PageApply.styl');
+import './PageApply.styl';
 
-let {Button, Toast} = SaltUI;
-
+import React from 'react';
+import {Button, Toast} from 'saltui';
 import actions from '../../app/actions';
 import SearchBar from '../../components/searchbar';
 import ListItem from '../../components/listitem';
