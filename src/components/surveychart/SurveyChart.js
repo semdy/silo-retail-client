@@ -1,8 +1,8 @@
 import './SurveyChart.styl';
 
 import React from 'react';
-import SurveyLineChart from '../../components/surveyLinechart';
-import SurveyBarChart from '../../components/surveyBarchart';
+import SurveyLineChart from '../../components/surveyLineChart';
+import SurveyBarChart from '../../components/surveyBarChart';
 
 class SurveyChart extends React.Component {
 

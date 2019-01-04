@@ -1,13 +1,12 @@
-'use strict';
+'use strict'
 
 import $ from 'jquery'
 import dd from 'dd'
-import {Toast} from 'saltui';
-import {hashHistory} from 'react-router';
-
-import {env, urlParams, keyCrop} from '../config';
-import {isDD} from '../../utils';
-import locale from '../../locale';
+import { Toast } from 'saltui'
+import { hashHistory } from 'react-router'
+import { env, urlParams, keyCorp } from '../config'
+import { isDD } from '../../utils'
+import locale from '../../locale'
 
 //改写Toast
 ["success", "error", "fail", "loading"].forEach((type) => {
@@ -17,60 +16,60 @@ import locale from '../../locale';
       content: typeof msg === 'object' ? JSON.stringify(msg) : String(msg),
       autoHide: type !== 'loading',
       ...options
-    });
-  };
-});
+    })
+  }
+})
 
-let error = Toast.error;
+let error = Toast.error
 
 const jsApiList = ['runtime.info', 'biz.contact.choose',
   'device.notification.confirm', 'device.notification.alert',
   'device.notification.prompt', 'biz.ding.post',
-  'biz.util.openLink'];
+  'biz.util.openLink']
 
-let readyQueue = [];
-let isReady = false;
-let STORAGE_Key = "__silo";
-let SESSION_KEY = STORAGE_Key + ".session";
-let USER_KEY = STORAGE_Key + ".user";
+let readyQueue = []
+let isReady = false
+let STORAGE_Key = "__silo"
+let SESSION_KEY = STORAGE_Key + ".session"
+let USER_KEY = STORAGE_Key + ".user"
 
 const session = {
 
-  set(info, username) {
+  set (info, username) {
     if (info === null) {
-      return;
+      return
     }
-    localStorage.setItem(SESSION_KEY, JSON.stringify(info));
-    if( username ){
-      this.setUsername(username);
+    localStorage.setItem(SESSION_KEY, JSON.stringify(info))
+    if (username) {
+      this.setUsername(username)
     }
   },
 
-  get(){
-    let sessionStr = localStorage.getItem(SESSION_KEY);
+  get () {
+    let sessionStr = localStorage.getItem(SESSION_KEY)
     if (sessionStr) {
-      return JSON.parse(sessionStr);
+      return JSON.parse(sessionStr)
     } else {
-      return null;
+      return null
     }
   },
 
-  setUsername(username){
-    localStorage.setItem(USER_KEY, username);
+  setUsername (username) {
+    localStorage.setItem(USER_KEY, username)
   },
 
-  getUsername(){
-    return localStorage.getItem(USER_KEY);
+  getUsername () {
+    return localStorage.getItem(USER_KEY)
   },
 
-  clear() {
-    localStorage.removeItem(SESSION_KEY);
-    localStorage.removeItem(USER_KEY);
+  clear () {
+    localStorage.removeItem(SESSION_KEY)
+    localStorage.removeItem(USER_KEY)
   }
 
-};
+}
 
-const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
+const request = ({ url, body = {}, method = 'post', dataType = 'json' }) => {
 
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -78,142 +77,146 @@ const request = ({url, body = {}, method = 'post', dataType = 'json'}) => {
       url: /^https?:\/\//.test(url) ? url : env.urlAppRoot + url,
       data: JSON.stringify(body),
       dataType: dataType,
-      success(recv) {
-        let code = recv.protocError;
+      success (recv) {
+        let code = recv.protocError
         if (code === 0) {
-          resolve(recv);
+          resolve(recv)
         } else {
-          reject(code);
+          reject(code)
         }
       },
-      error(xhr, status, err) {
-        reject(xhr, status, err);
-        error(`${locale.disconnect}, code: ${status}`);
+      error (xhr, status, err) {
+        reject(xhr, status, err)
+        error(`${locale.disconnect}, code: ${status}`)
       }
-    });
-  });
-};
+    })
+  })
+}
 
 /* 请求钉钉的JS-API签名信息 */
-function httpRequestConfig() {
-  let req = {keyCorp: keyCrop, keyApp: env.keyApp};
+function httpRequestConfig () {
+  let req = { keyCorp: keyCorp, keyApp: env.keyApp }
   return new Promise((resolve, reject) => {
-    request({url: '7001.json', body: req}).then((data) => {
-      resolve(data);
+    request({ url: '7001.json', body: req }).then((data) => {
+      resolve(data)
     }, (err) => {
-      reject(err);
+      reject(err)
       if (typeof err === 'number') {
-        error(`${locale.singnFailed}, code: ${err}`);
+        error(`${locale.singnFailed}, code: ${err}`)
       }
-    });
-  });
+    })
+  })
 }
 
 /* 请求使用钉钉返回的验证码登录 */
-function httpRequestSignIn(code, corpId) {
+function httpRequestSignIn (code, corpId) {
+  let params = {
+    corpId, code,
+    hotfix: { keyCorp: keyCorp, keyApp: env.keyApp }
+  }
   return new Promise((resolve, reject) => {
-    request({url: '7003.json', body: {corpId, code}}).then((json) => {
+    request({ url: '7003.json', body: params }).then((json) => {
       if (json.session) {
-        session.set(json.session);
-        resolve(json.session);
+        session.set(json.session)
+        resolve(json.session)
       } else {
-        error(locale.getUserInfoError);
+        error(locale.getUserInfoError)
       }
     }, (err) => {
-      reject(err);
+      reject(err)
       if (typeof err === 'number') {
-        error(`${locale.ddLoginError}, code: ${err}`);
+        error(`${locale.ddLoginError}, code: ${err}`)
       }
-    });
-  });
+    })
+  })
 }
 
 /* 请求使用用户名密码登录 */
-function httpRequestSignInByUserPass(username, password) {
+function httpRequestSignInByUserPass (username, password) {
   return new Promise((resolve, reject) => {
-    request({url: '1003.json', body: {username, password}}).then((json) => {
+    request({ url: '1003.json', body: { username, password } }).then((json) => {
       if (json.session) {
-        session.set(json.session, username);
-        resolve(json.session);
+        session.set(json.session, username)
+        resolve(json.session)
         //triggerReady();
       } else {
-        reject(locale.userPassError);
-        error(locale.userPassError);
+        reject(locale.userPassError)
+        error(locale.userPassError)
       }
     }, (err) => {
-      reject(err);
+      reject(err)
       if (typeof err === 'number') {
-        error(`${locale.loginError}, code: ${err}`);
+        error(`${locale.loginError}, code: ${err}`)
       }
-    });
-  });
+    })
+  })
 }
 
-function postError(errObject){
+function postError (errObject) {
   let params = {
-    keyCorp: keyCrop,
+    keyCorp: keyCorp,
     keyApp: env.keyApp,
     error: errObject.errorCode,
     detail: errObject.message
-  };
-  request({url: '7005.json', body: params}).then(res => {
-    if ( res.result === 0 ) {
-      setTimeout(function(){
-        window.location.reload();
-      }, 1000);
+  }
+  request({ url: '7005.json', body: params }).then(res => {
+    if (res.result === 0) {
+      setTimeout(function () {
+        window.location.reload()
+      }, 1000)
     } else {
-      alert("Request auth error, result: " + res.result);
+      alert("Request auth error, result: " + res.result)
     }
-  });
+  })
 }
 
-function onDingTalkYes(corpId) {
+function onDingTalkYes (corpId) {
   return new Promise((resolve, reject) => {
     dd.runtime.permission.requestAuthCode({
       corpId: corpId,
       onSuccess: (result) => {
         httpRequestSignIn(result.code, corpId).then((sessionInfo) => {
-          resolve(sessionInfo);
-          triggerReady();
+          resolve(sessionInfo)
+          triggerReady()
         }, (err) => {
-          reject(err);
-          onDingTalkApiFail(err);
-        });
+          reject(err)
+          onDingTalkApiFail(err)
+        })
       },
       onFail: (err) => {
-        reject(err);
-        onDingTalkApiFail(err);
+        reject(err)
+        onDingTalkApiFail(err)
       }
-    });
-  });
+    })
+  })
 }
 
-function signIn() {
-  isReady = false;
-  let sessionInfo = session.get();
+function signIn () {
+  isReady = false
+  let sessionInfo = session.get()
   if (sessionInfo) {
-    session.set(sessionInfo);
-    triggerReady();
+    session.set(sessionInfo)
+    triggerReady()
   } else {
     if (isDD) {
       httpRequestConfig().then((json) => {
-        let config = json.config;
-        config.jsApiList = jsApiList;
-        dd.config(config);
+        let config = json.config
+        config.jsApiList = jsApiList
+        dd.config(config)
         dd.ready(() => {
-          onDingTalkYes(config.corpId);
-        });
-        dd.error((err) => {
-          onDingTalkErr(err);
+          onDingTalkYes(config.corpId)
         })
-      });
+        dd.error((err) => {
+          onDingTalkErr(err)
+        })
+      })
     } else {
       /*if (username && password) {
-        httpRequestSignInByUserPass(username, password);
-      } else {*/
-        //alert(locale.noPermission);
-        gotoLogin();
-        triggerReady();
+       httpRequestSignInByUserPass(username, password);
+       } else {*/
+      //alert(locale.noPermission);
+      gotoLogin()
+      triggerReady()
       //}
     }
   }
@@ -223,38 +226,38 @@ function signIn() {
   }
 }
 
-function gotoLogin(){
-  hashHistory.replace('/user.login');
+function gotoLogin () {
+  hashHistory.replace('/user.login')
 }
 
-function onDingTalkErr(err) {
+function onDingTalkErr (err) {
   //error(`${locale.ddError}\n` + JSON.stringify(err));
-  postError(err);
+  postError(err)
 }
 
-function onDingTalkApiFail(err, api) {
-  error(locale.ddInvokeError + '\n' + api + '\n' + JSON.stringify(err));
+function onDingTalkApiFail (err, api) {
+  error(locale.ddInvokeError + '\n' + api + '\n' + JSON.stringify(err))
 }
 
-function ready(fun) {
+function ready (fun) {
   if (typeof fun === 'function') {
     if (!isReady) {
-      readyQueue.push(fun);
+      readyQueue.push(fun)
     } else {
-      fun();
+      fun()
     }
   }
 }
 
-function triggerReady() {
-  isReady = true;
+function triggerReady () {
+  isReady = true
   readyQueue.forEach((itemFun) => {
-    itemFun();
-  });
-  readyQueue = [];
+    itemFun()
+  })
+  readyQueue = []
 }
 
-signIn.ready = ready;
+signIn.ready = ready
 
 module.exports = {
   session,
@@ -262,4 +265,4 @@ module.exports = {
   gotoLogin,
   gotoLogout: gotoLogin,
   doLogin: httpRequestSignInByUserPass
-};
+}

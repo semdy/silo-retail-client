@@ -1,75 +1,76 @@
-import './Login.styl';
+import './Login.styl'
 
-import React, {hashHistory} from 'react-router';
-import actions from '../../app/actions';
-import SiteLogo from '../../components/sitelogo';
-import Form from '../../components/form';
-import FormItem from '../../components/formitem';
-import FormButton from '../../components/formbutton';
+import React from 'react'
+import { hashHistory } from 'react-router'
+import actions from '../../app/actions'
+import SiteLogo from '../../components/sitelogo'
+import Form from '../../components/form'
+import FormItem from '../../components/formitem'
+import FormButton from '../../components/formbutton'
 import AnimateGridBg from '../../components/animategridbg'
-import Wave from '../../components/wave';
-import {isDD} from '../../utils';
-import {signIn, session, doLogin} from '../../services/auth';
-import {fetchStoreList} from '../../services/store';
-import locale from '../../locale';
+import Wave from '../../components/wave'
+import { isDD } from '../../utils'
+import { signIn, session, doLogin } from '../../services/auth'
+import { fetchStoreList } from '../../services/store'
+import locale from '../../locale'
 
 class Login extends React.Component {
 
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       isLogining: false
-    };
+    }
   }
 
-  componentDidMount() {
-    session.clear();
-    actions.showScrollNav(false);
-    actions.setP2rEnabled(false);
+  componentDidMount () {
+    session.clear()
+    actions.showScrollNav(false)
+    actions.setP2rEnabled(false)
 
     if (isDD) {
       signIn().ready(() => {
         fetchStoreList().then(() => {
-          hashHistory.replace('/');
-        });
-      });
+          hashHistory.replace('/')
+        })
+      })
     }
   }
 
-  componentWillUnmount() {
-    actions.showScrollNav(true);
-    actions.setP2rEnabled(true);
+  componentWillUnmount () {
+    actions.showScrollNav(true)
+    actions.setP2rEnabled(true)
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    let inValid = this.refs.form.validate();
+  handleSubmit (e) {
+    e.preventDefault()
+    let inValid = this.refs.form.validate()
     if (!inValid) {
-      this.handleLogin();
+      this.handleLogin()
     }
   }
 
-  handleLogin() {
-    let username = this.refs.user.value;
-    let password = this.refs.pass.value;
-    this.setLoginStatus(true);
+  handleLogin () {
+    let username = this.refs.user.value
+    let password = this.refs.pass.value
+    this.setLoginStatus(true)
     doLogin(username, password).then(() => {
       fetchStoreList().then(() => {
-        hashHistory.replace('/');
-      });
+        hashHistory.replace('/')
+      })
     }, () => {
-      this.setLoginStatus(false);
-    });
+      this.setLoginStatus(false)
+    })
   }
 
-  setLoginStatus(bool) {
+  setLoginStatus (bool) {
     this.setState({
       isLogining: bool
-    });
+    })
   }
 
-  render() {
-    let {isLogining} = this.state;
+  render () {
+    let { isLogining } = this.state
     return (
       isDD ?
         <div className="logining-indict">
@@ -92,7 +93,7 @@ class Login extends React.Component {
                 showClear={true}
                 placeholder={locale.TYPE_USERNAME}
                 rules={[
-                  {method: 'required', errorMsg: locale.USER_EMPTY}
+                  { method: 'required', errorMsg: locale.USER_EMPTY }
                 ]}
               />
               <FormItem
@@ -103,7 +104,7 @@ class Login extends React.Component {
                 showEye={true}
                 placeholder={locale.TYPE_PASSWORD}
                 rules={[
-                  {method: 'required', errorMsg: locale.PASS_EMPTY}
+                  { method: 'required', errorMsg: locale.PASS_EMPTY }
                 ]}
               />
               <div className="form-action">
@@ -125,8 +126,8 @@ class Login extends React.Component {
           <AnimateGridBg className="animate-bg"/>
           <Wave/>
         </div>
-    );
+    )
   }
 }
 
-module.exports = Login;
+module.exports = Login

@@ -1,89 +1,89 @@
-import './Chart.styl';
+import './Chart.styl'
 
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react'
 import echarts from 'echarts'
-import classnames from 'classnames';
-import Helper from '../helper';
-import dom from '../../utils/dom';
+import classnames from 'classnames'
+import Helper from '../helper'
+import dom from '../../utils/dom'
 
 class Chart extends React.Component {
 
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       width: this.props.width,
       height: this.props.height
-    };
+    }
   }
 
-  componentDidMount() {
-    let timeout;
-    let responsive = this.props.responsive;
+  componentDidMount () {
+    let timeout
+    let responsive = this.props.responsive
 
     if (responsive) {
       this.setPieSize(() => {
-        this.chartInstance = echarts.init(this.refs.chart);
-      });
+        this.chartInstance = echarts.init(this.refs.chart)
+      })
     } else {
-      this.chartInstance = echarts.init(this.refs.chart);
+      this.chartInstance = echarts.init(this.refs.chart)
     }
 
     this.resizeHandler = () => {
-      if (timeout) clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout)
       timeout = setTimeout(() => {
         this.setPieSize(() => {
-          this.chartInstance.resize();
-        });
-      }, 50);
-    };
+          this.chartInstance.resize()
+        })
+      }, 50)
+    }
 
-    dom.on(window, "resize", this.resizeHandler);
+    dom.on(window, "resize", this.resizeHandler)
 
   }
 
-  setPieSize(cb) {
-    let responsive = this.props.responsive;
+  setPieSize (cb) {
+    let responsive = this.props.responsive
     if (responsive) {
       this.setState({
         width: window.innerWidth,
         height: Math.max(this.props.minHeight, window.innerHeight - dom.offset(this.refs.chart).top - 10)
-      }, cb);
+      }, cb)
     } else {
       this.setState({
         width: this.refs.chart.parentNode.offsetWidth
-      }, cb);
+      }, cb)
     }
   }
 
-  hideToolTip() {
+  hideToolTip () {
     this.chartInstance.dispatchAction({
       type: 'hideTip'
-    });
+    })
   }
 
-  componentWillUnmount() {
-    dom.off(window, "resize", this.resizeHandler);
-    this.chartInstance.dispose();
+  componentWillUnmount () {
+    dom.off(window, "resize", this.resizeHandler)
+    this.chartInstance.dispose()
   }
 
-  refresh() {
-    this.chartInstance.clear();
-    this.chartInstance.setOption(this.props.data);
+  refresh () {
+    this.chartInstance.clear()
+    this.chartInstance.setOption(this.props.data)
   }
 
-  render() {
-    let {width, height} = this.state;
-    let {title, titleCenter, alignCenter, helpText, data} = this.props;
+  render () {
+    let { width, height } = this.state
+    let { title, titleCenter, alignCenter, helpText, data } = this.props
     return (
       <div className="t-FB1 card">
-        { title &&
-          <div className={classnames("chart-title", {center: titleCenter, alignCenter: alignCenter})}>
-            <span>{title}</span>
-            {
-              helpText &&
-              <Helper text={helpText}/>
-            }
-          </div>
+        {title &&
+        <div className={classnames("chart-title", { center: titleCenter, alignCenter: alignCenter })}>
+          <span>{title}</span>
+          {
+            helpText &&
+            <Helper text={helpText}/>
+          }
+        </div>
         }
         <div ref="chart"
              className="chart"
@@ -95,7 +95,7 @@ class Chart extends React.Component {
         </div>
 
       </div>
-    );
+    )
   }
 }
 
@@ -109,7 +109,7 @@ Chart.defaultProps = {
   width: window.innerWidth,
   minHeight: 300,
   helpText: ''
-};
+}
 
 Chart.propTypes = {
   title: PropTypes.string,
@@ -121,6 +121,6 @@ Chart.propTypes = {
   height: PropTypes.number,
   minHeight: PropTypes.number,
   helpText: PropTypes.string
-};
+}
 
-module.exports = Chart;
+module.exports = Chart
