@@ -38,6 +38,8 @@ import HeatMap from '../pages/heatmap'
 import Login from '../pages/login'
 import NoMatch from '../pages/nomatch'
 
+import registerServiceWorker from '../registerServiceWorker'
+
 auth.signIn()
 
 class App extends React.Component {
@@ -125,3 +127,8 @@ appReady(() => {
     </Router>, document.getElementById('app')
   )
 })
+
+// service worker
+if (window.location.protocol === 'https:') {
+  registerServiceWorker()
+}
