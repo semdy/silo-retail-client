@@ -1,5 +1,6 @@
 import './Survey.styl';
 
+import React from 'react';
 import SurveyChart from '../../components/surveychart';
 import DateNavigator from '../../components/datenavigator';
 import Survey from '../../components/survey';

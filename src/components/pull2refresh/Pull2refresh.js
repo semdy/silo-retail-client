@@ -1,7 +1,7 @@
-require('./Pull2refresh.styl');
+import './Pull2refresh.styl';
 
-let {PropTypes} = React;
-let {Icon, Context} = SaltUI;
+import React, {PropTypes} from 'react';
+import {Icon, Context} from 'saltui';
 
 import dom, {transitionEnd} from '../../utils/dom';
 import classnames from 'classnames';

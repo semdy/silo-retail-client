@@ -1,4 +1,6 @@
-require('./Stats.styl');
+import './Stats.styl';
+
+import React from 'react';
 
 class StatItem extends React.Component {
 

@@ -1,7 +1,7 @@
-require('./Dropdown.styl');
+import './Dropdown.styl';
 
-let { PropTypes } = React;
-let { Button, Icon, Context } = SaltUI;
+import React, { PropTypes } from 'react';
+import { Button, Icon, Context } from 'saltui';
 import classnames from 'classnames';
 import dom from '../../utils/dom';
 

@@ -1,4 +1,4 @@
-require('./PaymentPieChart.styl');
+import './PaymentPieChart.styl';
 
 import BaseChart from '../baseChart';
 import locale from '../../locale';

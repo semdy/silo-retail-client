@@ -1,4 +1,4 @@
-require('./GoodsInfoStats.styl');
+import './GoodsInfoStats.styl';
 
 import BaseStatus from '../../components/baseStats';
 

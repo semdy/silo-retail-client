@@ -4,7 +4,8 @@ import actions from '../../app/actions';
 import locale from '../../locale';
 import config from '../../config';
 
-let {Toast} = SaltUI;
+import $ from 'jquery'
+import {Toast} from 'saltui';
 
 let requestCount = 0;
 let requestError = false;

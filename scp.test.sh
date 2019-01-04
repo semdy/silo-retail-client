@@ -1,6 +1,9 @@
 
-nowa build --mangle
+#nowa build --mangle
 #scp dist/* root@192.168.45.136:/usr/share/nginx/html/report
+
+npm install
+npm run build:client
 
 rsync -a -e 'ssh -p 22' --stats --progress ./vendors/* root@58.87.100.125:/usr/share/nginx/html/report/vendors
 scp dist/* root@58.87.100.125:/usr/share/nginx/html/report

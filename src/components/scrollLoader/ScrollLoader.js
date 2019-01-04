@@ -1,8 +1,7 @@
-require('./ScrollLoader.styl');
+import './ScrollLoader.styl';
 
-let {PropTypes} = React;
-let {Icon, Context} = SaltUI;
-
+import React, {PropTypes} from 'react';
+import {Icon, Context} from 'saltui';
 import ScrollDetector from '../scrolldetector';
 import locale from '../../locale';
 

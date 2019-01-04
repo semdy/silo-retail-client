@@ -1,6 +1,6 @@
-require('./TableHeader.styl');
+import './TableHeader.styl';
 
-let {PropTypes} = React;
+import React, {PropTypes} from 'react';
 import classnames from 'classnames';
 
 class TableHeader extends React.Component {

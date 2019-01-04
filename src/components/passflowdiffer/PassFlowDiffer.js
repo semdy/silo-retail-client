@@ -1,4 +1,4 @@
-require('./PassFlowDiffer.styl');
+import './PassFlowDiffer.styl';
 
 import BaseChart from '../../components/baseChart';
 import store from  '../../app/store';

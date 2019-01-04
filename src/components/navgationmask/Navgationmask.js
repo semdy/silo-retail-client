@@ -1,5 +1,7 @@
-require('./Navgationmask.styl');
+import './Navgationmask.styl';
 
+import React from 'react';
+import Reflux from 'reflux';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';

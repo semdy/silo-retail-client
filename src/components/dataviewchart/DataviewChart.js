@@ -1,6 +1,8 @@
-require('./DataviewChart.styl');
+import './DataviewChart.styl';
 
-let {Toast} = SaltUI;
+import React from 'react';
+import Reflux from 'reflux';
+import {Toast} from 'saltui';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
 import store from  '../../app/store';

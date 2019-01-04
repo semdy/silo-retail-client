@@ -1,5 +1,6 @@
-require('./Categoryratio.styl');
+import './Categoryratio.styl';
 
+import React from 'react';
 import PieChart from '../../components/piechart';
 import {getStoreChartReport} from '../../services/store';
 import locale from '../../locale';

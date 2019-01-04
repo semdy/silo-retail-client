@@ -1,4 +1,6 @@
-require('./Listitem.styl');
+import './Listitem.styl';
+
+import React from 'react';
 
 class Listitem extends React.Component {
 

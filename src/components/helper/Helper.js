@@ -1,7 +1,7 @@
-require('./Helper.styl');
+import './Helper.styl';
 
-let {PropTypes} = React;
-let {Icon} = SaltUI;
+import React, {PropTypes} from 'react';
+import {Icon} from 'saltui';
 import {alert} from '../../utils';
 
 class Helper extends React.Component {

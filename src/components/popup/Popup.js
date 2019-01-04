@@ -1,7 +1,7 @@
-require('./Popup.styl');
+import './Popup.styl';
 
-let {Context} = SaltUI;
-let {PropTypes} = React;
+import {Context} from 'saltui';
+import React, {PropTypes} from 'react';
 import Animate from '../../components/Animation';
 
 class Popup extends React.Component {

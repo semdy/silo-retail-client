@@ -4,8 +4,8 @@
 
 import './FormButton.styl';
 
-let {PropTypes} = React;
-let {Button} = SaltUI;
+import React, {PropTypes} from 'react';
+import {Button} from 'saltui';
 import EffetButton from '../effectbutton';
 
 class FormButton extends Button {

@@ -1,9 +1,8 @@
 import './StoreSelector.styl';
 
-let {PropTypes} = React;
-let {Button, Boxs, Icon, Context} = SaltUI;
-let HBox = Boxs.HBox;
-let Box = Boxs.Box;
+import React, {PropTypes} from 'react';
+import Reflux from 'reflux';
+import {Button, Boxs, Icon, Context} from 'saltui';
 import Animate from '../../components/Animation';
 import reactMixin from 'react-mixin';
 import actions from '../../app/actions';
@@ -11,6 +10,9 @@ import store from  '../../app/store';
 import classnames from 'classnames';
 import { setStoreModel } from '../../services/store';
 import locale, {storeLocale} from '../../locale';
+
+let HBox = Boxs.HBox;
+let Box = Boxs.Box;
 
 class Page extends React.Component {
 

@@ -1,6 +1,8 @@
-require('./PageApproval.styl');
+import './PageApproval.styl';
 
-let {Toast, Button, Icon} = SaltUI;
+import React from 'react';
+import Reflux from 'reflux';
+import {Toast, Button, Icon} from 'saltui';
 
 import reactMixin from 'react-mixin';
 import store from  '../../app/store';

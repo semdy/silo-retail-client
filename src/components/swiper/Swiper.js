@@ -1,7 +1,7 @@
-require('./Swiper.styl');
+import './Swiper.styl';
 
-let {Scroller} = SaltUI;
-let {PropTypes} = React;
+import {Scroller} from 'saltui';
+import React, {PropTypes} from 'react';
 
 import classnames from 'classnames';
 

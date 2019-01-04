@@ -1,5 +1,6 @@
 import './GoodsInfo.styl';
 
+import React from 'react';
 import GoodsInfoStats from '../../components/goodsInfoStats';
 import DateNavigator from '../../components/datenavigator';
 import Top10Tab from '../../components/top10Tab';

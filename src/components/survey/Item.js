@@ -1,8 +1,8 @@
 import './Item.styl';
 
-let {PropTypes} = React;
-let {Icon} = SaltUI;
-let {hashHistory} = ReactRouter;
+import React, {PropTypes} from 'react';
+import {Icon} from 'saltui';
+import {hashHistory} from 'react-router';
 import classnames from 'classnames';
 
 /**
