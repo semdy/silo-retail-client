@@ -1,3 +1,5 @@
+image: node:10.15.0
+
 stages:
   - build
   - deploy
@@ -18,5 +20,6 @@ deploy:
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://dev.withwheat.wang/report
+  when: manual
   only:
     - /^master$/
