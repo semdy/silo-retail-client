@@ -1,3 +1,5 @@
+image: node:10.15.0
+
 stages:
   - build
   - deploy
@@ -5,16 +7,19 @@ stages:
 build:
   stage: build
   script:
-    - npm install
-    - nowa build --mangle
+    - node -v
+    - npm -v
 
 deploy:
   stage: deploy
   script:
+    - node -v
+    - npm -v
     - npm install
-    - nowa build --mangle
+    - npm run build:client
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: http://dev.withwheat.wang:8082/version
+    url: https://dev.withwheat.wang/report
+  when: manual
   only:
     - /^master$/
