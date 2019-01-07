@@ -5,15 +5,12 @@
 import './EffectButton.styl';
 
 import {Button, Context} from 'saltui';
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import ReactDOM from 'react-dom';
 
 import dom from '../../utils/dom';
 
 class EffectButton extends Button {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.button = ReactDOM.findDOMNode(this.refs.button);

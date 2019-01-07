@@ -1,6 +1,6 @@
 import './Circleloader.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import {Context} from 'saltui';
 
 class Circleloader extends React.Component {
@@ -65,7 +65,7 @@ class Circleloader extends React.Component {
       let dashOffset = that.dashOffset - that.dashOffset*percent;
       that.setState({
         dashOffset: dashOffset,
-        text: parseInt(percent*100) + "%"
+        text: Math.floor(percent*100) + "%"
       });
       _animId = requestAnimationFrame(animate);
       if(ratio === 1 ){

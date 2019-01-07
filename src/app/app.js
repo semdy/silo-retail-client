@@ -43,9 +43,6 @@ import registerServiceWorker from '../registerServiceWorker'
 auth.signIn()
 
 class App extends React.Component {
-  constructor (props) {
-    super(props)
-  }
 
   render () {
     let { showHeader, headerTitle, shownP2r, isP2rEnabled, scrollNavVisible } = this.state

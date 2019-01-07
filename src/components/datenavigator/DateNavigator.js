@@ -45,6 +45,7 @@ export const getDateBefore = (offset, filterType) => {
     case 'year':
       date.setYear(date.getFullYear() - offset);
       break;
+    default:
   }
 
   return date;
@@ -93,6 +94,7 @@ const calculateOffset = (dateObj, filterType) => {
       return (nowYear - 1 - year)/2;
     case 'year':
       return (nowYear - 4 - year)/5;
+    default:
   }
 };
 
@@ -108,8 +110,8 @@ class DateNavigator extends React.Component {
   };
 
   static propTypes = {
-    className: React.PropTypes.string,
-    dateSwitchable: React.PropTypes.bool
+    className: React.PropTypes.string, // eslint-disable-line
+    dateSwitchable: React.PropTypes.bool // eslint-disable-line
   };
 
   constructor(props) {

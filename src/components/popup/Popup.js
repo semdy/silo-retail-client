@@ -1,7 +1,7 @@
 import './Popup.styl';
 
 import {Context} from 'saltui';
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import Animate from '../../components/Animation';
 
 class Popup extends React.Component {

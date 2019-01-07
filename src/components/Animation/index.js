@@ -1,6 +1,6 @@
 import './animation.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import RcAnimate from 'rc-animate';
 
 const AnimateEl = (props) => {
@@ -13,10 +13,6 @@ const AnimateEl = (props) => {
 };
 
 class Animate extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     let {className, style, ...props} = this.props;

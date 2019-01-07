@@ -1,6 +1,6 @@
 import './Chart.styl'
 
-import React, { PropTypes } from 'react'
+import React, { PropTypes } from 'react' // eslint-disable-line
 import echarts from 'echarts'
 import classnames from 'classnames'
 import Helper from '../helper'
@@ -73,7 +73,7 @@ class Chart extends React.Component {
 
   render () {
     let { width, height } = this.state
-    let { title, titleCenter, alignCenter, helpText, data } = this.props
+    let { title, titleCenter, alignCenter, helpText } = this.props
     return (
       <div className="t-FB1 card">
         {title &&

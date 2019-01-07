@@ -1,6 +1,6 @@
 import './PageRecord.styl';
 
-import {Toast, Button} from 'saltui';
+import {Toast, Button} from 'saltui'; // eslint-disable-line
 import React from 'react';
 import Reflux from 'reflux';
 import reactMixin from 'react-mixin';

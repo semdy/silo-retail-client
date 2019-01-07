@@ -1,7 +1,7 @@
 import './Searchbar.styl';
 
 import {Icon, Context} from 'saltui';
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 
 import Input from '../input';
 

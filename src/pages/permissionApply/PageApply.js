@@ -59,9 +59,14 @@ class Apply extends React.Component {
   handleApply(storeId, index) {
     authorityApply(storeId).then((res) => {
       if (res.result === 0 || res.result === undefined) {
-        this.state.data[index].disabled = true;
         this.setState({
-          data: this.state.data
+          data: this.state.data.map((item, i) => {
+            if (index === i) {
+              return {...item, disabled: true}
+            } else {
+              return item
+            }
+          })
         }, () => {
           Toast.success(locale.applySuccess);
         });

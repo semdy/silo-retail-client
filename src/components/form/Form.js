@@ -6,9 +6,6 @@ import React from 'react';
 import Validator from '../../components/validator';
 
 class Form extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   handleSubmit(e){
     this.props.onSubmit.call(this.refs.form, e);

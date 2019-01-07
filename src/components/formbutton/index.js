@@ -4,14 +4,12 @@
 
 import './FormButton.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import {Button} from 'saltui';
 import EffetButton from '../effectbutton';
 
 class FormButton extends Button {
-  constructor(props){
-    super(props);
-  }
+
   render(){
     let {funcType, disabled, effect} = this.props;
     return (

@@ -1,6 +1,6 @@
 import './Table.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import TableHeader from './TableHeader';
 import TableItem from './TableItem';
 import locale from '../../locale';

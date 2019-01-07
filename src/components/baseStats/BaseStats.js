@@ -32,6 +32,7 @@ class BaseStatus extends Base {
   }
 
   render() {
+    // eslint-disable-next-line
     let {loaded, data} = this.state;
     return (
       //loaded &&

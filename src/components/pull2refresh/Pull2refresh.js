@@ -1,6 +1,6 @@
 import './Pull2refresh.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import {Icon, Context} from 'saltui';
 
 import dom, {transitionEnd} from '../../utils/dom';
@@ -29,7 +29,7 @@ function getMoveRatio(diffY) {
 function getTransform(el) {
   let value = el.style.transform || el.style.webkitTransform || 0;
   if (value) {
-    let regx = /translate3d\(\d+px\, (\d+)px\, \d+px\)/.exec(value);
+    let regx = /translate3d\(\d+px, (\d+)px, \d+px\)/.exec(value);
     if (regx) {
       value = regx[1];
     } else {

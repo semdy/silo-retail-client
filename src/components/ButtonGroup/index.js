@@ -1,6 +1,6 @@
 import './style.styl';
 
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'; // eslint-disable-line
 import { Button } from 'saltui';
 import classnames from 'classnames';
 

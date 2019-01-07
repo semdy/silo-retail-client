@@ -8,10 +8,6 @@ import locale from '../../locale';
 
 class PassFlowStats extends BaseStatus {
 
-  constructor(props) {
-    super(props);
-  }
-
   /**
    * @override
    */

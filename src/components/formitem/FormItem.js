@@ -1,7 +1,7 @@
 import './FormItem.styl';
 
 import {Icon, Context} from 'saltui';
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 
 import classnames from 'classnames';
 import Input from '../input';

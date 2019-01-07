@@ -1,6 +1,6 @@
 import './Navigation.styl';
 
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'; // eslint-disable-line
 import { Link } from 'react-router';
 import Reflux from 'reflux';
 import { Icon } from 'saltui';
@@ -22,7 +22,7 @@ class Navigation extends React.Component {
 
   show() {
     this.refs.navigation.style.display = "block";
-    this.docBody.offsetWidth;
+    this.docBody.offsetWidth; // eslint-disable-line
     dom.addClass(this.docBody, "show-sidebar");
     transitionEnd(this.refs.navigation, function () {
       this.style.display = "block";
@@ -84,7 +84,7 @@ class Navigation extends React.Component {
                 >
                   {
                     !menu.icon ? "" :
-                      ( menu.icon.match(/\.(jpg|png|gif|svg)$/) ? <img src={menu.icon}/> :
+                      ( menu.icon.match(/\.(jpg|png|gif|svg)$/) ? <img src={menu.icon} alt='' /> :
                         <Icon name={menu.icon} width={20} height={20}/> )
                   }
                   <span>{menu.text}</span>

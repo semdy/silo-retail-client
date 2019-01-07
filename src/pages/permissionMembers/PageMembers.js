@@ -56,9 +56,14 @@ class Members extends React.Component {
 
   doRemove(userId, index) {
     authorityRemove(userId).then((res) => {
-      this.state.data[index].removed = true;
       this.setState({
-        data: this.state.data
+        data: this.state.data.map((item, i) => {
+          if (index === i) {
+            return {...item, removed: true}
+          } else {
+            return item
+          }
+        })
       }, () => {
         Toast.success(locale.removeSuccess);
       });
