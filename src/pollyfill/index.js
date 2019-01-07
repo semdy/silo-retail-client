@@ -1,5 +1,4 @@
-+function () {
-  'use strict';
+(function () {
   /* eslint-disable no-unused-vars */
   var hasOwnProperty = Object.prototype.hasOwnProperty;
   var propIsEnumerable = Object.prototype.propertyIsEnumerable;
@@ -13,6 +12,7 @@
   }
 
   if (!Array.prototype.find)
+    // eslint-disable-next-line
     Array.prototype.find = function (cb) {
       var i = 0,
         l = this.length;
@@ -25,13 +25,15 @@
 
     };
 
-  if (!Array.prototype.repeat)
+  if (!Array.prototype.repeat) {
+    // eslint-disable-next-line
     Array.prototype.repeat = function (len, value) {
-      return Array.apply(null, {length: len})
-        .map(() => {
-          return value;
-        });
+      return Array.apply(null, { length: len })
+                  .map(function() {
+                    return value;
+                  });
     };
+  }
 
   if (!Object.assign)
     Object.assign = function (target, source) {
@@ -61,13 +63,14 @@
       return to;
     };
 
+  // eslint-disable-next-line
   Promise.prototype['finally'] = function (onResolveOrReject) {
     return this['catch'](function (result) {
       return result;
     }).then(onResolveOrReject);
   };
 
-}();
+})();
 
 var requestAnimationFrame =
   window.requestAnimationFrame ||

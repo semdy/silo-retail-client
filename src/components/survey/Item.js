@@ -1,6 +1,6 @@
 import './Item.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import {Icon} from 'saltui';
 import {hashHistory} from 'react-router';
 import classnames from 'classnames';
@@ -14,10 +14,6 @@ const getTrender = (value, avg) => {
 };
 
 class Item extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   handleRoute(params) {
     if (typeof params === 'object' && params.link) {
@@ -58,7 +54,7 @@ class Item extends React.Component {
                   <div className="item-avg">
                     {item.params.compare} {item.value[1]}
                     <em className="trend-ratio">
-                      {(Math.abs(trend) < 1 ? trend.toFixed(2) : parseInt(trend)) + "%"}
+                      {(Math.abs(trend) < 1 ? trend.toFixed(2) : Math.floor(trend)) + "%"}
                     </em>
                   </div>
                 }

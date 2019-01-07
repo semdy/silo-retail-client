@@ -1,17 +1,13 @@
-import './Distribution.styl';
+import './Distribution.styl'
 
-import React from 'react';
-import DateNavigator from '../../components/datenavigator';
-import DistributionStats from '../../components/distributionstats';
-import DistributionPieChart from '../../components/distributionPieChart';
+import React from 'react'
+import DateNavigator from '../../components/datenavigator'
+import DistributionStats from '../../components/distributionstats'
+import DistributionPieChart from '../../components/distributionPieChart'
 
 class Distribution extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
+  render () {
     return (
       <div>
         <DistributionStats/>
@@ -23,4 +19,4 @@ class Distribution extends React.Component {
   }
 }
 
-module.exports = Distribution;
+module.exports = Distribution

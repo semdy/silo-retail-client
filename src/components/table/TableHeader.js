@@ -1,6 +1,6 @@
 import './TableHeader.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import classnames from 'classnames';
 
 class TableHeader extends React.Component {
@@ -25,13 +25,13 @@ class TableHeader extends React.Component {
             }
 
             return (
-              <div key={i} className={classnames("t-FB" + field.flex + " tba-" + (field.align||"center") + " ui-table-cell", {'ui-table-cell-num': field.field == 'rowNumber'})}
+              <div key={i} className={classnames("t-FB" + field.flex + " tba-" + (field.align||"center") + " ui-table-cell", {'ui-table-cell-num': field.field === 'rowNumber'})}
                 style={{
                   width: field.width === undefined ? undefined : field.width + "px"
                 }}
               >
                 {
-                  field.name == 'rowNumber' ? "" : field.name
+                  field.name === 'rowNumber' ? "" : field.name
                 }
               </div>
             )

@@ -1,6 +1,6 @@
 import './ScrollNav.styl'
 
-import React, { PropTypes } from 'react'
+import React, { PropTypes } from 'react' // eslint-disable-line
 import { Scroller, Icon } from 'saltui'
 import { Link } from 'react-router'
 import Reflux from 'reflux'

@@ -29,6 +29,7 @@ const formatTime = (time, formatType) => {
     case 'year':
       ret = date.getFullYear();
       break;
+    default:
   }
 
   return ret;

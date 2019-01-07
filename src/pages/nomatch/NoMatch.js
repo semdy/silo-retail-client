@@ -10,10 +10,6 @@ import locale from '../../locale';
 
 class NoMatch extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount(){
     if( session.get() === null ){
       actions.showScrollNav(false);

@@ -7,10 +7,6 @@ import PassFlowHeatMap from "../../components/passflowheatmap";
 
 class HeatMap extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="responsive">

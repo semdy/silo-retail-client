@@ -48,8 +48,8 @@ class Stats extends React.Component {
   };
 
   static propTypes = {
-    data: React.PropTypes.array,
-    decolate: React.PropTypes.bool
+    data: React.PropTypes.array, // eslint-disable-line
+    decolate: React.PropTypes.bool // eslint-disable-line
   };
 
   constructor(props) {

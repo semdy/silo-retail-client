@@ -36,6 +36,7 @@ const formatTime = (time, formatType) => {
     case 'year':
       ret = year;
       break;
+    default:
   }
 
   return year + "." + ( ret < 10 ? "0" + ret : ret );

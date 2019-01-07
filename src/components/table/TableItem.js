@@ -1,6 +1,6 @@
 import './TableItem.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import classnames from 'classnames';
 
 function formatter(value) {
@@ -29,13 +29,13 @@ class TableItem extends React.Component {
             }
 
             return (
-              <div key={i} className={classnames("t-FB" + field.flex + " tba-" + (field.align||"center") + " ui-table-cell", {'ui-table-cell-num': field.field == 'rowNumber'})}
+              <div key={i} className={classnames("t-FB" + field.flex + " tba-" + (field.align||"center") + " ui-table-cell", {'ui-table-cell-num': field.field === 'rowNumber'})}
                    style={{
                      width: field.width === undefined ? undefined : field.width + "px"
                    }}
               >
                 {
-                  field.field == 'rowNumber' ? rowNumber + 1 : (field.formatter || formatter)(row[field.field], rowNumber)
+                  field.field === 'rowNumber' ? rowNumber + 1 : (field.formatter || formatter)(row[field.field], rowNumber)
                 }
               </div>
             )

@@ -97,7 +97,7 @@ class PassFlowHeatMap extends BaseChart {
   };
 
   static propTypes = {
-    responsive: React.PropTypes.bool
+    responsive: React.PropTypes.bool // eslint-disable-line
   };
 
   constructor(props) {

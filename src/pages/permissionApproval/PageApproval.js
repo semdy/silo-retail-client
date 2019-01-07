@@ -56,9 +56,14 @@ class Approval extends React.Component {
   handleApproval(applyId, agreed, index) {
     authorityApprove(applyId, agreed).then((res) => {
       if (res.result === 0) {
-        this.state.data[index].agreed = agreed;
         this.setState({
-          data: this.state.data
+          data: this.state.data.map((item, i) => {
+            if (index === i) {
+              return {...item, agreed}
+            } else {
+              return item
+            }
+          })
         }, () => {
           Toast.success(locale.approveSuccess);
         });

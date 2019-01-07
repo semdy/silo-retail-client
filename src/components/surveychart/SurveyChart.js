@@ -6,10 +6,6 @@ import SurveyBarChart from '../../components/surveyBarChart';
 
 class SurveyChart extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="t-FBH survey-chart">

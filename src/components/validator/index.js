@@ -48,7 +48,7 @@ class Validator {
     if( {}.toString.call(rules) === '[object Object]' ){
       rules = [rules];
     }
-
+    // eslint-disable-next-line
     for(let i=0, rule; rule = rules[i++];){
       (function(rule){
         let strategyAry = rule.method.split(':');
@@ -71,6 +71,7 @@ class Validator {
   }
 
   validate(){
+    // eslint-disable-next-line
     for(let i = 0, validateFunc; validateFunc = this.cache[i++];){
       let msg = validateFunc();
       if(msg){

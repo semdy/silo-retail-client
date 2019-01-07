@@ -1,7 +1,7 @@
 import './Input.styl';
 
 import {Icon, Context} from 'saltui';
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import classnames from 'classnames';
 
 class Input extends React.Component {

@@ -1,7 +1,7 @@
 import './SiteLogo.styl';
 
 import {Icon} from 'saltui';
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 
 class SiteLogo extends React.Component {
 

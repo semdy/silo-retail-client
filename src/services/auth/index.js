@@ -1,10 +1,8 @@
-'use strict'
-
 import $ from 'jquery'
 import dd from 'dd'
 import { Toast } from 'saltui'
 import { hashHistory } from 'react-router'
-import { env, urlParams, keyCorp } from '../config'
+import { env, keyCorp } from '../config'
 import { isDD } from '../../utils'
 import locale from '../../locale'
 

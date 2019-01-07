@@ -7,10 +7,6 @@ import DataviewChart from '../../components/dataviewchart';
 
 class DataView extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="responsive">

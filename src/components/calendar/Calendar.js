@@ -1,6 +1,6 @@
 import './Calendar.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import {Icon, Button, Context} from 'saltui';
 import classnames from 'classnames';
 import ButtonGroup from '../ButtonGroup';
@@ -57,6 +57,7 @@ function nextMonth(date) {
   return date;
 }
 
+/*
 //获得指定月以前date对象
 function prevMonths(date, offset) {
   date.setMonth(date.getMonth() - offset);
@@ -69,6 +70,7 @@ function nextMonths(date, offset) {
   date.setMonth(date.getMonth() + offset);
   return date;
 }
+*/
 
 //获得下一年date对象
 function nextYear(date) {
@@ -337,6 +339,7 @@ function getDateGrid(date, defaultDate, minDate, maxDate, type) {
       return getDateGridByQuarter.apply(null, arguments);
     case 'year':
       return getDateGridByDecade.apply(null, arguments);
+    default:
   }
 }
 
@@ -353,10 +356,11 @@ function getCalendarText(date, type) {
     case 'quarter':
     case 'year':
       return "";
+    default:
   }
 }
 
-const DATE_REG = /^(\d{4}\-\d{2}\-\d{2})|(\d{4}\/\d{2}\/\d{2})$/;
+const DATE_REG = /^(\d{4}-\d{2}-\d{2})|(\d{4}\/\d{2}\/\d{2})$/;
 
 class Calendar extends React.Component {
 
@@ -423,6 +427,7 @@ class Calendar extends React.Component {
       case 'year':
         this.date.setYear(this.date.getFullYear() + (flag ? DECADE_OFFSET * 9 : -DECADE_OFFSET * 9));
         break;
+      default:
     }
     return this.date;
   }

@@ -1,6 +1,6 @@
 import './StoreSelector.styl';
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'; // eslint-disable-line
 import Reflux from 'reflux';
 import {Button, Boxs, Icon, Context} from 'saltui';
 import Animate from '../../components/Animation';
@@ -9,7 +9,7 @@ import actions from '../../app/actions';
 import store from  '../../app/store';
 import classnames from 'classnames';
 import { setStoreModel } from '../../services/store';
-import locale, {storeLocale} from '../../locale';
+import locale from '../../locale';
 
 let HBox = Boxs.HBox;
 let Box = Boxs.Box;
