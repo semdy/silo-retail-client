@@ -1,4 +1,4 @@
-image: node:10.15.0
+image: node:8.15.0-slim
 
 stages:
   - build
@@ -16,6 +16,8 @@ deploy:
     - node -v
     - npm -v
     - npm install
+    - pwd
+    - ls -l
     - npm run build:client
   environment:
     name: $CI_COMMIT_REF_NAME
