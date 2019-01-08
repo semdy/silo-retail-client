@@ -1,5 +1,9 @@
 image: node:8.15.0-slim
 
+cache:
+  paths:
+    - node_modules/
+
 stages:
   - build
   - deploy
