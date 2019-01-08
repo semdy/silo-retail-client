@@ -37,7 +37,7 @@ deploy:
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
     - ssh $VAR_DEPLOY_TARGET 'rm -rf /home/upload/h5retail/*'
-    - scp -r ./dist $VAR_DEPLOY_TARGET:/home/upload/h5retail
+    - scp -r ./dist/* $VAR_DEPLOY_TARGET:/home/upload/h5retail
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://dev.withwheat.wang/h5retail
