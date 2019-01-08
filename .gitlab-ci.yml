@@ -1,6 +1,10 @@
 image: node:10.15.0
 
+variables:
+  VAR_DEPLOY_TARGET: upload@dev.withwheat.wang
+
 cache:
+  key: cache-for-$CI_COMMIT_REF_NAME
   paths:
     - node_modules/
 
@@ -17,14 +21,9 @@ before_script:
 build:
   stage: build
   script:
+    - npm install
+    - npm run build:client
     - ls -l
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-    - ls -l ~/.ssh
-    - scp ./package.json upload@dev.withwheat.wang:/home/upload
 
 deploy:
   stage: deploy
@@ -32,9 +31,16 @@ deploy:
     - npm install
     - npm run build:client
     - ls -l
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - ssh $VAR_DEPLOY_TARGET 'rm -rf /home/upload/h5retail/*'
+    - scp -r ./dist $VAR_DEPLOY_TARGET:/home/upload/h5retail
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: https://dev.withwheat.wang/report
+    url: https://dev.withwheat.wang/h5retail
   when: manual
   only:
     - /^master$/
