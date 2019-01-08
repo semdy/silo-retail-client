@@ -7,14 +7,12 @@ stages:
 build:
   stage: build
   script:
-    - docker info
     - node -v
     - npm -v
 
 deploy:
   stage: deploy
   script:
-    - docker info
     - node -v
     - npm -v
     - npm install
