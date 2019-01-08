@@ -8,21 +8,22 @@ stages:
   - build
   - deploy
 
+before_script:
+  - node -v
+  - npm -v
+  - pwd
+
 build:
   stage: build
   script:
-    - node -v
-    - npm -v
+    - ls -l
 
 deploy:
   stage: deploy
   script:
-    - node -v
-    - npm -v
     - npm install
-    - pwd
-    - ls -l
     - npm run build:client
+    - ls -l
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://dev.withwheat.wang/report
