@@ -1,4 +1,4 @@
-image: node:8.15.0-slim
+image: node:10.15.0
 
 cache:
   paths:
@@ -12,16 +12,19 @@ before_script:
   - node -v
   - npm -v
   - pwd
+  - eval $(ssh-agent -s)
 
 build:
   stage: build
   script:
     - ls -l
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
 
 deploy:
   stage: deploy
   script:
-    - echo $SCP_REMOTE_HOME
     - npm install
     - npm run build:client
     - ls -l
