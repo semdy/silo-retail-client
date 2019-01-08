@@ -21,6 +21,7 @@ build:
 deploy:
   stage: deploy
   script:
+    - echo $SCP_REMOTE_HOME
     - npm install
     - npm run build:client
     - ls -l
